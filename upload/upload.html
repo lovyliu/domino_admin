@@ -1,0 +1,128 @@
+<h2>批量导入</h2>
+<br />
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="panel panel-primary">
+
+            <div class="panel-body">
+
+                <form role="form">
+                    <div class="row form-group form-horizontal">
+                        <label for="field-1" class="col-sm-2 control-label">数据上传目标表</label>
+                        <div class="col-sm-3">
+                            <select class="form-control" ng-model="page_state.upload_type"
+                                ng-change="changeUploadType()">
+                                <option value="" selected>请选择要上传的表</option>
+                                <option value="employee">员工表</option>
+                                <option value="proto_rate">产品模型表</option>
+                                <option value="dealer_employee">经销商-员工表</option>
+                            </select>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div data-provides="fileinput">
+                                <span class="btn btn-info btn-file"
+                                    ng-disabled="!page_state.upload_type || page_state.uploading">
+                                    <span ng-if="!page_state.uploading">
+                                        <i class='glyphicon glyphicon-circle-arrow-up'>
+                                        </i>
+                                        上传配置文件（.xls .xlsx .csc）
+                                    </span>
+                                    <span ng-if="page_state.uploading">
+                                        上传中...
+                                    </span>
+                                    <input type="file"
+                                        fileread="page_state.file"
+                                        accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                                        ng-disabled="!page_state.upload_type || page_state.uploading">
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <button type="button"
+                                class="btn btn-danger"
+                                ng-if="page_state.upload_type"
+                                ng-disabled="page_state.uploading"
+                                ng-click="resetUpload()"
+                            >重置</button>
+                            <button type="button"
+                                class="btn btn-primary"
+                                ng-if="page_state.valid && data_list"
+                                ng-click="saveUpload()"
+                            >确认导入</button>
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+    <div class="col-sm-12" ng-show="table_title">
+        <p class="text-danger" ng-if="page_state.valid === false">*数据校验存在错误</p>
+        <p class="text-success" ng-if="page_state.valid === true">*数据校验通过，可直接上传</p>
+        <table class="table table-bordered datatable" id="table-upload">
+			<thead>
+				<tr>
+                    <th style="min-width:30px;">行号</th>
+                    <th ng-repeat="title in table_title">
+                        {{title.name}}
+                    </th>
+                    <th>
+                        错误信息
+                    </th>
+				</tr>
+			</thead>
+			<tbody>
+                <tr ng-repeat="data in data_list">
+                    <td>{{$index + 1}}</td>
+                    <td ng-repeat="title in table_title"
+                        ng-class="{'bg-danger':data.error[title.field]}">
+                        <div ng-if="!data.error[title.field]">
+                            {{data[title.field]}}
+                        </div>
+                        <div ng-if="data.error[title.field]"
+                            uib-popover={{data.error[title.field]}}
+                            popover-trigger="'mouseenter'"
+                        >{{data[title.field]}}</div>
+                    </td>
+                    <td>
+                        <p ng-repeat="error_name in keys(data.error)"
+                            style="margin:5px 0;" class="text-danger">
+                            {{data.error[error_name]}}
+                        </p>
+                        <p ng-if="!keys(data.error)">无</p>
+                    </td>
+                </tr>
+			</tfoot>
+		</table>
+        <paging
+          page="page_state.current_page"
+          page-size="20"
+          total="page_state.count"
+          show-prev-next="true"
+          show-first-last="true"
+          hide-if-empty="true"
+          paging-action="pageChanged(page)"
+          style="float: right;">
+        </paging>
+        <script type="text/javascript">
+            jQuery( document ).ready( function( $ ) {
+                var $table_upload = jQuery( '#table-upload' );
+
+                // Initialize DataTable
+                $table_upload.DataTable( {
+                    "sDom": "tip",
+                    "ordering": false,
+                    "paging": false,
+                    "bInfo": false,
+                    "bStateSave": true
+                });
+            });
+		</script>
+    </div>
+</div>

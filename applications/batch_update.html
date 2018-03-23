@@ -1,0 +1,454 @@
+<h2>批量更新信息</h2>
+<br />
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="panel panel-primary" style="position:relative;"
+            ng-class="{'filter-panel-limit':!page_state.show_all_filters}">
+
+            <div class="panel-body">
+
+                <form role="form">
+
+                    <div class="row form-group form-horizontal">
+                        <label for="field-1" class="col-sm-2 control-label">申请编号</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="field-1" ng-model="page_state.filters.app_id"
+                            placeholder="申请编号">
+                        </div>
+
+                        <label for="field-2" class="col-sm-2 control-label">申请人姓名</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="field-2" ng-model="page_state.filters.clt_nm"
+                            placeholder="申请人姓名">
+                        </div>
+                    </div>
+                    <div class="row form-group form-horizontal">
+                        <label for="field-3" class="col-sm-2 control-label">手机号</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="field-3" ng-model="page_state.filters.mobile"
+                            placeholder="手机号">
+                        </div>
+                        <label for="field-4" class="col-sm-2 control-label">身份证号</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="field-4" ng-model="page_state.filters.id_no"
+                            placeholder="身份证号">
+                        </div>
+                    </div>
+
+                    <div class="row form-group form-horizontal">
+                        <label for="field-5" class="col-sm-2 control-label">经销商名称</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="field-5"
+                                ng-model="page_state.filters.dlr_nm"
+                                placeholder="经销商名称">
+                        </div>
+
+                        <label for="field-6" class="col-sm-2 control-label">工作单位</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="field-6"
+                                ng-model="page_state.filters.company_name"
+                                placeholder="工作单位">
+                        </div>
+                    </div>
+
+                    <div class="row form-group form-horizontal">
+                        <label class="col-sm-2 control-label">开店专员（AM）</label>
+                        <div class="col-sm-3">
+                            <select class="form-control" ng-model="page_state.filters.manage_staff">
+                                <option value="" selected>全部</option>
+                                <option value="{{staff.id}}" ng-repeat="staff in page_state.manage_staff_list">{{staff.name}}</option>
+                            </select>
+                        </div>
+
+                        <label class="col-sm-2 control-label">审单员</label>
+                        <div class="col-sm-3">
+                            <select class="form-control" ng-model="page_state.filters.post_loan_staff_owner">
+                                <option value="" selected>全部</option>
+                                <option value="{{staff.id}}" ng-repeat="staff in page_state.owner_staff_list">{{staff.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row form-group form-horizontal">
+
+                        <label for="field-7" class="col-sm-2 control-label">车型</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="field-7"
+                                ng-model="page_state.filters.trix"
+                                placeholder="车型">
+                        </div>
+
+                        <label class="col-sm-2 control-label">申请状态</label>
+                        <div class="col-sm-3">
+                            <select class="form-control" ng-model="page_state.filters.status">
+                                <option value="" selected>全部</option>
+                                <option value="{{status}}" ng-repeat="(status,status_name) in page_state.application_status">{{status_name}}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row form-group form-horizontal">
+                        <label for="field-2" class="control-label col-sm-2" style="padding: 12px 15px 5px 15px;">上牌地所在地</label>
+                        <div class="col-sm-8 row" style="margin-left:0;">
+                            <div class="row" style="margin:0;padding: 5px 0px 5px 5px;
+                                    border: 1px solid #ebebeb;">
+                                <span class="_style" style="padding-left:10px;">省</span>
+                                <div class="col-sm-3">
+                                    <select class="form-control"
+                                        ng-model="page_state.place_filter.province">
+                                        <option value="" selected>全部</option>
+                                        <option value="{{province.areaname}}" ng-repeat="province in page_state.province_list">{{province.areaname}}</option>
+                                    </select>
+                                </div>
+                                <span class="_style">市</span>
+                                <div class="col-sm-3">
+                                    <select class="form-control"
+                                        ng-model="page_state.place_filter.city">
+                                        <option value="" selected>全部</option>
+                                        <option value="{{city.areaname}}" ng-repeat="city in page_state.city_list">{{city.areaname}}</option>
+                                    </select>
+                                </div>
+                                <span class="_style">区</span>
+                                <div class="col-sm-3">
+                                    <select class="form-control"
+                                        ng-model="page_state.place_filter.district">
+                                        <option value="" selected>全部</option>
+                                        <option value="{{district.areaname}}" ng-repeat="district in page_state.district_list">{{district.areaname}}</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row form-group form-horizontal">
+                        <label class="col-sm-2 control-label">申请时间</label>
+                        <datepicker
+                            date-format="yyyy-MM-dd"
+                            date-max-limit="{{page_state.filters.app_ts_r_1 || now}}"
+                            date-typer="true"
+                            class="picker col-sm-3"
+                        >
+                            <input
+                                ng-model="page_state.filters.app_ts_r_0"
+                                type="text"
+                                placeholder="申请时间（From）"
+                                class="form-control"
+                            />
+                        </datepicker>
+                        <span class="_style">-</span>
+                        <datepicker
+                            date-format="yyyy-MM-dd"
+                            date-min-limit="{{page_state.filters.app_ts_r_0}}"
+                            date-max-limit="{{now}}"
+                            date-typer="true"
+                            class="picker col-sm-3"
+                        >
+                            <input
+                                ng-model="page_state.filters.app_ts_r_1"
+                                type="text"
+                                placeholder="申请时间（To）"
+                                class="form-control"
+                            />
+                        </datepicker>
+                    </div>
+
+                    <div class="row form-group form-horizontal">
+                        <label class="col-sm-2 control-label">批复时间</label>
+                        <datepicker
+                            date-format="yyyy-MM-dd"
+                            date-max-limit="{{page_state.filters.finance_plan_ts_r_1 || now}}"
+                            date-typer="true"
+                            class="picker col-sm-3"
+                        >
+                            <input
+                                ng-model="page_state.filters.finance_plan_ts_r_0"
+                                type="text"
+                                placeholder="批复时间（From）"
+                                class="form-control"
+                            />
+                        </datepicker>
+                        <span class="_style">-</span>
+                        <datepicker
+                            date-format="yyyy-MM-dd"
+                            date-min-limit="{{page_state.filters.finance_plan_ts_r_0}}"
+                            date-max-limit="{{now}}"
+                            date-typer="true"
+                            class="picker col-sm-3"
+                        >
+                            <input
+                                ng-model="page_state.filters.finance_plan_ts_r_1"
+                                type="text"
+                                placeholder="批复时间（To）"
+                                class="form-control"
+                            />
+                        </datepicker>
+                    </div>
+
+                    <div class="row form-group form-horizontal">
+                        <label class="col-sm-2 control-label">放款时间</label>
+                        <datepicker
+                            date-format="yyyy-MM-dd"
+                            date-max-limit="{{page_state.filters.loan_ts_r_1 || now}}"
+                            date-typer="true"
+                            class="picker col-sm-3"
+                        >
+                            <input
+                                ng-model="page_state.filters.loan_ts_r_0"
+                                type="text"
+                                placeholder="放款时间（From）"
+                                class="form-control"
+                            />
+                        </datepicker>
+                        <span class="_style">-</span>
+                        <datepicker
+                            date-format="yyyy-MM-dd"
+                            date-min-limit="{{page_state.filters.loan_ts_r_0}}"
+                            date-max-limit="{{now}}"
+                            date-typer="true"
+                            class="picker col-sm-3"
+                        >
+                            <input
+                                ng-model="page_state.filters.loan_ts_r_1"
+                                type="text"
+                                placeholder="放款时间（To）"
+                                class="form-control"
+                            />
+                        </datepicker>
+
+                        <button type="button"
+                            class="btn btn-primary col-sm-1 col-sm-offset-1 btn-search"
+                            ng-click="searchFirstApplications()"
+                        >查询</button>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+        <a class="link-underline"
+            style="position: absolute;
+                top: 420px;
+                right: 30px;
+                line-height: 40px;
+                z-index: 999;"
+            ng-click="page_state.show_all_filters=false;"
+            ng-if="page_state.show_all_filters"
+        >
+            收起
+            <i class="fa fa-angle-up"></i>
+        </a>
+        <a class="link-underline"
+            style="position: absolute;
+                top: 160px;
+                right: 30px;
+                line-height: 40px;
+                z-index: 999;"
+            ng-click="page_state.show_all_filters=true;"
+            ng-if="!page_state.show_all_filters"
+        >
+            展开
+            <i class="fa fa-angle-down"></i>
+        </a>
+        <form >
+            <h4 class="row form-group form-horizontal">
+                <label class="col-sm-2 control-label" style="text-align:left;">更新内容</label>
+                <div class="col-sm-2">
+                    <select class="form-control" ng-model="batch_update.field">
+                        <!-- <option value=""></option> -->
+                        <option ng-repeat="(field_key,field) in update_fields"
+                            ng-value="field_key">{{field.name}}</option>
+                    </select>
+                </div>
+                <div class="col-sm-2"
+                    ng-if="!batch_update.field || update_fields[batch_update.field].dtype=='char'">
+                    <input type="text" class="form-control"
+                        placeholder="待更新值" ng-model="batch_update.value">
+                </div>
+                <datepicker
+                    date-format="yyyy-MM-dd"
+                    date-typer="true"
+                    class="picker col-sm-2"
+                    ng-if="update_fields[batch_update.field].dtype=='date'"
+                >
+                    <input
+                        ng-model="batch_update.value"
+                        type="text"
+                        placeholder="待更新值"
+                        class="form-control"
+                        pattern="\d{4}-\d{2}-\d{2}"
+                    />
+                </datepicker>
+                <div class="col-sm-2">
+                    <button type="button"
+                        class="btn btn-primary btn-block"
+                        ng-click="batchUpdate()"
+                        ng-disabled="!batch_update.field || !batch_update.value"
+                    >批量更新</button>
+                </div>
+            </h4>
+        </form>
+
+
+        <table class="table table-bordered datatable" id="table-app-list">
+			<thead>
+				<tr>
+                    <th>
+                        全选
+                        <input type="checkbox" ng-model="page_state.select_all"
+                            ng-click="selectAllApplication()">
+                    </th>
+                    <th class="text-center">
+                        订单编号
+                    </th>
+                    <th class="text-center">
+                        申请人姓名
+                    </th>
+                    <th class="text-center">
+                        申请时间
+                    </th>
+                    <th class="text-center">
+                        经销商
+                    </th>
+                    <th class="text-center">
+                        工作单位
+                    </th>
+                    <th class="text-center">
+                        单位地址
+                    </th>
+                    <th class="text-center">
+                        订单状态
+                    </th>
+                    <th class="text-center">
+                        上牌地
+                    </th>
+                    <th class="text-center">
+                        车型
+                    </th>
+                    <th class="text-center">
+                        贷款金额
+                    </th>
+                    <th class="text-center">
+                        审单员
+                    </th>
+                    <th class="text-center"
+                        ng-if="current_state == 'applications'"
+                        style="min-width:100px;">
+                        操作
+                    </th>
+				</tr>
+			</thead>
+			<tbody>
+                <tr ng-repeat="application in applications">
+                    <td class="text-center">
+                        <input type="checkbox" ng-model="application.selected"
+                            ng-click="toggleSelect()">
+                    </td>
+                    <td class="text-center">
+                        <a ui-sref="menu.content.applications.detail.credit({app_id:application.app_id})"
+                            target="_blank"
+                            class="link-underline"
+                            ng-if="current_state == 'applications'">
+                            {{application.app_id}}
+                        </a>
+                        <a ui-sref="menu.content.postLoan.detail.base_info({app_id:application.app_id})"
+                            target="_blank"
+                            class="link-underline"
+                            ng-if="current_state == 'postLoan'">
+                            {{application.app_id}}
+                        </a>
+                        <p ng-if="application.source">{{application.source}}</p>
+                    </td>
+                    <td class="text-center">
+                        {{application.clt_nm || '-'}}
+                    </td>
+                    <td class="text-center">
+                        {{application.app_ts | date:'yyyy-MM-dd HH:mm:ss'}}
+                    </td>
+                    <td class="text-center">
+                        {{application.dlr_nm || '-'}}
+                    </td>
+                    <td class="text-center">
+                        {{application.company_name || '-'}}
+                    </td>
+                    <td class="text-center">
+                        {{application.work_adress || '-'}}
+                    </td>
+                    <td class="text-center">
+                        {{application.status || '-'}}
+                    </td>
+                    <td class="text-center">
+                        {{(application.plate_reg_addr) || '-'}}
+                    </td>
+                    <td class="text-center">
+                        {{(application.trix) || '-'}}
+                    </td>
+                    <td class="text-center">
+                        {{(application.loan_amt|parseint) || '-'}}
+                    </td>
+                    <td class="text-center">
+                        <div ng-if="current_state == 'applications'">
+                            <span ng-if="application.staff_owner">
+                                {{application.staff_owner}}
+                            </span>
+                            <button type="button" class="btn btn-primary"
+                                ng-if="!application.staff_owner"
+                                ng-click="open('ownApplication',application.app_id)">
+                                领取订单
+                            </button>
+                        </div>
+                        <div ng-if="current_state == 'postLoan'">
+                            <span ng-if="application.post_loan_staff_owner">
+                                {{application.post_loan_staff_owner}}
+                            </span>
+                            <button type="button" class="btn btn-primary"
+                                ng-if="!application.post_loan_staff_owner"
+                                ng-click="open('ownApplication',application.app_id)">
+                                领取订单
+                            </button>
+                        </div>
+
+                    </td>
+                    <td class="text-center"
+                        ng-if="current_state == 'applications'">
+                        <button type="button" class="btn btn-danger"
+                            ng-click="open('cancelApplication',application.app_id)">
+                            取消
+                        </button>
+                        <button type="button" class="btn btn-blue"
+                            ng-click="open('dragBackApplication',application.app_id)">
+                            拖回
+                        </button>
+                    </td>
+                </tr>
+			</tfoot>
+		</table>
+        <paging
+          page="page_state.current_page"
+          page-size="20"
+          total="page_state.count"
+          show-prev-next="true"
+          show-first-last="true"
+          hide-if-empty="true"
+          paging-action="pageChanged(page)"
+          style="float: right;">
+        </paging>
+        <script type="text/javascript">
+        jQuery( document ).ready( function( $ ) {
+            var $table_app_list = jQuery( '#table-app-list' );
+
+            // Initialize DataTable
+            $table_app_list.DataTable( {
+                "sDom": "tip",
+                "ordering": false,
+                "paging": false,
+                "bInfo": false,
+                "bStateSave": true
+            });
+        } );
+		</script>
+    </div>
+</div>

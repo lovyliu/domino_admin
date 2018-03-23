@@ -1,0 +1,159 @@
+<h2>车型管理</h2>
+<br />
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="panel panel-primary">
+
+            <div class="panel-body">
+
+                <form role="form">
+
+                    <div class="row form-group form-horizontal">
+
+                        <label class="col-sm-2 control-label">品牌</label>
+                        <div class="col-sm-3">
+                            <!-- <select class="form-control" ng-model="page_state.filters.brand">
+                                <option value="" selected>全部</option>
+                                <option ng-reeat="brand in brand_list"
+                                    ng-value="brand.brand_name">
+                                    {{brand.brand_name}}
+                                </option>
+                            </select> -->
+                            <input type="text"
+                                 class="form-control"
+                                ng-model="page_state.filters.trix__superior__brand_name"
+                                id="field-3"
+                                placeholder="品牌"
+                            >
+                        </div>
+
+                        <label class="col-sm-2 control-label">车系</label>
+                        <div class="col-sm-3">
+                            <!-- <select class="form-control" ng-model="page_state.filters.series">
+                                <option value="" selected>全部</option>
+                                <option ng-reeat="trix in trix_list"
+                                    ng-value="trix.brand_name">
+                                    {{trix.brand_name}}
+                                </option>
+                            </select> -->
+                            <input type="text"
+                                 class="form-control"
+                                ng-model="page_state.filters.trix__brand_name"
+                                id="field-4"
+                                placeholder="车系"
+                            >
+                        </div>
+
+                    </div>
+                    <div class="row form-group form-horizontal">
+                        <label class="col-sm-2 control-label">车型</label>
+                        <div class="col-sm-3">
+                            <!-- <select class="form-control" ng-model="page_state.filters.amount">
+                                <option value="全部" selected>全部</option>
+                                <option value="1">1</option>
+                            </select> -->
+                            <input type="text"
+                                 class="form-control"
+                                ng-model="page_state.filters.model_name"
+                                id="field-5"
+                                placeholder="车型"
+                            >
+                        </div>
+
+                        <label class="col-sm-2 control-label">排量</label>
+                        <div class="col-sm-3">
+                            <!-- <select class="form-control" ng-model="page_state.filters.amount">
+                                <option value="全部" selected>全部</option>
+                                <option value="1">1</option>
+                            </select> -->
+                            <input type="text"
+                                 class="form-control"
+                                ng-model="page_state.filters.eng_cap"
+                                id="field-4"
+                                placeholder="排量"
+                            >
+                        </div>
+
+
+                    </div>
+                    <div class="row form-group form-horizontal">
+                        <div class="col-sm-2 col-sm-offset-7">
+                            <button type="button"
+                                class="btn btn-primary btn-block"
+                                ng-click="searchFirstVehicles()"
+                            >查询</button>
+                        </div>
+                        <div class=" col-sm-2 col-sm-offset-1">
+                            <button type="button"
+                                class="btn btn-primary btn-block"
+                                ui-sref="menu.content.vehicle.newModel"
+                            >新增车型</button>
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+        <table class="table table-bordered datatable" id="table-vehicle-list">
+			<thead>
+				<tr>
+                    <th>品牌</th>
+                    <th>车系</th>
+                    <th>车辆型号名称</th>
+                    <th>排量</th>
+                    <th>厂商建议零售价（元）</th>
+                    <th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+                <tr ng-repeat="vehicle in vehicle_list">
+                    <td>{{vehicle.brand_name}}</td>
+                    <td>{{vehicle.trix_name}}</td>
+                    <td>
+                        <a ui-sref="menu.content.vehicle.detail({vehicle_id:vehicle.id})"
+                            class="link-underline" target="_blank">
+                            {{vehicle.model_name}}
+                        </a>
+                    </td>
+                    <td>{{vehicle.eng_cap}}</td>
+                    <td>{{vehicle.msrp}}</td>
+                    <td>
+                        <a class="btn btn-primary"
+                            ui-sref="menu.content.vehicle.detail({vehicle_id:vehicle.id})"
+                            target="_blank"
+                        >编辑</a>
+                    </td>
+                </tr>
+			</tfoot>
+		</table>
+        <paging
+          page="page_state.current_page"
+          page-size="20"
+          total="page_state.count"
+          show-prev-next="true"
+          show-first-last="true"
+          hide-if-empty="true"
+          paging-action="pageChanged(page)"
+          style="float: right;">
+        </paging>
+        <script type="text/javascript">
+        jQuery( document ).ready( function( $ ) {
+            var $table_vehicle_list = jQuery( '#table-vehicle-list' );
+
+            // Initialize DataTable
+            $table_vehicle_list.DataTable( {
+                "sDom": "tip",
+                "ordering": false,
+                "paging": false,
+                "bInfo": false,
+                "bStateSave": true
+            });
+        } );
+		</script>
+    </div>
+</div>

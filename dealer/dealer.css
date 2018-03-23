@@ -1,0 +1,25 @@
+/*new-dealer*/
+.new-dealer h4{
+    padding: 15px 0;
+}
+.select-list{
+    padding: 0;
+}
+.select-list p{
+    padding: 7px 10px;
+    margin: 0;
+    cursor: pointer;
+}
+.select-list p:hover{
+    background-color: #eeeeee;
+    color: #818da2;
+}
+.select-list p.selected{
+    background-color: #eeeeee;
+    color: #818da2;
+}
+
+.limit-height{
+    max-height: 36px;
+    overflow: hidden;
+}

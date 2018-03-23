@@ -1,0 +1,31 @@
+
+.contract .title{
+    font-size: 18px;
+    color: #222A36;
+    letter-spacing: 0.05px;
+    text-align: center;
+    padding: 28px 15px 18px;
+    border-bottom: 1px solid #ccc;
+    font-weight: normal;
+}
+.contract .item-header{
+    font-size: 15px;
+    color: #100018;
+    font-weight: normal;
+    margin-top: 36px;
+}
+.contract .header-text{
+    font-size: 15px;
+    color: #222A36;
+    line-height: 21px;
+    font-weight: normal;
+}
+.contract .item-list p{
+    font-size: 13px;
+    color: #2A2A2A;
+    line-height: 21px;
+}
+.contract .item-list p span{
+    color: #100018;
+    padding-right: 10px;
+}

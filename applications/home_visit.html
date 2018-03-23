@@ -1,0 +1,187 @@
+<div class="content loans">
+    <div class="content-fixed">
+        <div class="row">
+            <div class="col-sm-7" style="position: absolute;
+                left: 0;
+                right: 0;
+                top: 10px;
+                bottom: 10px;
+                overflow-y: scroll;"
+            >
+                <h3 class="text-center">上门家访登记表</h3>
+                <div class="row">
+                    <div class="col-sm-3">经办人::</div>
+                    <div class="col-sm-3">经办人电话:</div>
+                    <div class="col-sm-3">上门同去人员:</div>
+                    <div class="col-sm-3">日期:</div>
+                </div>
+                <table border="1" class="bg-white print-table" width="100%">
+                  <tr>
+                    <td rowspan="3" colspan="1">房产情况</td>
+                    <td colspan="2">调查方式</td>
+                    <td colspan="6">
+                        <input type="checkbox">房产中介
+                        <input type="checkbox">房地产公司
+                        <input type="checkbox">上门核实
+                        <input type="checkbox">村委会
+                    </td>
+                    <td colspan="2">核实情况</td>
+                    <td colspan="4">
+                        <input type="checkbox">地址相符
+                        <input type="checkbox">房主相符
+                        <input type="checkbox">面积相符
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">装修档次</td>
+                    <td colspan="4">
+                        <input type="checkbox">无装修
+                        <input type="checkbox">简装
+                        <input type="checkbox">中装
+                        <input type="checkbox">豪装
+                    </td>
+                    <td colspan="2">周边环境</td>
+                    <td colspan="6">
+                        <input type="checkbox">偏僻
+                        <input type="checkbox">郊区
+                        <input type="checkbox">小区
+                        <input type="checkbox">别墅
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">拆迁预判</td>
+                    <td colspan="12">
+                        <input type="checkbox">周围有少数拆迁
+                        <input type="checkbox">周围拆迁很多
+                        <input type="checkbox">无拆迁
+                    </td>
+                  </tr>
+                  <tr>
+                    <td rowspan="4" colspan="1">单位情况</td>
+                    <td colspan="2">调查方式</td>
+                    <td colspan="4">
+                        <input type="checkbox">上门调查
+                        <input type="checkbox">其他方式
+                    </td>
+                    <td colspan="2">核实情况</td>
+                    <td colspan="6">
+                        <input type="checkbox">单位地址符合
+                        <input type="checkbox">营业执照符合
+                        <input type="checkbox">单位名称符合
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">营业执照</td>
+                    <td colspan="4">
+                        <input type="checkbox">有
+                        <input type="checkbox">无
+                    </td>
+                    <td colspan="2">单位性质</td>
+                    <td colspan="6">
+                        <input type="checkbox">个体
+                        <input type="checkbox">私营
+                        <input type="checkbox">机关单位
+                        <input type="checkbox">国企
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">单位面积</td>
+                    <td colspan="6">
+                        <input type="checkbox">100以下
+                        <input type="checkbox">100-200
+                        <input type="checkbox">200-400
+                        <input type="checkbox">400以上
+                    </td>
+                    <td colspan="2">工作氛围</td>
+                    <td colspan="4">
+                        <input type="checkbox">很好
+                        <input type="checkbox">一般
+                        <input type="checkbox">较差
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">单位职员</td>
+                    <td colspan="6">
+                        <input type="checkbox">20以下
+                        <input type="checkbox">20-50人
+                        <input type="checkbox">50-150人
+                        <input type="checkbox">150以上
+                    </td>
+                    <td colspan="2">周边环境</td>
+                    <td colspan="4">
+                        <input type="checkbox">偏僻较差
+                        <input type="checkbox">周围店铺情况不好
+                        <input type="checkbox">有拆迁
+                        <input type="checkbox">繁华地段
+                    </td>
+                  </tr>
+                  <tr>
+                    <td rowspan="2" colspan="1">家庭情况</td>
+                    <td colspan="2">外观穿着</td>
+                    <td colspan="5">
+                        <input type="checkbox">朴素一般
+                        <input type="checkbox">时尚流行
+                        <input type="checkbox">品牌服饰较多
+                    </td>
+                    <td colspan="3">家庭成员及子女情况</td>
+                    <td colspan="4">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="3">言谈举止及态度</td>
+                    <td colspan="11">
+                        <input type="checkbox">不待见
+                        <input type="checkbox">一般
+                        <input type="checkbox">很和气
+                        <input type="checkbox">很有礼貌，礼节
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="4">车辆情况(须客户口述)</td>
+                    <td>车型:</td>
+                    <td colspan="2"></td>
+                    <td colspan="2">
+                        <input type="checkbox">新车
+                        <input type="checkbox">二手车
+                    </td>
+                    <td>车价:</td>
+                    <td colspan="2"></td>
+                    <td>贷款额::</td>
+                    <td colspan="2"></td>
+                  </tr>
+                  <tr>
+                    <td rowspan="3" colspan="1" height="162">家访人意见</td>
+                    <td rowspan="3" colspan="14" style="position: relative;">
+                        <div>{{home_visit_note.home_visit_note}}</div>
+                        <p style="overflow: hidden;position: absolute;bottom: 0;width: 100%;right: 0;">
+                            <span class="pull-right" style="margin-right: 60px;">日期:</span>
+                            <span class="pull-right" style="margin-right: 60px;">家访人签字:</span>
+                        </p>
+                    </td>
+                  </tr>
+                </table>
+            </div>
+            <div class="col-sm-5 submit-block" style="left:auto;top:10px;">
+                <div class="row form-group form-horizontal"
+                    style="position: absolute;width: 100%;top: 66px;">
+                    <div class="col-sm-12" style="margin-bottom: 20px;">
+                        <textarea name="name" style="width:100%;height:300px;"
+                            placeholder="请输入家访人意见"
+                            ng-model="home_visit_note.home_visit_note"
+                            ng-disabled="current_state != 'applications'"
+                        ></textarea>
+                    </div>
+                    <div class="col-sm-3">
+                        <button type="button"
+                            class="btn btn-success btn-block"
+                            style="max-width:120px;"
+                            ng-disabled="!home_visit_note.home_visit_note||current_state != 'applications'"
+                            ng-click="updateHomeVisitNote(home_visit_note.id,home_visit_note.home_visit_note)"
+                        >保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

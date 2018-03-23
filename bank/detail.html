@@ -1,0 +1,701 @@
+<ol class="breadcrumb bc-3" >
+    <li>
+        <a ui-sref="menu.content.bank.list">金融机构管理</a>
+    </li>
+    <li class="active">
+        <strong>金融机构管理信息编辑</strong>
+    </li>
+</ol>
+<h2>金融机构管理信息编辑</h2>
+<br />
+<ul class="nav nav-tabs bordered" style="margin: 0;margin-top: 5px;">
+    <li ng-class="{'active': tab == 'basic'}">
+        <a ng-click="changeTab('basic')" data-toggle="tab">
+            <span class="visible-xs"><i class="entypo-info-circle"></i></span>
+            <span class="hidden-xs">基础信息</span>
+        </a>
+    </li>
+    <li ng-class="{'active': tab == 'proto_rate'}">
+        <a ng-click="changeTab('proto_rate')" data-toggle="tab">
+            <span class="visible-xs"><i class="entypo-car"></i></span>
+            <span class="hidden-xs">金融产品配置</span>
+        </a>
+    </li>
+    <li ng-class="{'active': tab == 'plate'}">
+        <a ng-click="changeTab('plate')" data-toggle="tab">
+            <span class="visible-xs"><i class="entypo-lacation"></i></span>
+            <span class="hidden-xs">上牌备案地管理</span>
+        </a>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane" ng-class="{'active': tab == 'basic'}">
+        <div class="row employee-info">
+            <form ng-submit="updateBank()" name="form">
+                <h4 class="col-sm-12">金融机构信息编辑</h4>
+                <div class="col-sm-5">
+                    <table class="table table-bordered">
+            			<tbody>
+                            <tr>
+                                <td>金融机构名称*</td>
+                                <td>
+                                    <input type="text" class="form-control"
+                                        ng-model="post_data.name" required>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>机构类型*</td>
+                                <td>
+                                    <select class="form-control" ng-model="post_data.dtype" required>
+                                        <option value=""></option>
+                                        <option ng-value="type_key" ng-repeat="(type_key,type_name) in bank_types">{{type_name}}</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Base 省份</td>
+                                <td>
+                                    <select class="form-control" ng-model="post_data.province">
+                                        <option ng-value="province.id" ng-repeat="province in province_list">
+                                            {{province.areaname}}
+                                        </option>
+                                    </select>
+                                </td>
+                            </tr>
+            			</tfoot>
+            		</table>
+                </div>
+
+                <h4 class="col-sm-12">金融机构利率／费率信息</h4>
+                <h6 class="col-sm-12">
+                    <i class="fa fa-exclamation-triangle text-danger"></i>
+                    此处为金融机构成本费率，用于计算「合同本金」，与金融产品模型的对外费率不同
+                </h6>
+                <div class="col-sm-10">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>新车／二手车</th>
+                                <th>省内／省外</th>
+                                <th>1年费率（%）</th>
+                                <th>2年费率（%）</th>
+                                <th>3年费率（%）</th>
+                            </tr>
+                        </thead>
+            			<tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>新车</td>
+                                <td>省内</td>
+                                <td>
+                                    <input type="text" ng-model="post_data.rate_12">
+                                </td>
+                                <td>
+                                    <input type="text" ng-model="post_data.rate_24">
+                                </td>
+                                <td>
+                                    <input type="text" ng-model="post_data.rate_36">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>新车</td>
+                                <td>省外</td>
+                                <td>
+                                    <input type="text" ng-model="post_data.other_rate_12">
+                                </td>
+                                <td>
+                                    <input type="text" ng-model="post_data.other_rate_24">
+                                </td>
+                                <td>
+                                    <input type="text" ng-model="post_data.other_rate_36">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>二手车</td>
+                                <td>省内</td>
+                                <td>
+                                    <input type="text" ng-model="post_data.rate_second_12">
+                                </td>
+                                <td>
+                                    <input type="text" ng-model="post_data.rate_second_24">
+                                </td>
+                                <td>
+                                    <input type="text" ng-model="post_data.rate_second_36">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>二手车</td>
+                                <td>省外</td>
+                                <td>
+                                    <input type="text" ng-model="post_data.other_rate_second_12">
+                                </td>
+                                <td>
+                                    <input type="text" ng-model="post_data.other_rate_second_24">
+                                </td>
+                                <td>
+                                    <input type="text" ng-model="post_data.other_rate_second_36">
+                                </td>
+                            </tr>
+            			</tfoot>
+            		</table>
+                </div>
+
+                <div class="col-sm-12 save-button" style="margin-bottom:20px;">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <button type="submit" class="btn btn-primary"
+                                style="width: 100%;max-width: 120px;">保存</button>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" class="btn btn-danger"
+                                style="width: 100%;max-width: 120px;"
+                                ng-click="deleteBank()">删除</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <div class="tab-pane" ng-class="{'active': tab == 'proto_rate'}">
+        <form name="form">
+            <div class="row employee-info">
+
+                <h4 class="col-sm-12">金融产品配置</h4>
+                <div class="col-sm-3">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading select-search">
+                            <div class="panel-title">
+                                <div class="input-group">
+                                    <input type="text" class="form-control"
+                                        ng-model="search.proto_rate">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default"
+                                            type="button"
+                                            ng-click="searchProtoRate()">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-body select-list">
+
+                            <div class="scrollable" data-height="150">
+                                <div style="min-height:150px;">
+                                    <p ng-repeat="proto_rate in proto_rate_list"
+                                        ng-class="{'selected':selected_proto_rate_id == proto_rate.id}"
+                                        ng-click="selectProtoRate($index)"
+                                        ng-if="added_proto_rate_id_list.indexOf(proto_rate.id) == -1"
+                                    >{{proto_rate.name}}</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-sm-1" style="margin-top:63px;">
+                    <button type="button"
+                        class="btn btn-default btn-block"
+                        ng-click="addToProtoRateList()">
+                        <i class="fa fa-arrow-right"></i>
+                    </button>
+                    <button type="button"
+                        class="btn btn-default btn-block"
+                        ng-click="removeFromProtoRateList()">
+                        <i class="fa fa-arrow-left"></i>
+                    </button>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="panel panel-primary">
+                        <!-- <div class="panel-heading">
+                            <div class="panel-title">已选择</div>
+                        </div> -->
+                        <div class="panel-heading select-search">
+                            <div class="panel-title">
+                                <div class="input-group">
+                                    <input type="text" class="form-control"
+                                        ng-model="search.added_proto_rate">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default"
+                                            type="button"
+                                            >
+                                            <!-- ng-click="searchAddedProtoRate()" -->
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-body select-list">
+
+                            <div class="scrollable" data-height="150">
+                                <div style="min-height:150px;">
+                                    <p ng-repeat="added_proto_rate in added_proto_rate_list"
+                                        ng-class="{'selected':selected_added_proto_rate_id == added_proto_rate.id}"
+                                        ng-click="selectAddedProtoRate($index)"
+                                    >{{added_proto_rate.name}}</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <button type="button" class="btn btn-default btn-block"
+                        ng-click="addAllToProtoRateList()"
+                        style="max-width:120px;margin:0 auto;">
+                        全部添加
+                    </button>
+                </div>
+                <div class="col-sm-3 col-sm-offset-1">
+                    <button type="button" class="btn btn-default btn-block"
+                        ng-click="removeAllFromProtoRateList()"
+                        style="max-width:120px;margin:0 auto;">
+                        全部删除
+                    </button>
+                </div>
+                <!-- <div class="col-sm-2 col-sm-offset-1">
+                    <button type="submit" class="btn btn-primary btn-block"
+                        style="max-width:120px;"
+                    >保存</button>
+                </div> -->
+                <div class="col-sm-2">
+                    <a class="btn btn-default btn-block"
+                        style="max-width:120px;"
+                        ui-sref="menu.content.protoRate.list"
+                        target="_blank"
+                    >管理产品模型</a>
+                </div>
+            </div>
+        </form>
+        <hr>
+        <table class="table table-bordered datatable" id="table-bank1">
+			<thead>
+				<tr>
+                    <th>金融产品ID</th>
+                    <th>金融产品名称</th>
+                    <th>利率</th>
+                    <th>2年经销商返点</th>
+                    <th>3年经销商返点</th>
+                    <th>2年万元系数</th>
+                    <th>3年万元系数</th>
+                    <th>2年费率</th>
+                    <th>3年费率</th>
+				</tr>
+			</thead>
+			<tbody>
+                <tr ng-repeat="proto_rate in added_proto_rate_list">
+                    <td>{{proto_rate.id}}</td>
+                    <td>{{proto_rate.name||'-'}}</td>
+                    <td>{{proto_rate.interest_rate||'-'}}</td>
+                    <td>{{proto_rate.rebate_24||'-'}}</td>
+                    <td>{{proto_rate.rebate_36||'-'}}</td>
+                    <td>{{proto_rate.million_coefficient_24||'-'}}</td>
+                    <td>{{proto_rate.million_coefficient_36||'-'}}</td>
+                    <td>{{proto_rate.rate_24||'-'}}</td>
+                    <td>{{proto_rate.rate_36||'-'}}</td>
+                </tr>
+			</tfoot>
+		</table>
+        <paging
+          page="page_state.current_page"
+          page-size="20"
+          total="page_state.count"
+          show-prev-next="true"
+          show-first-last="true"
+          hide-if-empty="true"
+          paging-action="pageChanged(page)"
+          style="float: right;">
+        </paging>
+        <script type="text/javascript">
+        jQuery( document ).ready( function( $ ) {
+            var $table_bank1 = jQuery( '#table-bank1' );
+
+            // Initialize DataTable
+            $table_bank1.DataTable( {
+                "sDom": "tip",
+                "ordering": false,
+                "paging": false,
+                "bInfo": false,
+                "bStateSave": true
+            });
+        } );
+		</script>
+    </div>
+
+    <div class="tab-pane" ng-class="{'active': tab == 'plate'}">
+        <div class="row employee-info">
+
+            <h4 class="col-sm-12">金融机构上牌备案地</h4>
+            <div class="col-sm-5 row">
+                <div class="col-sm-4">
+                    <div class="panel panel-primary">
+                        <!-- <div class="panel-heading">
+                            <div class="panel-title">省</div>
+                        </div> -->
+                        <div class="panel-heading select-search">
+                            <div class="panel-title">
+                                <div class="input-group">
+                                    <input type="text" class="form-control"
+                                        ng-model="search.province">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default"
+                                            type="button"
+                                            ng-click="searchProvince()">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-body select-list">
+
+                            <div class="scrollable" data-height="150">
+                                <div style="min-height:150px;">
+                                    <p ng-repeat="province in province_list"
+                                        ng-class="{'selected':selected_place.name == province.areaname}"
+                                        ng-click="selectProvince($index)"
+                                    >{{province.areaname}}</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="panel panel-primary">
+                        <!-- <div class="panel-heading">
+                            <div class="panel-title">市</div>
+                        </div> -->
+                        <div class="panel-heading select-search">
+                            <div class="panel-title">
+                                <div class="input-group">
+                                    <input type="text" class="form-control"
+                                        ng-model="search.city">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default"
+                                            type="button"
+                                            ng-click="searchCity()">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-body select-list">
+
+                            <div class="scrollable" data-height="150">
+                                <div style="min-height:150px;">
+                                    <p ng-repeat="city in city_list"
+                                        ng-class="{'selected':selected_place.name == city.areaname}"
+                                        ng-click="selectCity($index)"
+                                    >{{city.areaname}}</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="panel panel-primary">
+                        <!-- <div class="panel-heading">
+                            <div class="panel-title">区</div>
+                        </div> -->
+                        <div class="panel-heading select-search">
+                            <div class="panel-title">
+                                <div class="input-group">
+                                    <input type="text" class="form-control"
+                                        ng-model="search.district">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default"
+                                            type="button"
+                                            ng-click="searchDistrict()">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-body select-list">
+
+                            <div class="scrollable" data-height="150">
+                                <div style="min-height:150px;">
+                                    <p ng-repeat="district in district_list"
+                                        ng-class="{'selected':selected_place.name == district.areaname}"
+                                        ng-click="selectDistrict($index)"
+                                    >{{district.areaname}}</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-sm-4" style="text-align:center;">
+                    <button type="button" class="btn btn-default"
+                        ng-click="addAllProvince()">
+                        全部添加
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-sm-2 row" style="margin-top:63px;">
+                <div class="col-sm-6 col-sm-offset-3">
+                    <button type="button" class="btn btn-default btn-block"
+                        ng-click="addToPlateList()">
+                        <i class="fa fa-arrow-right"></i>
+                    </button>
+                    <button type="button" class="btn btn-default btn-block"
+                        ng-click="removeFromPlateList()">
+                        <i class="fa fa-arrow-left"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-sm-5 row">
+                <div class="col-sm-4">
+                    <div class="panel panel-primary">
+                        <!-- <div class="panel-heading">
+                            <div class="panel-title">省</div>
+                        </div> -->
+                        <div class="panel-heading select-search">
+                            <div class="panel-title">
+                                <div class="input-group">
+                                    <input type="text" class="form-control"
+                                        ng-model="search.added_province">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default"
+                                            type="button"
+                                            ng-click="searchAddedProvince()">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-body select-list">
+
+                            <div class="scrollable" data-height="150">
+                                <div style="min-height:150px;">
+                                    <p ng-repeat="province in added_province_list"
+                                        ng-class="{'selected':selected_added_place.name == province.areaname}"
+                                        ng-click="selectAddedProvince($index)"
+                                    >{{province.areaname}}</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="panel panel-primary">
+                        <!-- <div class="panel-heading">
+                            <div class="panel-title">市</div>
+                        </div> -->
+                        <div class="panel-heading select-search">
+                            <div class="panel-title">
+                                <div class="input-group">
+                                    <input type="text" class="form-control"
+                                        ng-model="search.added_city">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default"
+                                            type="button"
+                                            ng-click="searchAddedCity()">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-body select-list">
+
+                            <div class="scrollable" data-height="150">
+                                <div style="min-height:150px;">
+                                    <p ng-repeat="city in added_city_list"
+                                        ng-class="{'selected':selected_added_place.name == city.areaname}"
+                                        ng-click="selectAddedCity($index)"
+                                    >{{city.areaname}}</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="panel panel-primary">
+                        <!-- <div class="panel-heading">
+                            <div class="panel-title">区</div>
+                        </div> -->
+                        <div class="panel-heading select-search">
+                            <div class="panel-title">
+                                <div class="input-group">
+                                    <input type="text" class="form-control"
+                                        ng-model="search.added_district">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default"
+                                            type="button"
+                                            ng-click="searchAddedDistrict()">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-body select-list">
+
+                            <div class="scrollable" data-height="150">
+                                <div style="min-height:150px;">
+                                    <p ng-repeat="district in added_district_list"
+                                        ng-class="{'selected':selected_added_place.name == district.areaname}"
+                                        ng-click="selectAddedDistrict($index)"
+                                    >{{district.areaname}}</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-sm-4" style="text-align:center;">
+                    <button type="button" class="btn btn-default"
+                        ng-click="removeAllProvince()">
+                        全部删除
+                    </button>
+                </div>
+            </div>
+
+        </div>
+        <hr>
+        <div class="row form-group form-horizontal">
+            <div class="col-sm-4">
+                <input type="text" class="col-sm-4 form-control"
+                    ng-model="page_state.search_added_name"
+                    placeholder="请输入省／市／区／县／行政特区进行搜索">
+            </div>
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-primary btn-block"
+                    ng-click="searchAddedPlates()" style="max-width:120px;">
+                    查询
+                </button>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-sm-10">
+                <table class="table table-bordered datatable" id="table-bank2">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>省／直辖市／行政特区</th>
+                            <th>市</th>
+                            <th>区／县</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="plate in added_plate_list">
+                            <td>{{(page_state.plate_current_page-1)*20 + $index+1}}</td>
+                            <td>{{plate.areaname}}</td>
+                            <td>{{plate._parent}}</td>
+                            <td>{{plate._parent_parent}}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+                <paging
+                  page="page_state.plate_current_page"
+                  page-size="20"
+                  total="page_state.plate_count"
+                  show-prev-next="true"
+                  show-first-last="true"
+                  hide-if-empty="true"
+                  paging-action="platePageChanged(page)"
+                  style="float: right;">
+                </paging>
+                <script type="text/javascript">
+                    jQuery( document ).ready( function( $ ) {
+                        var $table_bank2 = jQuery( '#table-bank2' );
+
+                        // Initialize DataTable
+                        $table_bank2.DataTable( {
+                            "sDom": "tip",
+                            "ordering": false,
+                            "paging": false,
+                            "bInfo": false,
+                            "bStateSave": true
+                        });
+                    } );
+                </script>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<script>
+
+
+$(document).ready(function()
+{
+    // Scrollable
+    if($.isFunction($.fn.slimScroll))
+    {
+        $(".scrollable").each(function(i, el)
+        {
+            var $this = $(el),
+                height = attrDefault($this, 'height', $this.height());
+
+            if($this.is(':visible'))
+            {
+                $this.removeClass('scrollable');
+
+                if($this.height() < parseInt(height, 10))
+                {
+                    height = $this.outerHeight(true) + 10;
+                }
+
+                $this.addClass('scrollable');
+            }
+
+            $this.css({maxHeight: ''}).slimScroll({
+                height: height,
+                position: attrDefault($this, 'scroll-position', 'right'),
+                color: attrDefault($this, 'rail-color', '#000'),
+                size: attrDefault($this, 'rail-width', 6),
+                borderRadius: attrDefault($this, 'rail-radius', 3),
+                opacity: attrDefault($this, 'rail-opacity', .3),
+                alwaysVisible: parseInt(attrDefault($this, 'autohide', 1), 10) == 1 ? false : true
+            });
+        });
+    }
+})
+
+</script>

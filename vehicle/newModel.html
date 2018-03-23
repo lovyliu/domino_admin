@@ -1,0 +1,220 @@
+<ol class="breadcrumb bc-3" >
+    <li>
+        <a ui-sref="menu.content.vehicle.list">车型管理</a>
+    </li>
+    <li class="active">
+        <strong>新增车型</strong>
+    </li>
+</ol>
+<h2>车辆信息</h2>
+<br>
+<div class="row new-dealer">
+    <div class="col-md-12">
+        <form role="form" ng-submit="createVehicle()" name="form">
+            <h4>选择品牌信息</h4>
+            <div class="row form-group form-horizontal">
+                <div class="col-sm-3">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="panel-title">品牌＊</div>
+                        </div>
+                        <div class="panel-heading select-search">
+                            <div class="panel-title">
+                                <div class="input-group">
+                                    <input type="text" class="form-control"
+                                        ng-model="page_state.brand_filters.brand_name">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default"
+                                            type="button"
+                                            ng-click="searchBrand()">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-body select-list">
+
+                            <div class="scrollable" data-height="150">
+                                <div style="min-height:150px;">
+                                    <p ng-repeat="brand in brand_list"
+                                        ng-class="{'selected':selected_brand_index == $index}"
+                                        ng-click="selectBrand($index)"
+                                    >{{brand.brand_name}}</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="panel-title">车系＊</div>
+                        </div>
+
+                        <div class="panel-heading select-search">
+                            <div class="panel-title">
+                                <div class="input-group">
+                                    <input type="text" class="form-control"
+                                        ng-model="page_state.trix_filters.brand_name">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default"
+                                            type="button"
+                                            ng-click="searchTrix()"
+                                        >
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-body select-list">
+
+                            <div class="scrollable" data-height="150">
+                                <div style="min-height:150px;">
+                                    <p ng-repeat="trix in trix_list"
+                                        ng-class="{'selected':selected_trix_index == $index}"
+                                        ng-click="selectTrix($index)"
+                                    >{{trix.brand_name}}</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <h4>输入车型信息</h4>
+            <div class="row form-group form-horizontal">
+                <label for="field-1" class="control-label col-sm-2">车辆型号名称</label>
+                <div class="col-sm-5">
+                    <input type="text" id="field-1"
+                        name="model_name"
+                        ng-model="vehicle.model_name"
+                        placeholder="车辆型号名称"
+                        class="form-control"
+                        required
+                    >
+                    <span class="error-msg"
+                         ng-show="(form.model_name.$dirty || submitted) && form.model_name.$error.required"
+                    >请输入车辆型号名称</span>
+                </div>
+            </div>
+            <div class="row form-group form-horizontal">
+                <label for="field-2" class="control-label col-sm-2">厂商建议零售价（元）</label>
+                <div class="col-sm-3">
+                    <input type="text" id="field-2"
+                        name="msrp"
+                        ng-model="vehicle.msrp"
+                        placeholder="厂商建议零售价"
+                        class="form-control"
+                        required
+                    >
+                    <span class="error-msg"
+                         ng-show="(form.msrp.$dirty || submitted) && form.msrp.$error.required"
+                    >请输入厂商建议零售价</span>
+                </div>
+            </div>
+            <div class="row form-group form-horizontal">
+                <label for="field-3" class="control-label col-sm-2">排量</label>
+                <div class="col-sm-3">
+                    <input type="text" id="field-3"
+                        name="eng_cap"
+                        ng-model="vehicle.eng_cap"
+                        placeholder="排量"
+                        class="form-control"
+                        required
+                    >
+                    <span class="error-msg"
+                         ng-show="(form.eng_cap.$dirty || submitted) && form.eng_cap.$error.required"
+                    >请输入排量</span>
+                </div>
+            </div>
+            <div class="row form-group form-horizontal">
+                <label for="field-4" class="control-label col-sm-2">座位数</label>
+                <div class="col-sm-5">
+                    <input type="text" id="field-4"
+                        name="seat_number"
+                        ng-model="vehicle.seat_number"
+                        placeholder="座位数"
+                        class="form-control"
+                        required
+                    >
+                    <span class="error-msg"
+                         ng-show="(form.seat_number.$dirty || submitted) && form.seat_number.$error.required"
+                    >请输入座位数</span>
+                </div>
+            </div>
+            <div class="row form-group form-horizontal">
+                <label class="control-label col-sm-2">国产／合资</label>
+                <div class="col-sm-2">
+                    <select class="form-control"
+                        ng-model="vehicle.maker_type"
+                        name="maker_type">
+                        <option value="国产" selected>国产</option>
+                        <option value="合资">合资</option>
+                        <option value="进口">进口</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row form-group form-horizontal" style="margin-top:50px;">
+                <div class="col-sm-2">
+                    <button type="submit"
+                        class="btn btn-primary btn-block"
+                    >创建</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+
+
+
+
+<script>
+
+
+$(document).ready(function()
+{
+    // Scrollable
+    if($.isFunction($.fn.slimScroll))
+    {
+        $(".scrollable").each(function(i, el)
+        {
+            var $this = $(el),
+                height = attrDefault($this, 'height', $this.height());
+
+            if($this.is(':visible'))
+            {
+                $this.removeClass('scrollable');
+
+                if($this.height() < parseInt(height, 10))
+                {
+                    height = $this.outerHeight(true) + 10;
+                }
+
+                $this.addClass('scrollable');
+            }
+
+            $this.css({maxHeight: ''}).slimScroll({
+                height: height,
+                position: attrDefault($this, 'scroll-position', 'right'),
+                color: attrDefault($this, 'rail-color', '#000'),
+                size: attrDefault($this, 'rail-width', 6),
+                borderRadius: attrDefault($this, 'rail-radius', 3),
+                opacity: attrDefault($this, 'rail-opacity', .3),
+                alwaysVisible: parseInt(attrDefault($this, 'autohide', 1), 10) == 1 ? false : true
+            });
+        });
+    }
+})
+
+</script>

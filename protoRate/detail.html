@@ -1,0 +1,120 @@
+<ol class="breadcrumb bc-3" >
+    <li>
+        <a ui-sref="menu.content.protoRate.list">产品模型管理</a>
+    </li>
+    <li class="active">
+        <strong>产品模型信息编辑</strong>
+    </li>
+</ol>
+<h2>产品模型信息编辑</h2>
+<br />
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="panel panel-primary">
+
+            <div class="panel-body">
+
+                <form role="form" ng-submit="updateProtoRate()">
+                    <div class="row" style="margin:20px 10px 0 0;">
+                        <table class="table table-bordered table-color responsive col-sm-12">
+                            <tbody>
+                                <tr>
+                                    <td>产品名称</td>
+                                    <td>
+                                        <input type="text" name="name"
+                                            placeholder="请输入产品名称"
+                                            ng-model="post_data.name"
+                                            required
+                                            ng-class="{'invalid':form.interest_rate.$error.required}"
+                                        >
+                                    </td>
+                                    <td>2年经销商返点</td>
+                                    <td>
+                                        <input type="tel" class="plan-input"
+                                            placeholder="请输入2年经销商返点"
+                                            ng-model="post_data.rebate_24"
+                                            min="0"
+                                            name="rebate_24"
+                                            required
+                                            ng-class="{'invalid':form.rebate_24.$error.required||form.rebate_24.$error.min}">
+                                    </td>
+                                    <td>2年费率</td>
+                                    <td>
+                                        {{post_data.rate_24||'----'}}
+                                    </td>
+                                    <td>2年万元系数</td>
+                                    <td>
+                                        {{post_data.million_coefficient_24||'----'}}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group button-toggle">
+                                            <label class="btn btn-default" ng-model="post_data.effect_24" uib-btn-radio="true">生效</label>
+                                            <label class="btn btn-default" ng-model="post_data.effect_24" uib-btn-radio="false">失效</label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>利率</td>
+                                    <td>
+                                        <input type="tel" class="plan-input"
+                                            placeholder="请输入利率"
+                                            ng-model="post_data.interest_rate"
+                                            min="0"
+                                            name="rate_24"
+                                            required
+                                            ng-class="{'invalid':form.interest_rate.$error.required||form.interest_rate.$error.min}"
+                                            ng-blur="autoCalculate()">
+                                    </td>
+                                    <td>3年经销商返点</td>
+                                    <td>
+                                        <input type="tel" class="plan-input"
+                                            placeholder="请输入3年经销商返点"
+                                            ng-model="post_data.rebate_36"
+                                            min="0"
+                                            name="rebate_36"
+                                            required
+                                            ng-class="{'invalid':form.rebate_36.$error.required||form.rebate_36.$error.min}">
+                                    </td>
+                                    <td>3年费率</td>
+                                    <td>
+                                        {{post_data.rate_36||'----'}}
+                                    </td>
+                                    <td>3年万元系数</td>
+                                    <td>
+                                        {{post_data.million_coefficient_36||'----'}}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group button-toggle">
+                                            <label class="btn btn-default" ng-model="post_data.effect_36" uib-btn-radio="true">生效</label>
+                                            <label class="btn btn-default" ng-model="post_data.effect_36" uib-btn-radio="false">失效</label>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div class="row" style="margin-right:10px;">
+                        <div class="col-sm-2 col-sm-offset-8">
+                            <button type="submit"
+                                class="btn btn-primary btn-block"
+                                style="max-width:120px;"
+                            >保存</button>
+
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" class="btn btn-danger"
+                                style="width: 100%;max-width: 120px;"
+                                ng-click="deleteProtoRate()">删除</button>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>

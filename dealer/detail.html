@@ -1,0 +1,1453 @@
+<ol class="breadcrumb bc-3" >
+    <li>
+        <a ui-sref="menu.content.dealer.list">经销商管理</a>
+    </li>
+    <li class="active">
+        <strong>经销商详情</strong>
+    </li>
+</ol>
+<h2>经销商信息</h2>
+<br>
+<ul class="nav nav-tabs bordered" style="margin: 0;margin-top: 5px;">
+    <li ng-class="{'active': tab == 'basic'}">
+        <a ng-click="changeTab('basic')" data-toggle="tab">
+            <span class="visible-xs"><i class="entypo-info-circle"></i></span>
+            <span class="hidden-xs">基础信息</span>
+        </a>
+    </li>
+    <li ng-class="{'active': tab == 'vehicle'}">
+        <a ng-click="changeTab('vehicle')" data-toggle="tab">
+            <span class="visible-xs"><i class="entypo-car"></i></span>
+            <span class="hidden-xs">门店品牌管理</span>
+        </a>
+    </li>
+    <li ng-class="{'active': tab == 'employee'}">
+        <a ng-click="changeTab('employee')" data-toggle="tab">
+            <span class="visible-xs"><i class="entypo-user"></i></span>
+            <span class="hidden-xs">员工管理</span>
+        </a>
+    </li>
+    <li ng-class="{'active': tab == 'proto_rate'}">
+        <a ng-click="changeTab('proto_rate')" data-toggle="tab">
+            <span class="visible-xs"><i class="entypo-money"></i></span>
+            <span class="hidden-xs">资金渠道／金融产品管理</span>
+        </a>
+    </li>
+    <li ng-class="{'active': tab == 'plate'}">
+        <a ng-click="changeTab('plate')" data-toggle="tab">
+            <span class="visible-xs"><i class="entypo-location"></i></span>
+            <span class="hidden-xs">上牌备案地管理</span>
+        </a>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane" ng-class="{'active': tab == 'basic'}">
+        <div class="row new-dealer">
+            <div class="col-md-12">
+                <form role="form" ng-submit="updateDealer()" name="form">
+                    <h4>机构基本信息</h4>
+                    <div class="row form-group form-horizontal">
+                        <label class="control-label col-sm-2">经销商识别码</label>
+                        <div class="col-sm-3" style="padding-top:7px;">{{dealer.dlr_id}}</div>
+                    </div>
+
+                    <div class="row form-group form-horizontal">
+                        <label for="field-1" class="control-label col-sm-2">经销商名称</label>
+                        <div class="col-sm-3">
+                            <input type="text" id="field-1"
+                                name="dlr_nm"
+                                ng-model="post_data.dlr_nm"
+                                placeholder="经销商名称"
+                                class="form-control"
+                                required
+                            >
+                            <span class="error-msg"
+                                 ng-show="(form.dlr_nm.$dirty || submitted) && form.dlr_nm.$error.required"
+                            >请输入经销商名称</span>
+                        </div>
+
+                        <label class="control-label col-sm-2">经销商类型</label>
+                        <div class="col-sm-2">
+                            <select class="form-control"
+                                ng-model="post_data.dtype"
+                                name="dtype"
+                                required>
+                                <option value="D" selected>直营店</option>
+                                <option value="SP">SP</option>
+                            </select>
+                            <span class="error-msg"
+                                 ng-show="(form.dtype.$dirty || submitted) && form.dtype.$error.required"
+                            >请选择经销商类型</span>
+                        </div>
+                        <div class="col-sm-2" ng-if="post_data.dtype == 'D'">
+                            <select class="form-control"
+                                ng-model="post_data.sub_dtype"
+                                name="sub_dtype"
+                                required>
+                                <option value="1" selected>AID</option>
+                                <option value="2">综合汽贸</option>
+                                <option value="3">二网</option>
+                            </select>
+                            <span class="error-msg"
+                                 ng-show="(form.sub_dtype.$dirty || submitted) && form.sub_dtype.$error.required"
+                            >请选择直营子类型</span>
+                        </div>
+                    </div>
+                    <div class="row form-group form-horizontal">
+                        <label for="field-2" class="control-label col-sm-2">工商注册号</label>
+                        <div class="col-sm-3">
+                            <input type="text" id="field-2"
+                                name="brn"
+                                ng-model="post_data.business_registration_number"
+                                placeholder="工商注册号"
+                                class="form-control"
+                                required
+                            >
+                            <span class="error-msg"
+                                 ng-show="(form.brn.$dirty || submitted) && form.brn.$error.required"
+                            >请输入工商注册号</span>
+                        </div>
+                    </div>
+
+                    <h4>机构银行账户信息</h4>
+                    <div class="row form-group form-horizontal">
+                        <label class="control-label col-sm-2">打款方式</label>
+                        <div class="col-sm-2">
+                            <select class="form-control"
+                                ng-model="post_data.pay_way">
+                                <option value="public" selected>公户</option>
+                                <option value="private">私户</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row form-group form-horizontal">
+
+                        <label for="field-3" class="control-label col-sm-2">账户名称</label>
+                        <div class="col-sm-3">
+                            <input type="text" id="field-3"
+                                name="bank_account_name"
+                                ng-model="post_data.bank_account_name"
+                                placeholder="账户名称"
+                                class="form-control"
+                            >
+                        </div>
+
+                        <label for="field-4" class="control-label col-sm-2">开户行支行名</label>
+                        <div class="col-sm-3">
+                            <input type="text" id="field-4"
+                                name="bank_branch_name"
+                                ng-model="post_data.bank_branch_name"
+                                placeholder="开户行支行名"
+                                class="form-control"
+                            >
+                        </div>
+                    </div>
+                    <div class="row form-group form-horizontal">
+                        <label for="field-5" class="control-label col-sm-2">银行账户（卡号）</label>
+                        <div class="col-sm-3">
+                            <input type="tel" id="field-5"
+                                name="bank_account_num"
+                                ng-model="post_data.bank_account_num"
+                                placeholder="银行账户"
+                                class="form-control"
+                            >
+                        </div>
+
+                        <label for="field-6" class="control-label col-sm-2"
+                            ng-if="post_data.pay_way == 'public'">收款银行电子联行号</label>
+                        <div class="col-sm-3" ng-if="post_data.pay_way == 'public'">
+                            <input type="text" id="field-6"
+                                name="bank_branch_id"
+                                ng-model="post_data.bank_branch_id"
+                                placeholder="开户银行编码"
+                                class="form-control"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="row form-group form-horizontal">
+                        <label class="control-label col-sm-2">开户银行所在省</label>
+                        <div class="col-sm-3">
+                            <select class="form-control" ng-model="post_data.bank_province">
+                                <option value="" selected>全部</option>
+                                <option value="{{province.areaname}}"
+                                    ng-repeat="province in province_list"
+                                >{{province.areaname}}</option>
+                            </select>
+                        </div>
+
+                        <label class="control-label col-sm-2">开户银行所在市</label>
+                        <div class="col-sm-3">
+                            <select class="form-control" ng-model="post_data.bank_city">
+                                <option value="" selected>全部</option>
+                                <option value={{city.areaname}} ng-repeat="city in bank_city_list">{{city.areaname}}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <h4>机构联系方式</h4>
+                    <div class="row form-group form-horizontal">
+                        <label for="field-7" class="control-label col-sm-2">营业电话</label>
+                        <div class="col-sm-3">
+                            <input type="text" id="field-7"
+                                name="tel_num"
+                                ng-model="post_data.tel_num"
+                                placeholder="营业电话"
+                                class="form-control"
+                            >
+                        </div>
+
+                        <label for="field-8" class="control-label col-sm-2">营业电子邮箱</label>
+                        <div class="col-sm-3">
+                            <input type="text" id="field-8"
+                                name="email"
+                                ng-model="post_data.email"
+                                placeholder="营业电子邮箱"
+                                class="form-control"
+                            >
+                        </div>
+                    </div>
+
+                    <h4>机构地址信息</h4>
+                    <div class="row form-group form-horizontal">
+                        <label class="control-label col-sm-2">省</label>
+                        <div class="col-sm-3">
+                            <select class="form-control" ng-model="post_data.province">
+                                <option value="" selected>全部</option>
+                                <option value="{{province.areaname}}"
+                                    ng-repeat="province in province_list"
+                                >{{province.areaname}}</option>
+                            </select>
+                        </div>
+
+                        <label class="control-label _style">市</label>
+                        <div class="col-sm-3">
+                            <select class="form-control" ng-model="post_data.city">
+                                <option value="" selected>全部</option>
+                                <option value="{{city.areaname}}" ng-repeat="city in city_list">{{city.areaname}}</option>
+                            </select>
+                        </div>
+
+                        <label class="control-label _style">区</label>
+                        <div class="col-sm-3">
+                            <select class="form-control" ng-model="post_data.district">
+                                <option value="" selected>全部</option>
+                                <option value="{{district.areaname}}" ng-repeat="district in district_list">{{district.areaname}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row form-group form-horizontal">
+                        <label for="field-9" class="control-label col-sm-2">详细地址</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="field-9"
+                                name="address1"
+                                ng-model="post_data.address1"
+                                placeholder="详细地址"
+                                class="form-control"
+                            >
+                        </div>
+
+                    </div>
+                    <h4>开店信息</h4>
+                    <div class="row form-group form-horizontal">
+                        <label class="control-label col-sm-2">开店经理</label>
+                        <div class="col-sm-3">
+                            <select class="form-control"
+                                name="manage_staff"
+                                ng-model="post_data.manage_staff">
+                                <option value=""></option>
+                                <option ng-value="staff.id"
+                                    ng-repeat="staff in staff_list">
+                                    {{staff.name}}
+                                </option>
+                            </select>
+                        </div>
+
+                        <label class="control-label col-sm-2">所属大区</label>
+                        <div class="col-sm-3">
+                            <select class="form-control"
+                                ng-model="post_data.region">
+                                <option ng-value="region_key" ng-repeat="(region_key,region) in regions">{{region}}</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="row form-group form-horizontal">
+                        <label class="control-label col-sm-2">门店状态</label>
+                        <div class="col-sm-3">
+                            <select class="form-control"
+                                ng-model="post_data.status">
+                                <option value={{status}}
+                                    ng-repeat="(status,status_name) in dealer_status">
+                                    {{status_name}}
+                                </option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="row form-group form-horizontal">
+                        <label class="col-sm-2 control-label">合同签订日期</label>
+                        <datepicker
+                            date-format="yyyy-MM-dd hh:mm:ss"
+                            date-typer="true"
+                            class="picker col-sm-3"
+                        >
+                            <input
+                                ng-model="post_data.effective_date"
+                                type="text"
+                                placeholder="合同签订日期"
+                                class="form-control"
+                            />
+                        </datepicker>
+
+                        <label for="field-10" class="control-label col-sm-2">合同有效期（月）</label>
+                        <div class="col-sm-3">
+                            <input type="text" id="field-10"
+                                name="month"
+                                ng-model="post_data.valid_month"
+                                placeholder="合同有效期（月）"
+                                class="form-control"
+                            >
+                        </div>
+
+                    </div>
+
+                    <hr>
+                    <h4>
+                        结算金额
+                    </h4>
+
+                    <div class="row form-group form-horizontal">
+                        <label for="field-13" class="control-label col-sm-2">档案管理费</label>
+                        <div class="col-sm-3">
+                            <input type="text" id="field-13"
+                                name="management_fee"
+                                ng-model="post_data.management_fee"
+                                placeholder="档案管理费"
+                                class="form-control"
+                            >
+                        </div>
+
+                        <label for="field-14" class="control-label col-sm-2">「其他费用」上限1</label>
+                        <div class="col-sm-3">
+                            <input type="text" id="field-14"
+                                name="other_fee"
+                                ng-model="post_data.other_fee"
+                                placeholder="「其他费用1」的最大值"
+                                class="form-control"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="row form-group form-horizontal">
+                        <label for="field-15" class="control-label col-sm-2">GPS 协议价</label>
+                        <div class="col-sm-3">
+                            <input type="text" id="field-15"
+                                name="gps_fee"
+                                ng-model="post_data.gps_fee"
+                                placeholder="AM 与门店谈妥的 GPS 报价"
+                                class="form-control"
+                            >
+                        </div>
+
+                        <label for="field-14" class="control-label col-sm-2">「其他费用」上限2</label>
+                        <div class="col-sm-3">
+                            <input type="text" id="field-14"
+                                name="other_fee2"
+                                ng-model="post_data.other_fee2"
+                                placeholder="「其他费用2」的最大值"
+                                class="form-control"
+                            >
+                        </div>
+
+                    </div>
+
+                    <div class="row form-group form-horizontal">
+                        <div class="col-sm-2">
+                            <button type="submit"
+                                class="btn btn-primary btn-block"
+                            >保存</button>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button"
+                                class="btn btn-danger btn-block"
+                                ng-click="deleteDealer()"
+                            >删除</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-pane" ng-class="{'active': tab == 'vehicle'}">
+        <div class="row">
+            <div class="col-md-12">
+                <form role="form" style="margin-bottom:20px;">
+                    <h5 class="text-danger">* 给门店添加品牌前，请仔细确认该门店是否有该品牌的品牌授权书</h5>
+                    <div class="row form-group form-horizontal">
+                        <div class="col-sm-3">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <div class="panel-title">车辆品牌＊</div>
+                                </div>
+                                <div class="panel-heading select-search">
+                                    <div class="panel-title">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control"
+                                                ng-model="search.brand">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-default"
+                                                    type="button"
+                                                    ng-click="searchBrand()">
+                                                    <i class="fa fa-search"></i>
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="panel-body select-list">
+
+                                    <div class="scrollable" data-height="150">
+                                        <div style="min-height:150px;">
+                                            <p ng-repeat="brand in brand_list"
+                                                ng-class="{'selected':selected_brand_index == $index}"
+                                                ng-click="selectBrand($index)"
+                                            >{{brand.brand_name}}</p>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="col-sm-1" style="margin-top:63px;">
+                            <button type="button"
+                                class="btn btn-default btn-block"
+                                ng-click="addToBrandList()">
+                                <i class="fa fa-arrow-right"></i>
+                            </button>
+                            <button type="button"
+                                class="btn btn-default btn-block"
+                                ng-click="removeFromBrandList()">
+                                <i class="fa fa-arrow-left"></i>
+                            </button>
+                        </div>
+
+                        <div class="col-sm-3">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <div class="panel-title">车辆品牌＊</div>
+                                </div>
+
+                                <div class="panel-heading select-search">
+                                    <div class="panel-title">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control"
+                                                ng-model="search.added_brand">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-default"
+                                                    type="button"
+                                                    >
+                                                    <!-- ng-click="searchAddedBank()" -->
+                                                    <i class="fa fa-search"></i>
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="panel-body select-list">
+
+                                    <div class="scrollable" data-height="150">
+                                        <div style="min-height:150px;">
+                                            <p ng-repeat="added_brand in added_brand_list"
+                                                ng-class="{'selected':selected_added_brand_id == added_brand.id}"
+                                                ng-click="selectAddedBrand($index)"
+                                            >{{added_brand.brand_name}}</p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <button type="button" class="btn btn-default btn-block"
+                                ng-disabled="!brand_list.length"
+                                ng-click="addAllToBrandList()"
+                                style="max-width:120px;margin:0 auto;">
+                                全部添加
+                            </button>
+                        </div>
+                        <div class="col-sm-3 col-sm-offset-1">
+                            <button type="button" class="btn btn-default btn-block"
+                                ng-disabled="!added_brand_list.length"
+                                ng-click="removeAllFromBrandList()"
+                                style="max-width:120px;margin:0 auto;">
+                                全部删除
+                            </button>
+                        </div>
+                    </div>
+                    <hr />
+                    <div ng-class="{'limit-height':!show_full_brand_list}">
+                        <div class="row form-group form-horizontal" id="limitWrapper">
+                            <button type="button"
+                                ng-repeat="brand in added_brand_list"
+                                class="btn btn-default btn"
+                                ng-click="toggleBrand($index)"
+                                ng-class="{'btn-primary':$index==selected_added_toggle_brand_index}"
+                                style="float: left;margin: 0 16px 5px;"
+                            >{{brand.brand_name}}</button>
+                        </div>
+                    </div>
+
+                    <div style="overflow: hidden;" ng-if="added_brand_list.length&&more_than_one_line">
+                        <a ng-click="toggleBrandList(true)" class="link-underline"
+                            ng-if="!show_full_brand_list"
+                            style="float:left;">展开全部 <i class="fa fa-angle-down"></i></a>
+                        <a ng-click="toggleBrandList(false)" class="link-underline"
+                            ng-if="show_full_brand_list"
+                            style="float:left;">收起 <i class="fa fa-angle-up"></i></a>
+                    </div>
+                </form>
+
+
+                <table class="table table-bordered datatable" id="table-dealer1">
+                    <thead>
+                        <tr>
+                            <th>车系 ID</th>
+                            <th>车系名称</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="trix in trix_list">
+                            <td>{{trix.id}}</td>
+                            <td>{{trix.brand_name}}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+                <paging
+                  page="brand_current_page"
+                  page-size="20"
+                  total="brand_count"
+                  show-prev-next="true"
+                  show-first-last="true"
+                  hide-if-empty="true"
+                  paging-action="brandPageChanged(page)"
+                  style="float: right;">
+                </paging>
+                <script type="text/javascript">
+                    jQuery( document ).ready( function( $ ) {
+                        var $table_dealer1 = jQuery( '#table-dealer1' );
+
+                        // Initialize DataTable
+                        $table_dealer1.DataTable( {
+                            "sDom": "tip",
+                            "ordering": false,
+                            "paging": false,
+                            "bInfo": false,
+                            "bStateSave": true
+                        });
+                    } );
+                </script>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="tab-pane" ng-class="{'active': tab == 'employee'}">
+        <div class="row">
+            <div class="col-md-12">
+                <form role="form" style="margin-bottom:20px;">
+                    <div class="row form-group form-horizontal">
+                        <label class="control-label col-sm-2">员工 ID</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" ng-model="employee_filters.id"
+                                placeholder="员工 ID">
+                        </div>
+                        <label for="field-3" class="col-sm-2 control-label">手机号码</label>
+                        <div class="col-sm-3">
+                            <input type="text"
+                                class="form-control" id="field-3"
+                                ng-model="employee_filters.mobile"
+                                placeholder="手机号码"
+                            >
+                        </div>
+
+                    </div>
+                    <div class="row form-group form-horizontal">
+                        <label class="control-label col-sm-2">员工姓名</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" ng-model="employee_filters.name"
+                                placeholder="员工姓名">
+                        </div>
+
+                        <label class="col-sm-2 col-sm-offset control-label">员工创建时间</label>
+                        <datepicker
+                            date-format="yyyy-MM-dd"
+                            date-max-limit="{{employee_filters.created_time_r_1 || now}}"
+                            date-typer="true"
+                            class="picker col-sm-2"
+                        >
+                            <input
+                                ng-model="employee_filters.created_time_r_0"
+                                type="text"
+                                placeholder="From"
+                                class="form-control"
+                            />
+                        </datepicker>
+                        <span class="_style">-</span>
+                        <datepicker
+                            date-format="yyyy-MM-dd"
+                            date-min-limit="{{employee_filters.created_time_r_0}}"
+                            date-max-limit="{{now}}"
+                            date-typer="true"
+                            class="picker col-sm-2"
+                        >
+                            <input
+                                ng-model="employee_filters.created_time_r_1"
+                                type="text"
+                                placeholder="To"
+                                class="form-control"
+                            />
+                        </datepicker>
+                        <!-- <label class="control-label col-sm-2">员工状态</label>
+                        <div class="col-sm-3">
+                            <select class="form-control" ng-model="employee_relation_filters.status">
+                                <option value="" selected>全部</option>
+                                <option value="{{status}}" ng-repeat="(status,status_name) in employee_status">{{status_name}}</option>
+                            </select>
+                        </div> -->
+
+                    </div>
+
+                    <!-- <div class="row form-group form-horizontal">
+                        <label class="control-label col-sm-2">员工角色</label>
+                        <div class="col-sm-2">
+                            <select class="form-control" ng-model="employee_relation_filters.role">
+                                <option value="" selected>全部</option>
+                                <option value="{{role}}" ng-repeat="(role,role_name) in employee_role">{{role_name}}</option>
+                            </select>
+                        </div>
+
+
+                    </div> -->
+
+                    <div class="row">
+                        <div class="col-sm-2 col-sm-offset-6">
+                            <button type="button"
+                                class="btn btn-primary btn-block"
+                                ng-click="searchEmployee()"
+                                style="max-width: 120px;"
+                            >查询</button>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button"
+                                class="btn btn-green btn-block"
+                                ng-click="createEmployeeRelation()"
+                                style="max-width: 120px;"
+                            >生成</button>
+                        </div>
+                        <div class="col-sm-2">
+                            <a type="button"
+                                class="btn btn-info btn-block"
+                                style="max-width:120px;"
+                                ui-sref="menu.content.upload({'upload_type':'dealer_employee'})"
+                                target="_blank"
+                            >批量导入</a>
+                        </div>
+                    </div>
+
+                </form>
+
+                <div>
+                    <table class="table table-bordered datatable" id="table-dealer2">
+            			<thead>
+            				<tr>
+                                <th>
+                                    选择
+                                    <input type="checkbox"
+                                        ng-model="selected_all_employee"
+                                        ng-click="selectAllEmployee()">
+                                </th>
+                                <th>员工 ID</th>
+                                <th>员工姓名</th>
+                                <th>手机号码</th>
+                                <th>邮箱地址</th>
+                                <th>员工角色</th>
+                                <th>员工状态</th>
+            				</tr>
+            			</thead>
+            			<tbody>
+                            <tr ng-repeat="employee in employee_list">
+                                <td>
+                                    <input type="checkbox"
+                                        ng-model="employee.selected"
+                                        ng-click="selectEmployee($index)"
+                                    >
+                                </td>
+                                <td>{{employee.id}}</td>
+                                <td>{{employee.name}}</td>
+                                <td>{{employee.mobile}}</td>
+                                <td>{{employee.email}}</td>
+                                <td>
+                                    <select ng-model="employee.role"
+                                        style="width:100%;">
+                                        <option value={{role}}
+                                            ng-repeat="(role,role_name) in employee_role"
+                                        >{{role_name}}</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select ng-model="employee.status"
+                                        style="width:100%;">
+                                        <option value={{status}}
+                                            ng-repeat="(status,status_name) in employee_status"
+                                        >{{status_name}}</option>
+                                    </select>
+                                </td>
+                            </tr>
+            			</tfoot>
+            		</table>
+                    <paging
+                      page="employee_current_page"
+                      page-size="5"
+                      total="employee_count"
+                      show-prev-next="true"
+                      show-first-last="true"
+                      hide-if-empty="true"
+                      paging-action="employeePageChanged(page)"
+                      style="float: right;">
+                    </paging>
+                    <script type="text/javascript">
+                        jQuery( document ).ready( function( $ ) {
+                            var $table_dealer2 = jQuery( '#table-dealer2' );
+
+                            // Initialize DataTable
+                            $table_dealer2.DataTable( {
+                                "sDom": "tip",
+                                "ordering": false,
+                                "paging": false,
+                                "bInfo": false,
+                                "bStateSave": true
+                            });
+                        } );
+            		</script>
+                </div>
+                <!-- <hr> -->
+                <div style="margin-top:80px;">
+                    <hr>
+                    <h4 style="margin: 30px 0;line-height:32px;">
+                        岗位信息编辑
+                        <button type="button" class="btn btn-danger col-sm-2"
+                            style="float:right;max-width:120px;"
+                            ng-click="deleteEmployeeRelation()">
+                            删除
+                        </button>
+                        <button type="button" class="btn btn-info col-sm-2"
+                            style="float:right;max-width:160px;margin-right:20px;"
+                            ng-click="downloadEmployeeFile()">
+                            导出经销商员工列表 .xlsx
+                        </button>
+                    </h4>
+                    <!-- <div class="row">
+                        <div class="col-sm-2 col-sm-offset-10">
+                            <button type="button" class="btn btn-danger btn-block"
+                                style="max-width:120px;"
+                                ng-click="deleteEmployeeRelation()">
+                                删除
+                            </button>
+                        </div>
+                    </div> -->
+                    <table class="table table-bordered datatable" id="table-dealer3">
+            			<thead>
+            				<tr>
+                                <th>
+                                    选择
+                                    <input type="checkbox"
+                                        ng-model="selected_all_employee_relation"
+                                        ng-click="selectAllEmployeeRelation()">
+                                </th>
+                                <th>员工 ID</th>
+                                <th>员工姓名</th>
+                                <th>手机号码</th>
+                                <th>邮箱地址</th>
+                                <th>员工角色</th>
+                                <th>员工状态</th>
+                                <th>操作</th>
+            				</tr>
+            			</thead>
+            			<tbody>
+                            <tr ng-repeat="relation in employee_relation_list">
+                                <td>
+                                    <input type="checkbox"
+                                        ng-model="relation.selected"
+                                        ng-click="selectEmployeeRelation($index)"
+                                    >
+                                </td>
+                                <td>{{relation.employee}}</td>
+                                <td>{{relation.employee__name}}</td>
+                                <td>{{relation.employee__mobile}}</td>
+                                <td>{{relation.employee__email}}</td>
+                                <td>
+                                    <select ng-model="relation.role"
+                                        style="width:100%;">
+                                        <option value={{role}}
+                                            ng-repeat="(role,role_name) in employee_role"
+                                        >{{role_name}}</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select ng-model="relation.status"
+                                        style="width:100%;">
+                                        <option value={{status}}
+                                            ng-repeat="(status,status_name) in employee_status"
+                                        >{{status_name}}</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <!-- <button type="button"
+                                        class="btn btn-primary"
+                                        ui-sref="menu.content.employee.detail({employee_id:relation.employee,dealer_id:dealer_id})"
+                                    >
+                                        查看详情
+                                    </button> -->
+                                    <button type="button"
+                                        class="btn btn-primary"
+                                        ng-click="updateEmployeeRelation(relation)"
+                                    >
+                                        保存
+                                    </button>
+                                </td>
+                            </tr>
+            			</tfoot>
+            		</table>
+                    <paging
+                      page="employee_relation_current_page"
+                      page-size="20"
+                      total="employee_relation_count"
+                      show-prev-next="true"
+                      show-first-last="true"
+                      hide-if-empty="true"
+                      paging-action="employeeRelationPageChanged(page)"
+                      style="float: right;">
+                    </paging>
+                    <script type="text/javascript">
+                        jQuery( document ).ready( function( $ ) {
+                            var $table_dealer3 = jQuery( '#table-dealer3' );
+
+                            // Initialize DataTable
+                            $table_dealer3.DataTable( {
+                                "sDom": "tip",
+                                "ordering": false,
+                                "paging": false,
+                                "bInfo": false,
+                                "bStateSave": true
+                            });
+                        } );
+            		</script>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-pane" ng-class="{'active': tab == 'proto_rate'}">
+        <div class="row">
+            <div class="col-md-12">
+                <form role="form" style="margin-bottom:20px;">
+                    <div class="row form-group form-horizontal">
+                        <div class="col-sm-3">
+                            <div class="panel panel-primary">
+            					<div class="panel-heading">
+            						<div class="panel-title">资金渠道＊</div>
+            					</div>
+                                <div class="panel-heading select-search">
+                                    <div class="panel-title">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control"
+                                                ng-model="search.bank">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-default"
+                                                    type="button"
+                                                    ng-click="searchBank()">
+                                                    <i class="fa fa-search"></i>
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="panel-body select-list">
+
+                                    <div class="scrollable" data-height="150">
+                                        <div style="min-height:150px;">
+                                            <p ng-repeat="bank in bank_list"
+                                                ng-class="{'selected':selected_bank_index == $index}"
+                                                ng-click="selectBank($index)"
+                                            >{{bank.name}}</p>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+            				</div>
+                        </div>
+
+                        <div class="col-sm-1" style="margin-top:63px;">
+                            <button type="button"
+                                class="btn btn-default btn-block"
+                                ng-click="addToBankList()">
+                                <i class="fa fa-arrow-right"></i>
+                            </button>
+                            <button type="button"
+                                class="btn btn-default btn-block"
+                                ng-click="removeFromBankList()">
+                                <i class="fa fa-arrow-left"></i>
+                            </button>
+                        </div>
+
+                        <div class="col-sm-3">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <div class="panel-title">资金渠道＊</div>
+                                </div>
+
+                                <div class="panel-heading select-search">
+                                    <div class="panel-title">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control"
+                                                ng-model="search.added_bank">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-default"
+                                                    type="button"
+                                                    >
+                                                    <!-- ng-click="searchAddedBank()" -->
+                                                    <i class="fa fa-search"></i>
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="panel-body select-list">
+
+                                    <div class="scrollable" data-height="150">
+                                        <div style="min-height:150px;">
+                                            <p ng-repeat="added_bank in added_bank_list"
+                                                ng-class="{'selected':selected_added_bank_id == added_bank.id}"
+                                                ng-click="selectAddedBank($index)"
+                                            >{{added_bank.name}}</p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <button type="button"
+                            class="col-sm-2 btn btn-primary"
+                            ng-click="addTrix()">
+                            添加品牌
+                        </button> -->
+
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <button type="button" class="btn btn-default btn-block"
+                                ng-click="addAllToBankList()"
+                                style="max-width:120px;margin:0 auto;">
+                                全部添加
+                            </button>
+                        </div>
+                        <div class="col-sm-3 col-sm-offset-1">
+                            <button type="button" class="btn btn-default btn-block"
+                                ng-click="removeAllFromBankList()"
+                                style="max-width:120px;margin:0 auto;">
+                                全部删除
+                            </button>
+                        </div>
+                        <!-- <div class="col-sm-2 col-sm-offset-1">
+                            <button type="button" class="btn btn-primary btn-block"
+                                style="max-width:120px;"
+                                ng-click="updateDealerBank()"
+                            >保存</button>
+                        </div> -->
+                    </div>
+                    <hr />
+                    <div class="row form-group form-horizontal">
+                        <!-- <div class="col-sm-2"> -->
+                            <button type="button"
+                                ng-repeat="bank in added_bank_list"
+                                class="btn btn-default btn"
+                                ng-click="toggleBank($index)"
+                                ng-class="{'btn-primary':$index==selected_added_toggle_bank_index}"
+                                style="float: left;margin: 0 16px;"
+                            >{{bank.name}}</button>
+                        <!-- </div> -->
+
+                    </div>
+                </form>
+
+
+                <table class="table table-bordered datatable" id="table-dealer4">
+        			<thead>
+        				<tr>
+                            <th>金融产品ID</th>
+                            <th>金融产品名称</th>
+                            <th>资金渠道</th>
+                            <th>利率</th>
+                            <th>2年经销商返点</th>
+                            <th>3年经销商返点</th>
+                            <th>2年万元系数</th>
+                            <th>3年万元系数</th>
+                            <th>2年费率</th>
+                            <th>3年费率</th>
+                            <th>状态</th>
+                            <th>操作</th>
+        				</tr>
+        			</thead>
+        			<tbody>
+                        <tr ng-repeat="proto_rate in proto_rate_list">
+                            <td>{{proto_rate.id}}</td>
+                            <td>{{proto_rate.name}}</td>
+                            <td>{{added_bank_list[selected_added_toggle_bank_index].name}}</td>
+                            <td>{{proto_rate.interest_rate||'-'}}</td>
+                            <td>
+                                <input type="text"
+                                    name="rebate_24"
+                                    ng-model="proto_rate.rebate_24"
+                                    placeholder="请输入2年经销商返点"
+                                    >
+                                <p style="color: red; margin: 0; text-align: left; margin-top: 3px;"
+                                    ng-show="proto_rate.rebate_24_not_valid"
+                                >该项是必填项</p>
+                            </td>
+                            <td>
+                                <input type="text"
+                                    ng-model="proto_rate.rebate_36"
+                                    placeholder="请输入3年经销商返点">
+                                <p style="color: red; margin: 0; text-align: left; margin-top: 3px;"
+                                    ng-show="proto_rate.rebate_36_not_valid"
+                                >该项是必填项</p>
+                            </td>
+                            <td>{{proto_rate.million_coefficient_24||'-'}}</td>
+                            <td>{{proto_rate.million_coefficient_36||'-'}}</td>
+                            <td>{{proto_rate.rate_24||'-'}}</td>
+                            <td>{{proto_rate.rate_36||'-'}}</td>
+                            <td>
+                                <select ng-model="proto_rate.status">
+                                    <option value={{status}}
+                                        ng-repeat="(status,status_name) in dealer_proto_rate_status"
+                                    >{{status_name}}</option>
+                                </select>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-primary"
+                                    ng-click="updateDealerProtoRate($index)">
+                                    保存
+                                </button>
+                                <!-- <button type="button" class="btn btn-primary"
+                                    ng-click="updateDealerProtoRate($index,'A')">
+                                    生效
+                                </button>
+                                <button type="button" class="btn btn-default"
+                                    ng-click="updateDealerProtoRate($index,'N')">
+                                    失效
+                                </button> -->
+                            </td>
+                        </tr>
+        			</tfoot>
+        		</table>
+                <paging
+                  page="proto_current_page"
+                  page-size="20"
+                  total="proto_count"
+                  show-prev-next="true"
+                  show-first-last="true"
+                  hide-if-empty="true"
+                  paging-action="protoPageChanged(page)"
+                  style="float: right;">
+                </paging>
+                <script type="text/javascript">
+                    jQuery( document ).ready( function( $ ) {
+                        var $table_dealer4 = jQuery( '#table-dealer4' );
+
+                        // Initialize DataTable
+                        $table_dealer4.DataTable( {
+                            "sDom": "tip",
+                            "ordering": false,
+                            "paging": false,
+                            "bInfo": false,
+                            "bStateSave": true
+                        });
+                    } );
+        		</script>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-pane" ng-class="{'active': tab == 'plate'}">
+        <div class="row employee-info">
+
+            <h4 class="col-sm-12">金融机构上牌备案地</h4>
+            <div class="col-sm-5 row">
+                <div class="col-sm-4">
+                    <div class="panel panel-primary">
+                        <!-- <div class="panel-heading">
+                            <div class="panel-title">省</div>
+                        </div> -->
+                        <div class="panel-heading select-search">
+                            <div class="panel-title">
+                                <div class="input-group">
+                                    <input type="text" class="form-control"
+                                        ng-model="search.province">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default"
+                                            type="button"
+                                            ng-click="searchProvince()">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-body select-list">
+
+                            <div class="scrollable" data-height="150">
+                                <div style="min-height:150px;">
+                                    <p ng-repeat="province in province_list"
+                                        ng-class="{'selected':selected_place.name == province.areaname}"
+                                        ng-click="selectProvince($index)"
+                                    >{{province.areaname}}</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="panel panel-primary">
+                        <!-- <div class="panel-heading">
+                            <div class="panel-title">市</div>
+                        </div> -->
+                        <div class="panel-heading select-search">
+                            <div class="panel-title">
+                                <div class="input-group">
+                                    <input type="text" class="form-control"
+                                        ng-model="search.city">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default"
+                                            type="button"
+                                            ng-click="searchCity()">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-body select-list">
+
+                            <div class="scrollable" data-height="150">
+                                <div style="min-height:150px;">
+                                    <p ng-repeat="city in city_list"
+                                        ng-class="{'selected':selected_place.name == city.areaname}"
+                                        ng-click="selectCity($index)"
+                                    >{{city.areaname}}</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="panel panel-primary">
+                        <!-- <div class="panel-heading">
+                            <div class="panel-title">区</div>
+                        </div> -->
+                        <div class="panel-heading select-search">
+                            <div class="panel-title">
+                                <div class="input-group">
+                                    <input type="text" class="form-control"
+                                        ng-model="search.district">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default"
+                                            type="button"
+                                            ng-click="searchDistrict()">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-body select-list">
+
+                            <div class="scrollable" data-height="150">
+                                <div style="min-height:150px;">
+                                    <p ng-repeat="district in district_list"
+                                        ng-class="{'selected':selected_place.name == district.areaname}"
+                                        ng-click="selectDistrict($index)"
+                                    >{{district.areaname}}</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-sm-4" style="text-align:center;">
+                    <button type="button" class="btn btn-default"
+                        ng-click="addAllProvince()">
+                        全部添加
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-sm-2 row" style="margin-top:63px;">
+                <div class="col-sm-6 col-sm-offset-3">
+                    <button type="button" class="btn btn-default btn-block"
+                        ng-click="addToPlateList()">
+                        <i class="fa fa-arrow-right"></i>
+                    </button>
+                    <button type="button" class="btn btn-default btn-block"
+                        ng-click="removeFromPlateList()">
+                        <i class="fa fa-arrow-left"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-sm-5 row">
+                <div class="col-sm-4">
+                    <div class="panel panel-primary">
+                        <!-- <div class="panel-heading">
+                            <div class="panel-title">省</div>
+                        </div> -->
+                        <div class="panel-heading select-search">
+                            <div class="panel-title">
+                                <div class="input-group">
+                                    <input type="text" class="form-control"
+                                        ng-model="search.added_province">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default"
+                                            type="button"
+                                            ng-click="searchAddedProvince()">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-body select-list">
+
+                            <div class="scrollable" data-height="150">
+                                <div style="min-height:150px;">
+                                    <p ng-repeat="province in added_province_list"
+                                        ng-class="{'selected':selected_added_place.name == province.areaname}"
+                                        ng-click="selectAddedProvince($index)"
+                                    >{{province.areaname}}</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="panel panel-primary">
+                        <!-- <div class="panel-heading">
+                            <div class="panel-title">市</div>
+                        </div> -->
+                        <div class="panel-heading select-search">
+                            <div class="panel-title">
+                                <div class="input-group">
+                                    <input type="text" class="form-control"
+                                        ng-model="search.added_city">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default"
+                                            type="button"
+                                            ng-click="searchAddedCity()">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-body select-list">
+
+                            <div class="scrollable" data-height="150">
+                                <div style="min-height:150px;">
+                                    <p ng-repeat="city in added_city_list"
+                                        ng-class="{'selected':selected_added_place.name == city.areaname}"
+                                        ng-click="selectAddedCity($index)"
+                                    >{{city.areaname}}</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="panel panel-primary">
+                        <!-- <div class="panel-heading">
+                            <div class="panel-title">区</div>
+                        </div> -->
+                        <div class="panel-heading select-search">
+                            <div class="panel-title">
+                                <div class="input-group">
+                                    <input type="text" class="form-control"
+                                        ng-model="search.added_district">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default"
+                                            type="button"
+                                            ng-click="searchAddedDistrict()">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-body select-list">
+
+                            <div class="scrollable" data-height="150">
+                                <div style="min-height:150px;">
+                                    <p ng-repeat="district in added_district_list"
+                                        ng-class="{'selected':selected_added_place.name == district.areaname}"
+                                        ng-click="selectAddedDistrict($index)"
+                                    >{{district.areaname}}</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-sm-4" style="text-align:center;">
+                    <button type="button" class="btn btn-default"
+                        ng-click="removeAllProvince()">
+                        全部删除
+                    </button>
+                </div>
+            </div>
+
+        </div>
+        <hr>
+        <div class="row form-group form-horizontal">
+            <div class="col-sm-4">
+                <input type="text" class="col-sm-4 form-control"
+                    ng-model="page_state.search_added_name"
+                    placeholder="请输入省／市／区／县／行政特区进行搜索">
+            </div>
+            <div class="col-sm-2">
+                <button type="button" class="btn btn-primary btn-block"
+                    ng-click="searchAddedPlates()" style="max-width:120px;">
+                    查询
+                </button>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-sm-10">
+                <table class="table table-bordered datatable" id="table-dealer5">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>省／直辖市／行政特区</th>
+                            <th>市</th>
+                            <th>区／县</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="plate in added_plate_list">
+                            <td>{{(page_state.plate_current_page-1)*20 + $index+1}}</td>
+                            <td>{{plate.areaname}}</td>
+                            <td>{{plate._parent}}</td>
+                            <td>{{plate._parent_parent}}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+                <paging
+                  page="page_state.plate_current_page"
+                  page-size="20"
+                  total="page_state.plate_count"
+                  show-prev-next="true"
+                  show-first-last="true"
+                  hide-if-empty="true"
+                  paging-action="platePageChanged(page)"
+                  style="float: right;">
+                </paging>
+                <script type="text/javascript">
+                    jQuery( document ).ready( function( $ ) {
+                        var $table_dealer5 = jQuery( '#table-dealer5' );
+
+                        // Initialize DataTable
+                        $table_dealer5.DataTable( {
+                            "sDom": "tip",
+                            "ordering": false,
+                            "paging": false,
+                            "bInfo": false,
+                            "bStateSave": true
+                        });
+                    } );
+                </script>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<script>
+
+
+$(document).ready(function()
+{
+    // Scrollable
+    if($.isFunction($.fn.slimScroll))
+    {
+        $(".scrollable").each(function(i, el)
+        {
+            var $this = $(el),
+                height = attrDefault($this, 'height', $this.height());
+
+            if($this.is(':visible'))
+            {
+                $this.removeClass('scrollable');
+
+                if($this.height() < parseInt(height, 10))
+                {
+                    height = $this.outerHeight(true) + 10;
+                }
+
+                $this.addClass('scrollable');
+            }
+
+            $this.css({maxHeight: ''}).slimScroll({
+                height: height,
+                position: attrDefault($this, 'scroll-position', 'right'),
+                color: attrDefault($this, 'rail-color', '#000'),
+                size: attrDefault($this, 'rail-width', 6),
+                borderRadius: attrDefault($this, 'rail-radius', 3),
+                opacity: attrDefault($this, 'rail-opacity', .3),
+                alwaysVisible: parseInt(attrDefault($this, 'autohide', 1), 10) == 1 ? false : true
+            });
+        });
+    }
+})
+
+</script>

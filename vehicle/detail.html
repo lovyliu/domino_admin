@@ -1,0 +1,116 @@
+<ol class="breadcrumb bc-3" >
+    <li>
+        <a ui-sref="menu.content.vehicle.list">车型管理</a>
+    </li>
+    <li class="active">
+        <strong>车型详情</strong>
+    </li>
+</ol>
+<h2>车辆信息</h2>
+<br>
+<div class="row new-dealer">
+    <div class="col-md-12">
+        <form role="form" ng-submit="updateVehicle()" name="form">
+            <!-- <div class="row form-group form-horizontal">
+                <label class="control-label col-sm-2">车型 ID</label>
+                <div class="col-sm-3" style="padding-top:7px;">{{vehicle.id}}</div>
+            </div> -->
+            <div class="row form-group form-horizontal">
+                <label class="control-label col-sm-2">品牌</label>
+                <div class="col-sm-3" style="padding-top:7px;">{{vehicle.brand_name}}</div>
+            </div>
+            <div class="row form-group form-horizontal">
+                <label class="control-label col-sm-2">车系</label>
+                <div class="col-sm-3" style="padding-top:7px;">{{vehicle.trix_name}}</div>
+            </div>
+
+            <div class="row form-group form-horizontal">
+                <label for="field-1" class="control-label col-sm-2">车辆型号名称</label>
+                <div class="col-sm-5">
+                    <input type="text" id="field-1"
+                        name="model_name"
+                        ng-model="vehicle.model_name"
+                        placeholder="车辆型号名称"
+                        class="form-control"
+                        required
+                    >
+                    <span class="error-msg"
+                         ng-show="(form.model_name.$dirty || submitted) && form.model_name.$error.required"
+                    >请输入车辆型号名称</span>
+                </div>
+            </div>
+            <div class="row form-group form-horizontal">
+                <label for="field-2" class="control-label col-sm-2">厂商建议零售价（元）</label>
+                <div class="col-sm-3">
+                    <input type="text" id="field-2"
+                        name="msrp"
+                        ng-model="vehicle.msrp"
+                        placeholder="厂商建议零售价"
+                        class="form-control"
+                        required
+                    >
+                    <span class="error-msg"
+                         ng-show="(form.msrp.$dirty || submitted) && form.msrp.$error.required"
+                    >请输入厂商建议零售价</span>
+                </div>
+            </div>
+            <div class="row form-group form-horizontal">
+                <label for="field-3" class="control-label col-sm-2">排量</label>
+                <div class="col-sm-3">
+                    <input type="text" id="field-3"
+                        name="eng_cap"
+                        ng-model="vehicle.eng_cap"
+                        placeholder="排量"
+                        class="form-control"
+                        required
+                    >
+                    <span class="error-msg"
+                         ng-show="(form.eng_cap.$dirty || submitted) && form.eng_cap.$error.required"
+                    >请输入排量</span>
+                </div>
+            </div>
+            <div class="row form-group form-horizontal">
+                <label for="field-4" class="control-label col-sm-2">座位数</label>
+                <div class="col-sm-5">
+                    <input type="text" id="field-4"
+                        name="seat_number"
+                        ng-model="vehicle.seat_number"
+                        placeholder="座位数"
+                        class="form-control"
+                        required
+                    >
+                    <span class="error-msg"
+                         ng-show="(form.seat_number.$dirty || submitted) && form.seat_number.$error.required"
+                    >请输入座位数</span>
+                </div>
+            </div>
+            <div class="row form-group form-horizontal">
+                <label class="control-label col-sm-2">国产／合资</label>
+                <div class="col-sm-2">
+                    <select class="form-control"
+                        ng-model="vehicle.maker_type"
+                        name="maker_type">
+                        <option value="国产" selected>国产</option>
+                        <option value="合资">合资</option>
+                        <option value="进口">进口</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row form-group form-horizontal">
+                <div class="col-sm-2 col-sm-offset-2">
+                    <button type="submit"
+                        class="btn btn-primary btn-block"
+                    >保存</button>
+                </div>
+                <div class="col-sm-2">
+                    <button type="button"
+                        class="btn btn-danger btn-block"
+                        ng-click="deleteModel()"
+                    >删除</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>

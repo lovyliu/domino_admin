@@ -1,0 +1,179 @@
+<h2>予见员工管理</h2>
+<br />
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="panel panel-primary">
+
+            <div class="panel-body">
+
+                <form role="form">
+                    <div class="row form-group form-horizontal">
+                        <label for="field-1" class="col-sm-2 control-label">员工 ID</label>
+                        <div class="col-sm-3">
+                            <input type="text"
+                                class="form-control" id="field-1"
+                                ng-model="page_state.filters.id"
+                                placeholder="员工 ID"
+                            >
+                        </div>
+
+                        <label for="field-2" class="col-sm-2 control-label">员工姓名</label>
+                        <div class="col-sm-3">
+                            <input type="text"
+                                 class="form-control" id="field-2"
+                                ng-model="page_state.filters.name"
+                                placeholder="员工姓名"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="row form-group form-horizontal">
+                        <label for="field-3" class="col-sm-2 control-label">手机号码</label>
+                        <div class="col-sm-3">
+                            <input type="text"
+                                class="form-control" id="field-3"
+                                ng-model="page_state.filters.mobile"
+                                placeholder="手机号码"
+                            >
+                        </div>
+
+                        <label for="field-4" class="col-sm-2 control-label">身份证</label>
+                        <div class="col-sm-4">
+                            <input type="text"
+                                class="form-control" id="field-4"
+                                ng-model="page_state.filters.id_no"
+                                placeholder="身份证"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="row form-group form-horizontal">
+
+                        <label class="col-sm-2 control-label">创建时间</label>
+                        <datepicker
+                            date-format="yyyy-MM-dd"
+                            date-max-limit="{{page_state.filters.created_time_r_1 || now}}"
+                            date-typer="true"
+                            class="picker col-sm-2"
+                        >
+                            <input
+                                ng-model="page_state.filters.created_time_r_0"
+                                type="text"
+                                placeholder="From"
+                                class="form-control"
+                            />
+                        </datepicker>
+                        <span class="_style">-</span>
+                        <datepicker
+                            date-format="yyyy-MM-dd"
+                            date-min-limit="{{page_state.filters.created_time_r_0}}"
+                            date-max-limit="{{now}}"
+                            date-typer="true"
+                            class="picker col-sm-2"
+                        >
+                            <input
+                                ng-model="page_state.filters.created_time_r_1"
+                                type="text"
+                                placeholder="To"
+                                class="form-control"
+                            />
+                        </datepicker>
+
+                    </div>
+
+                    <div class="row form-group form-horizontal">
+
+                        <div class="col-sm-2 col-sm-offset-6">
+                            <button type="button"
+                                class="btn btn-primary btn-block"
+                                ng-click="searchFirstStaffs()"
+                            >查询</button>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button"
+                                class="btn btn-primary btn-block"
+                                ui-sref="menu.content.staff.newStaff"
+                            >新增</button>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+        <button type="button" class="btn btn-danger delete-btn"
+            ng-click="deleteMultipleStaff()">删除已选中记录</button>
+        <table class="table table-bordered datatable" id="table-staff-list">
+			<thead>
+				<tr>
+                    <th>
+                        选择
+                        <input type="checkbox" ng-model="page_state.select_all"
+                            ng-click="selectAllStaff()">
+                    </th>
+                    <th>ID</th>
+                    <th>姓名</th>
+                    <th>性别</th>
+                    <th>手机号</th>
+                    <th>生日</th>
+                    <th>身份证</th>
+                    <th>邮箱</th>
+                    <th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+                <tr ng-repeat="staff in staff_list" ng-if="staff_list.length">
+                    <td>
+                        <input type="checkbox" ng-model="staff.selected">
+                    </td>
+                    <td>
+                        <a ui-sref="menu.content.staff.detail({
+                            staff_id:staff.id})"
+                            class="link-underline"
+                            target="_blank"
+                        >{{staff.id}}</a>
+                    </td>
+                    <td>{{staff.name||'-'}}</td>
+                    <td>{{staff.gender||'-'}}</td>
+                    <td>{{staff.mobile||'-'}}</td>
+                    <td>{{staff.birthday||'-'}}</td>
+                    <td>{{staff.id_number||'-'}}</td>
+                    <td>{{staff.email||'-'}}</td>
+                    <td>
+                        <a class="btn btn-primary"
+                            ui-sref="menu.content.staff.detail({
+                                staff_id:staff.id})"
+                            target="_blank"
+                        >编辑</a>
+                    </td>
+                </tr>
+			</tfoot>
+		</table>
+        <paging
+          page="page_state.current_page"
+          page-size="20"
+          total="page_state.count"
+          show-prev-next="true"
+          show-first-last="true"
+          hide-if-empty="true"
+          paging-action="pageChanged(page)"
+          style="float: right;">
+        </paging>
+        <script type="text/javascript">
+        jQuery( document ).ready( function( $ ) {
+            var $table_staff_list = jQuery( '#table-staff-list' );
+
+            // Initialize DataTable
+            $table_staff_list.DataTable( {
+                "sDom": "tip",
+                "ordering": false,
+                "paging": false,
+                "bInfo": false,
+                "bStateSave": true
+            });
+        } );
+		</script>
+    </div>
+</div>

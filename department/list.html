@@ -1,0 +1,105 @@
+<h2>部门管理</h2>
+<br />
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="panel panel-primary">
+
+            <div class="panel-body">
+
+                <form role="form">
+                    <div class="row form-group form-horizontal">
+                        <label for="field-1" class="col-sm-2 control-label">部门 ID</label>
+                        <div class="col-sm-3">
+                            <input type="text"
+                                class="form-control" id="field-1"
+                                ng-model="page_state.filters.id"
+                                placeholder="部门 ID"
+                            >
+                        </div>
+
+                        <label for="field-2" class="col-sm-2 control-label">部门名称</label>
+                        <div class="col-sm-3">
+                            <input type="text"
+                                 class="form-control" id="field-2"
+                                ng-model="page_state.filters.name"
+                                placeholder="部门名称"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="row form-group form-horizontal">
+                        <div class="col-sm-2 col-sm-offset-7">
+                            <button type="button"
+                                class="btn btn-primary btn-block"
+                                ng-click="searchFirstDepartments()"
+                            >查询</button>
+                        </div>
+                        <div class=" col-sm-2 col-sm-offset-1">
+                            <button type="button"
+                                class="btn btn-primary btn-block"
+                                ui-sref="menu.content.department.newDepartment"
+                            >新增</button>
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+        <table class="table table-bordered datatable" id="table-dep-list">
+			<thead>
+				<tr>
+                    <th>部门 ID</th>
+                    <th>部门名称</th>
+                    <th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+                <tr ng-repeat="department in departments" ng-if="departments.length">
+                    <td>
+                        <a ui-sref="menu.content.department.detail({department_id:department.id})"
+                            target="_blank"
+                            class="link-underline">
+                            {{department.id}}
+                        </a>
+                    </td>
+                    <td>{{department.name||'-'}}</td>
+                    <td>
+                        <a class="btn btn-primary"
+                            ui-sref="menu.content.department.detail({department_id:department.id})"
+                            target="_blank"
+                        >编辑</a>
+                    </td>
+                </tr>
+			</tfoot>
+		</table>
+        <paging
+          page="page_state.current_page"
+          page-size="20"
+          total="page_state.count"
+          show-prev-next="true"
+          show-first-last="true"
+          hide-if-empty="true"
+          paging-action="pageChanged(page)"
+          style="float: right;">
+        </paging>
+        <script type="text/javascript">
+        jQuery( document ).ready( function( $ ) {
+            var $table_dep_list = jQuery( '#table-dep-list' );
+
+            // Initialize DataTable
+            $table_dep_list.DataTable( {
+                "sDom": "tip",
+                "ordering": false,
+                "paging": false,
+                "bInfo": false,
+                "bStateSave": true
+            });
+        } );
+		</script>
+    </div>
+</div>

@@ -1,0 +1,161 @@
+<ol class="breadcrumb bc-3" >
+    <li>
+        <a ui-sref="menu.content.applications.list">贷前管理</a>
+    </li>
+    <li>
+        <a ui-sref="menu.content.applications.detail.credit({app_id:app_id})">
+            申请详情 申请编号{{app_id}}
+        </a>
+    </li>
+    <li class="active">
+        <strong>返审审批</strong>
+    </li>
+</ol>
+<div class="panel panel-primary" style="padding-left: 20px;">
+    <div class="panel-heading" style="border-bottom-color: #f2f2f2;">
+        <h2 style="font-size: 16px;
+            color: #232933;
+            font-weight: normal;
+            padding: 22px 0;
+            margin: 0;">返审审批</h2>
+    </div>
+
+    <div class="panel-body" style="padding-top:20px;margin-right: 20px;">
+
+        <div>
+            <div class="send-back-buttons" style="position:absolute;">
+                <ul>
+                    <li>
+                        <button type="button" class="btn btn-default"
+                            ng-click="toggleItem(0,true)"
+                            ng-class="{'active':page_state.selected_first}">
+                            返审申请
+                        </button>
+                    </li>
+                    <li ng-repeat="modify_detail in app_list.all_app"
+                        ng-if="$index!=0 || $index==0 && modify_detail.edit_status">
+                        <button type="button" class="btn btn-default"
+                            ng-click="toggleItem($index)"
+                            ng-class="{'active':page_state.active_index == $index&&!page_state.selected_first}">
+                            修改记录{{app_list.all_app.length-$index}}
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <p class="text-danger"
+                ng-if="!modify_detail">暂无修改记录</p>
+                {{modify_detail.edit_status}}
+            <p class="text-danger"
+                ng-if="modify_detail&&modify_detail.edit_status&&page_state.selected_first"
+                style="width: 100%;
+    padding-left: 150px;
+    height: 500px;">没有待审批信息</p>
+            <div style="width:100%;padding-left:150px;" ng-if="modify_detail&&(!modify_detail.edit_status||!page_state.selected_first)">
+                <div class="send-back-header"
+                    style="border-bottom: 1px solid #f2f2f2;overflow:hidden;">
+                    <div class="send-back-log pull-left">
+                        <div>
+                            <div class="text-right">修改提交时间：</div>
+                            <div class="">{{modify_detail.created_time||'-'}}</div>
+                        </div>
+                        <div>
+                            <div class="text-right">返审申请人：</div>
+                            <div class="">{{modify_detail.dlr_sales_name||'-'}}</div>
+                        </div>
+                        <div>
+                            <div class="text-right">修改原因：</div>
+                            <div class="">{{modify_detail.edit_reason||'-'}}</div>
+                        </div>
+
+                    </div>
+                    <div class="send-back-log pull-left" ng-if="!page_state.show_edit">
+                        <div>
+                            <div class="text-right">修改审批时间：</div>
+                            <div class="">{{modify_detail.uw_time||'-'}}</div>
+                        </div>
+                        <div>
+                            <div class="text-right">审批人：</div>
+                            <div class="">{{modify_detail.uw_staff||'-'}}</div>
+                        </div>
+                        <div>
+                            <div class="text-right">审批结果：</div>
+                            <div class="">
+                                <span ng-if="!modify_detail.edit_status">-</span>
+                                <span ng-if="modify_detail.edit_status=='P'">通过</span>
+                                <span ng-if="modify_detail.edit_status=='R'">拒绝（拒绝理由：{{modify_detail.reason}}）</span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="pull-left send-back-log" ng-if="page_state.show_edit">
+                        <div class="text-right">
+                            <button type="button"
+                                class="btn btn-success"
+                                ng-click="open('pass')">
+                                通过
+                            </button>
+                        </div>
+                        <div class="text-right">
+                            <input type="text"
+                                ng-model="page_state.reject_reason"
+                                placeholder="请输入拒绝理由"
+                            ><button type="button"
+                                class="btn btn-orange"
+                                ng-disabled="!page_state.reject_reason"
+                                ng-click="open('reject')">
+                                拒绝
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="send-back-detail">
+                    <h4>修改详情</h4>
+                    <div class="row">
+                        <div class="col-sm-10">
+                            <table class="table table-bordered">
+                    			<tbody>
+                                    <tr>
+                                        <td colspan="3" style="background:#fff;">订单基本信息</td>
+                                    </tr>
+                                    <tr ng-repeat="item in app_detail.app">
+                                        <td>{{item.name}}</td>
+                                        <td>{{origin_app[item.key]||'-'}}</td>
+                                        <td ng-class="{'different':modify_detail[item.key]!=origin_app[item.key]}">
+                                            {{modify_detail[item.key]||'-'}}
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="3" style="background:#fff;">主贷人信息</td>
+                                    </tr>
+                                    <tr ng-repeat="item in app_detail.lender">
+                                        <td>{{item.name}}</td>
+                                        <td>{{origin_app.client[item.key]||'-'}}</td>
+                                        <td ng-class="{'different':modify_detail.client[item.key]!=origin_app.client[item.key]}">
+                                            {{modify_detail.client[item.key]||'-'}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3" style="background:#fff;">配偶信息</td>
+                                    </tr>
+                                    <tr ng-repeat="item in app_detail.spouse">
+                                        <td>{{item.name}}</td>
+                                        <td>{{origin_app.spouse[item.key]||'-'}}</td>
+                                        <td ng-class="{'different':modify_detail.spouse[item.key]!=origin_app.spouse[item.key]}">
+                                            {{modify_detail.spouse[item.key]||'-'}}
+                                        </td>
+                                    </tr>
+
+                    			</tfoot>
+                    		</table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>

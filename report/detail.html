@@ -1,0 +1,140 @@
+<ol class="breadcrumb bc-3" >
+    <li>
+        <a ui-sref="menu.content.report.list">BI Report</a>
+    </li>
+    <li class="active">
+        <strong>报表详情</strong>
+    </li>
+</ol>
+<h2>报表：贷后管理表</h2>
+<br>
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="panel panel-primary">
+
+            <div class="panel-body">
+
+                <form role="form">
+                    <div class="row form-group form-horizontal">
+                        <label for="field-1" class="col-sm-2 control-label">申请编号</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="field-1" ng-model="page_state.filters.app_id"
+                            placeholder="申请编号">
+                        </div>
+
+                        <label for="field-2" class="col-sm-2 control-label">申请人姓名</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="field-2" ng-model="page_state.filters.clt_nm"
+                            placeholder="申请人姓名">
+                        </div>
+                    </div>
+                    <div class="row form-group form-horizontal">
+                        <label for="field-3" class="col-sm-2 control-label">手机号</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="field-3" ng-model="page_state.filters.mobile"
+                            placeholder="手机号">
+                        </div>
+                        <label for="field-4" class="col-sm-2 control-label">身份证号</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="field-4" ng-model="page_state.filters.id_no"
+                            placeholder="身份证号">
+                        </div>
+                    </div>
+
+                    <div class="row form-group form-horizontal">
+                        <label for="field-1" class="col-sm-2 control-label">数据范围（不选表示全量）</label>
+                        <datepicker
+                            date-format="yyyy-MM-dd"
+                            date-max-limit="{{page_state.filters.ed || now}}"
+                            date-typer="true"
+                            class="picker col-sm-2"
+                        >
+                            <input
+                                ng-model="page_state.filters.st"
+                                type="text"
+                                placeholder="From"
+                                class="form-control"
+                            />
+                        </datepicker>
+                        <span class="_style">-</span>
+                        <datepicker
+                            date-format="yyyy-MM-dd"
+                            date-min-limit="{{page_state.filters.st}}"
+                            date-max-limit="{{now}}"
+                            date-typer="true"
+                            class="picker col-sm-2"
+                        >
+                            <input
+                                ng-model="page_state.filters.ed"
+                                type="text"
+                                placeholder="To"
+                                class="form-control"
+                            />
+                        </datepicker>
+                        <div class="col-sm-2 col-sm-offset-8">
+                            <button type="button"
+                                class="btn btn-primary btn-block"
+                                ng-click="searchFirstReports()"
+                            >查询</button>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button"
+                                class="btn btn-info btn-block"
+                                ng-click="exportFile()"
+                            >导出报表</button>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+        <div style="overflow-x:scroll;width:100%;">
+            <table class="table table-bordered datatable" id="table-report-detail"
+                style="width:auto;max-width:none;">
+    			<thead>
+    				<tr>
+                        <th ng-repeat="field in fields"
+                            >
+                            <div style="max-width:198px;" ng-style="{'width':field.length*12+19+'px'}">{{field}}</div>
+
+                        </th>
+    				</tr>
+    			</thead>
+    			<tbody>
+                    <tr ng-repeat="report in reports">
+                        <td ng-repeat="field in fields">{{report[field]}}</td>
+                    </tr>
+    			</tfoot>
+    		</table>
+        </div>
+
+        <paging
+          page="page_state.current_page"
+          page-size="20"
+          total="page_state.count"
+          show-prev-next="true"
+          show-first-last="true"
+          hide-if-empty="true"
+          paging-action="pageChanged(page)"
+          style="float: right;">
+        </paging>
+        <script type="text/javascript">
+        jQuery( document ).ready( function( $ ) {
+            var $table_emp_list = jQuery( '#table-emp-list' );
+
+            // Initialize DataTable
+            $table_emp_list.DataTable( {
+                "sDom": "tip",
+                "ordering": false,
+                "paging": false,
+                "bInfo": false,
+                "bStateSave": true
+            });
+        } );
+		</script>
+    </div>
+</div>

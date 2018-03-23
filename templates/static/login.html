@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<head>
+    <title>同盾登录</title>
+    <meta charset="UTF-8"/>
+</head>
+    <link href="/static/css/jsonFormater.css" type="text/css" rel="stylesheet"/>
+    <link href="/static/css/bootstrap.min.css" type="text/css" rel="stylesheet"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+      <style>
+          .col-center-block {
+            float: none;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+      </style>
+
+<body>
+  <!--<div class="container">-->
+      <!--<form class="form-login">-->
+          <!--<input   name="name" id="name" placeholder="姓名" value="王明桃" >-->
+          <!--<br/>-->
+          <!--<input type="number" class="mobile" name="mobile" id="mobile" placeholder="手机号" value="18148442555" >-->
+          <!--<br/>-->
+          <!--<input type="number" class="id_number" name="id_number" id="id_number" placeholder="身份证" value="511502198603236029" >-->
+          <!--<br/>-->
+          <!--<input  class="report_id" name="report_id" id="report_id" placeholder="身份证" value="ER201708251201449764CF2F" >-->
+          <!--<br/>-->
+          <!--<button type="submit" class="submit">查询</button>-->
+      <!--</form>-->
+
+      <!--&lt;!&ndash;<pre id="result">&ndash;&gt;-->
+
+      <!--&lt;!&ndash;</pre>&ndash;&gt;-->
+  <!--</div>-->
+
+  <div class="container">
+  <div class="row myCenter">
+    <div class="col-xs-6 col-md-4 col-center-block">
+      <form class="form-login">
+        <h2 class="form-signin-heading" style="text-align:center">同盾&nbsp;登录</h2>
+        <label  class="sr-only">用户名</label>
+          <input type="text" class="form-control"  name="username" id="username" placeholder="用户名"  >
+          <br/>
+          <input  type="text" class="form-control"  name="password" id="password" placeholder="密码"  >
+          <br/>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="remember-me">
+            记住我 </label>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">登&nbsp;&nbsp;录</button>
+      </form>
+    </div>
+      <br/><br/>
+      <div id="json">
+      </div>
+  </div>
+</div>
+
+
+    <script src="/static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/js/jsonFormater.js"></script>
+    <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+
+    <script >
+      $(document).ready(function() {
+          $(".form-login").submit(function(e){
+              e.preventDefault();
+              name = $("#name").val();
+              password = $("#mobile").val();
+              var data = {};
+              $(this).serializeArray().map(function(x){data[x.name] = x.value;});
+              var jsonData = JSON.stringify(data);
+//              alert(jsonData)
+              $.ajax({
+                  url:"http://192.168.0.213:8002/login",
+                  type:"POST",
+                  data: jsonData,
+                  contentType: "application/json",
+                  dataType: "json",
+                  headers : {"token": '12345'},
+                  success: function (data) {
+                      if ( 0 == data.code) {
+                          alert('登录成功');
+                          location.href = "/index.html";
+                          return;
+                      }
+                      else{
+                          alert(data.msg);
+                      }
+                  }
+              });
+          });
+      })
+    </script>
+</body>
+</html>

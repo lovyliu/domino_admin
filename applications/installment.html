@@ -1,0 +1,203 @@
+<div class="row">
+    <div class="col-sm-12">
+        <h3 class="text-center">购车分期付款担保审批单</h3>
+        <div align="right" style="text-align:right;font-size:15px;color:#333;">
+          <span >档案编号：<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u></span>
+        </div>
+        <p class="installment-text" style="text-indent:2em;font-size:15px;color:#333;">
+          兹有客户<u>{{application.clt_nm}}</u>通过我公司担保向<u>{{application.loan_bank ? application.loan_bank.split('银行')[0] : ''}}</u>银行<u>{{application.loan_bank ? application.loan_bank.split('银行')[1].slice(0,-2) : ''}}</u>支行按揭购买<u>{{application.brand+application.trix}}</u>轿车一辆。车价约<u>{{application.uw_fin_plan.vehicle_price||application.vehicle_price|parseint}}</u>元，按揭年限为<u>{{application.nper/12}}</u>年，上牌地<u>{{application.plate_reg_addr}}</u>；若为二手车，登记日期为<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>年<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>月。<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>年，加收费用<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>。
+        </p>
+        <table border="1" class="bg-white print-table" width="100%" style="margin-bottom:-1px;">
+          <!-- 客户信息 -->
+          <tr>
+            <td width="25%">按揭客户</td>
+            <td width="10%">姓名</td>
+            <td width="25%">{{application.client.clt_nm||'-'}}</td>
+            <td width="25%">户口所在地</td>
+            <td width="15%">{{application.client.reg_addr_info||'-'}}</td>
+          </tr>
+          <tr>
+            <td>共同还款人/担保人</td>
+            <td>姓名</td>
+            <td ng-if="!show_guarantor">{{application.client.spouse.clt_nm||'-'}}</td>
+            <td ng-if="show_guarantor">{{application.client.guarantor.clt_nm||'-'}}</td>
+            <td>户口所在地</td>
+            <td ng-if="!show_guarantor">{{application.client.spouse.reg_addr_info||'-'}}</td>
+            <td ng-if="show_guarantor">{{application.client.guarantor.reg_addr_info||'-'}}</td>
+          </tr>
+        </table>
+        <table border="1" class="bg-white print-table" width="100%" style="margin-bottom:-1px;">
+          <!-- 车辆/费用情况 -->
+          <tr>
+            <td width="25%">贷款金额</td>
+            <td width="25%">{{(application.uw_fin_plan.loan_amt||application.loan_amt|parseint)}}</td>
+            <td width="25%">合同本金</td>
+            <td width="25%">{{(application.uw_fin_plan.principal_ex||application.principal_ex|parseint)}} 元</td>
+          </tr>
+          <tr>
+            <td>贷款利率</td>
+            <td>{{rightDecimal(application.rate*100,100)||'-'}}%</td>
+            <td>手续费</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>业务地区</td>
+            <td>{{application.business_area}}</td>
+            <td>公证抵押费</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>车辆情况</td>
+            <td style="margin-left:10px;">
+              <input type="checkbox" name="vehicle_status" value="new" checked="checked" disabled="disabled" style="margin-left:10px;"/> 新车
+              <input type="checkbox" name="vehicle_status" value="old" disabled="disabled" style="margin-left:10px;"/> 二手车
+            </td>
+            <td>返利金额</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>保险情况（年）</td>
+            <td style="margin-left:10px;">
+              <input type="checkbox" name="insurence_year" value="new" checked="checked" disabled="disabled" style="margin-left:10px;"/> 0
+              <input type="checkbox" name="insurence_year" value="old" disabled="disabled" style="margin-left:10px;"/> 1
+              <input type="checkbox" name="insurence_year" value="old" disabled="disabled" style="margin-left:10px;"/> 2
+              <input type="checkbox" name="insurence_year" value="old" disabled="disabled" style="margin-left:10px;"/> 3
+            </td>
+            <td>风险金(业务保证金)</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>超年限费</td>
+            <td></td>
+            <td>履约保证金</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>上省外牌费</td>
+            <td></td>
+            <td>基础保证金</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>其他</td>
+            <td></td>
+            <td>上牌押金</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>GPS费</td>
+            <td></td>
+            <td>结算金额</td>
+            <td></td>
+          </tr>
+        </table>
+        <table border="1" class="bg-white print-table" width="100%">
+          <!-- 备注 -->
+          <tr style="height:60pt">
+            <td colspan="10" style="border-bottom-style:none;style-algin:left;vertical-align:top;">
+              备注：
+            </td>
+          </tr>
+          <tr>
+            <td colspan="10" style="border-bottom-style:none;">
+              本人已按公司规定对购车分期付款客户和所有证件材料的真实性进行核实无误，购车分期付款签约文件所涉及的签字均系客户及相关人员本人签字，申请资金于本日内垫付上述客户购车款，本人对资金安全负责。望给予批准。
+            </td>
+          </tr>
+          <tr style="height:30pt" class="no-border">
+            <td class="t1" colspan="2">业务员签字：</td>
+            <td class="t2"></td>
+            <td class="t2">日期：</td>
+            <td class="t2"></td>
+            <td class="t2" colspan="2">负责人签字：</td>
+            <td class="t2"></td>
+            <td class="t2">日期：</td>
+            <td class="t3"></td>
+          </tr>
+          <!-- 业务审批部意见 -->
+          <tr>
+            <tr>
+              <td colspan="10" style="border-bottom-style:none;">
+                业务审批部意见:
+              </td>
+            </tr>
+            <tr style="height:30pt" class="no-border">
+              <td class="t1" colspan="6"></td>
+              <td class="t2" >签字：</td>
+              <td class="t2"></td>
+              <td class="t2">日期：</td>
+              <td class="t3"></td>
+            </tr>
+          </tr>
+          <!-- 业务渠道部意见 -->
+          <tr>
+            <tr>
+              <td colspan="10" style="border-bottom-style:none;">
+                业务审批部意见：
+                <br>
+                打款指定户名：
+              </td>
+            </tr>
+            <tr style="height:30pt" class="no-border">
+              <td class="t1" colspan="6"></td>
+              <td class="t2" >签字：</td>
+              <td class="t2"></td>
+              <td class="t2">日期：</td>
+              <td class="t3"></td>
+            </tr>
+          </tr>
+          <!-- 财务部意见 -->
+          <tr>
+            <tr>
+              <td colspan="10" style="border-bottom-style:none;">
+                财务部意见:
+              </td>
+            </tr>
+            <tr style="height:30pt" class="no-border">
+              <td class="t1" colspan="6"></td>
+              <td class="t2" >签字：</td>
+              <td class="t2"></td>
+              <td class="t2">日期：</td>
+              <td class="t3"></td>
+            </tr>
+          </tr>
+          <!-- 风险管理部意见 -->
+          <tr>
+            <tr>
+              <td colspan="10" style="border-bottom-style:none;">
+                风险管理部意见:
+              </td>
+            </tr>
+            <tr class="no-border">
+              <td class="t1" style="border-bottom-style:none;" >GPS：</td>
+              <td class="t2" style="border-bottom-style:none;"></td>
+              <td class="t2" style="border-bottom-style:none;">钥匙：</td>
+              <td class="t2" style="border-bottom-style:none;"></td>
+              <td class="t2" style="border-bottom-style:none;">其他</td>
+              <td class="t3" style="border-bottom-style:none;" colspan="5"></td>
+            </tr>
+            <tr class="no-border">
+              <td class="t1" colspan="6"></td>
+              <td class="t2" >签字：</td>
+              <td class="t2"></td>
+              <td class="t2">日期：</td>
+              <td class="t3"></td>
+            </tr>
+          </tr>
+          <!-- 总经理意见 -->
+          <tr>
+            <tr>
+              <td colspan="10" style="border-bottom-style:none;">
+                总经理意见:
+              </td>
+            </tr>
+            <tr style="height:30pt" class="no-border">
+              <td class="t1" colspan="6"></td>
+              <td class="t2" >签字：</td>
+              <td class="t2"></td>
+              <td class="t2">日期：</td>
+              <td class="t3"></td>
+            </tr>
+          </tr>
+        </table>
+    </div>
+  </div>

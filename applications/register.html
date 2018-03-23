@@ -1,0 +1,57 @@
+<div class="row">
+    <div class="col-sm-12">
+        <h3 class="text-center">专项分期付款业务信息登记表</h3>
+        <form class="form-horizontal">
+            <table border="1" class="bg-white print-table" width="100%">
+              <tr>
+                <td>业务种类</td>
+                <td colspan="5" style="text-align:left;">
+                    <input type="checkbox" style="margin-left:10px;" checked disabled> 一手车
+                    <input type="checkbox" style="margin-left:10px;" disabled> 二手车
+                    <input type="checkbox" style="margin-left:10px;" disabled> 省内
+                    <input type="checkbox" style="margin-left:10px;" checked disabled> 省外
+              </tr>
+              <tr>
+                <td>客户姓名</td>
+                <td colspan="2">{{application.client.clt_nm||'-'}}</td>
+                <td>身份证号码</td>
+                <td colspan="2">{{application.client.id_no||'-'}}</td>
+              </tr>
+              <tr>
+                <td>经销商名称</td>
+                <td colspan="2">浙江鑫宝行担保有限公司</td>
+                <td>品牌车牌</td>
+                <td colspan="2">{{application.brand + '-' + application.trix||'-'}}</td>
+              </tr>
+              <tr>
+                <td>分期本金</td>
+                <td>{{(application.uw_fin_plan.principal_ex||application.principal_ex|parseint)||'-'}} 元</td>
+                <td>手续费率</td>
+                <td>{{rightDecimal(application.bank_rate*100,100)||'-'}} %</td>
+                <td>手续费</td>
+                <td>{{(application.service_charge|parseint)||'-'}} 元</td>
+              </tr>
+              <tr>
+                <td>分期期数（月）</td>
+                <td colspan="2">{{application.uw_fin_plan.nper||application.nper||'-'}}</td>
+                <td>车价</td>
+                <td colspan="2">{{(application.uw_fin_plan.vehicle_price||application.vehicle_price|parseint)||'-'}} 元</td>
+              </tr>
+              <tr>
+                <td>申请调整账户额度</td>
+                <td colspan="2">{{application.uw_fin_plan.adjustment_quota||application.adjustment_quota||'-'}} 万元</td>
+                <td>上牌地（省外注明省份）</td>
+                <td colspan="2">{{application.plate_reg_addr||'-'}}</td>
+              </tr>
+              <tr>
+                <td>编号</td>
+                <td colspan="5"></td>
+              </tr>
+              <tr>
+                <td>抄单员</td>
+                <td colspan="5"></td>
+              </tr>
+            </table>
+        </form>
+    </div>
+</div>

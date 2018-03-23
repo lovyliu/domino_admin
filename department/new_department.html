@@ -1,0 +1,50 @@
+<ol class="breadcrumb bc-3" >
+    <li>
+        <a ui-sref="menu.content.department.list">部门管理</a>
+    </li>
+    <li class="active">
+        <strong>新增部门</strong>
+    </li>
+</ol>
+<h2>新增部门</h2>
+<br>
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="panel panel-primary">
+
+            <div class="panel-body">
+
+                <form role="form" ng-submit="createDepartment()" name="form">
+                    <h4>部门基本信息</h4>
+                    <div class="row form-group form-horizontal">
+                        <label for="field-1" class="control-label col-sm-2">部门名称</label>
+                        <div class="col-sm-3">
+                            <input type="text" id="field-1"
+                                name="name"
+                                ng-model="post_data.name"
+                                placeholder="部门名称"
+                                class="form-control"
+                                required
+                            >
+                            <span class="error-msg"
+                                 ng-show="(form.name.$dirty || submitted) && form.name.$error.required"
+                            >请输入部门名称</span>
+                        </div>
+
+                    </div>
+
+                    <div class="row form-group form-horizontal">
+                        <div class="col-sm-2">
+                            <button type="submit"
+                                class="btn btn-primary btn-block"
+                            >保存</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>

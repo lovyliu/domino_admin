@@ -1,0 +1,144 @@
+<h2>经销商管理</h2>
+<br />
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="panel panel-primary">
+
+            <div class="panel-body">
+
+                <form role="form">
+                    <div class="row form-group form-horizontal">
+                        <label for="field-1" class="col-sm-2 control-label">经销商识别码</label>
+                        <div class="col-sm-3">
+                            <input type="text"
+                                class="form-control" id="field-1"
+                                ng-model="page_state.filters.dlr_id"
+                                placeholder="经销商识别码"
+                            >
+                        </div>
+
+                        <label for="field-2" class="col-sm-2 control-label">经销商名称</label>
+                        <div class="col-sm-3">
+                            <input type="text"
+                                 class="form-control" id="field-2"
+                                ng-model="page_state.filters.dlr_nm"
+                                placeholder="经销商名称"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="row form-group form-horizontal">
+                        <label class="col-sm-2 control-label">开店专员</label>
+                        <div class="col-sm-2">
+                            <select class="form-control" ng-model="page_state.filters.dfim__id">
+                                <option value="" selected>全部</option>
+                                <option value="{{staff.id}}" ng-repeat="staff in page_state.staff_list">{{staff.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row form-group form-horizontal">
+                        <label for="field-2" class="control-label col-sm-2">所在省</label>
+                        <div class="col-sm-3">
+                            <select class="form-control"
+                                ng-model="page_state.filters.province">
+                                <option value="" selected>全部</option>
+                                <option value="{{province.areaname}}" ng-repeat="province in province_list">{{province.areaname}}</option>
+                            </select>
+                        </div>
+
+                        <label for="field-2" class="control-label col-sm-2">所在市</label>
+                        <div class="col-sm-3">
+                            <select class="form-control"
+                                ng-model="page_state.filters.city"
+                                ng-options="city.areaname for city in city_list">
+                                <option value="" selected>全部</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row form-group form-horizontal">
+                        <div class="col-sm-2 col-sm-offset-7">
+                            <button type="button"
+                                class="btn btn-primary btn-block"
+                                ng-click="searchFirstDealers()"
+                            >查询</button>
+                        </div>
+                        <div class=" col-sm-2 col-sm-offset-1">
+                            <button type="button"
+                                class="btn btn-primary btn-block"
+                                ui-sref="menu.content.dealer.newDealer"
+                            >新增</button>
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+        <table class="table table-bordered datatable" id="table-dealer-list">
+			<thead>
+				<tr>
+                    <th>经销商识别码</th>
+                    <th>经销商名称</th>
+                    <th>经销商类型</th>
+                    <th>电话号</th>
+                    <th>地址</th>
+                    <th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+                <tr ng-repeat="dealer in dealers" ng-if="dealers.length">
+                    <td>
+                        <a ui-sref="menu.content.dealer.detail({dealer_id:dealer.id})"
+                            target="_blank"
+                            class="link-underline">
+                            {{dealer.dlr_id}}
+                        </a>
+                    </td>
+                    <td>{{dealer.dlr_nm||'-'}}</td>
+                    <td>{{dealer_role[dealer.dtype]||'-'}}</td>
+                    <td>{{dealer.tel_num||'-'}}</td>
+                    <td>
+                        <span>{{dealer.address||'-'}}</span>
+                    </td>
+                    <td>
+                        <a class="btn btn-primary"
+                            ui-sref="menu.content.dealer.detail({
+                                dealer_id:dealer.id})"
+                            target="_blank"
+                        >编辑</a>
+                    </td>
+                </tr>
+			</tfoot>
+		</table>
+        <paging
+          page="page_state.current_page"
+          page-size="20"
+          total="page_state.count"
+          show-prev-next="true"
+          show-first-last="true"
+          hide-if-empty="true"
+          paging-action="pageChanged(page)"
+          style="float: right;">
+        </paging>
+        <script type="text/javascript">
+        jQuery( document ).ready( function( $ ) {
+            var $table_dealer_list = jQuery( '#table-dealer-list' );
+
+            // Initialize DataTable
+            $table_dealer_list.DataTable( {
+                "sDom": "tip",
+                "ordering": false,
+                "paging": false,
+                "bInfo": false,
+                "bStateSave": true
+            });
+        } );
+		</script>
+    </div>
+</div>

@@ -1,0 +1,468 @@
+<ol class="breadcrumb bc-3" >
+    <li>
+        <a ui-sref="menu.content.department.list">部门管理</a>
+    </li>
+    <li class="active">
+        <strong>部门详情</strong>
+    </li>
+</ol>
+<h2>部门信息</h2>
+<br>
+<ul class="nav nav-tabs bordered" style="margin: 0;margin-top: 5px;">
+    <li ng-class="{'active': tab == 'basic'}">
+        <a ng-click="changeTab('basic')" data-toggle="tab">
+            <span class="visible-xs"><i class="entypo-info-circle"></i></span>
+            <span class="hidden-xs">基础信息</span>
+        </a>
+    </li>
+    <li ng-class="{'active': tab == 'position'}">
+        <a ng-click="changeTab('position')" data-toggle="tab">
+            <span class="visible-xs"><i class="entypo-bag"></i></span>
+            <span class="hidden-xs">职位信息</span>
+        </a>
+    </li>
+    <li ng-class="{'active': tab == 'staff'}">
+        <a ng-click="changeTab('staff')" data-toggle="tab">
+            <span class="visible-xs"><i class="entypo-user"></i></span>
+            <span class="hidden-xs">员工管理</span>
+        </a>
+    </li>
+</ul>
+<div class="tab-content">
+    <div class="tab-pane" ng-class="{'active': tab == 'basic'}">
+        <div class="row new-department">
+            <div class="col-md-12">
+                <form role="form" ng-submit="updateDepartment()" name="form">
+                    <h4>部门基本信息</h4>
+                    <div class="row form-group form-horizontal">
+                        <label class="control-label col-sm-2">部门 ID</label>
+                        <div class="col-sm-3" style="padding-top:7px;">{{department.id}}</div>
+                    </div>
+
+                    <div class="row form-group form-horizontal">
+                        <label for="field-1" class="control-label col-sm-2">部门名称</label>
+                        <div class="col-sm-3">
+                            <input type="text" id="field-1"
+                                name="name"
+                                ng-model="post_data.name"
+                                placeholder="部门名称"
+                                class="form-control"
+                                required
+                            >
+                            <span class="error-msg"
+                                 ng-show="(form.name.$dirty || submitted) && form.name.$error.required"
+                            >请输入部门名称</span>
+                        </div>
+                    </div>
+
+                    <div class="row form-group form-horizontal">
+                        <div class="col-sm-2">
+                            <button type="submit"
+                                class="btn btn-primary btn-block"
+                            >保存</button>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button"
+                                class="btn btn-danger btn-block"
+                                ng-click="deleteDepartment()"
+                            >删除</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane" ng-class="{'active': tab == 'position'}">
+        <div class="row new-department">
+            <div class="col-md-12">
+                <form role="form" ng-submit="addPosition()" name="form">
+                    <h4>新建部门职位</h4>
+
+                    <div class="row form-group form-horizontal">
+                        <label for="field-1" class="control-label col-sm-2">职位名称</label>
+                        <div class="col-sm-3">
+                            <input type="text" id="field-1"
+                                name="position"
+                                ng-model="new_position.position"
+                                placeholder="职位名称"
+                                class="form-control"
+                                required
+                            >
+                            <span class="error-msg"
+                                 ng-show="(form.position.$dirty || submitted) && form.position.$error.required"
+                            >请输入职位名称</span>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <button type="submit"
+                                class="btn btn-primary btn-block"
+                            >添加</button>
+                        </div>
+                    </div>
+
+                    <hr style="margin:40px 0;">
+
+                    <h4 style="margin: 30px 0;line-height:32px;">
+                        部门职位列表
+                        <button type="button" class="btn btn-danger col-sm-2"
+                            style="float:right;"
+                            ng-click="deletePosition()">
+                            删除
+                        </button>
+                    </h4>
+                    <div>
+                        <table class="table table-bordered datatable" id="table-dep-1">
+                			<thead>
+                				<tr>
+                                    <th>
+                                        选择
+                                        <input type="checkbox"
+                                            ng-model="selected_all_position"
+                                            ng-click="selectAllPosition()">
+                                    </th>
+                                    <th>职位 ID</th>
+                                    <th>职位名称</th>
+                                    <th>职位状态</th>
+                                    <th>操作</th>
+                				</tr>
+                			</thead>
+                			<tbody>
+                                <tr ng-repeat="position in department_position_list">
+                                    <td>
+                                        <input type="checkbox"
+                                            ng-model="position.selected"
+                                            ng-click="selectPosition($index)"
+                                        >
+                                    </td>
+                                    <td>{{position.role_id}}</td>
+                                    <td>{{position.position}}</td>
+                                    <td>
+                                        <select ng-model="position.status"
+                                            style="width:100%;">
+                                            <option value="A">已激活</option>
+                                            <option value="N">未激活</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <button type="button"
+                                            class="btn btn-primary"
+                                            ng-click="savePosition(position)">
+                                            保存
+                                        </button>
+                                    </td>
+                                </tr>
+                			</tfoot>
+                		</table>
+                        <paging
+                          page="department_position_current_page"
+                          page-size="20"
+                          total="department_position_count"
+                          show-prev-next="true"
+                          show-first-last="true"
+                          hide-if-empty="true"
+                          paging-action="departmentPositionPageChanged(page)"
+                          style="float: right;">
+                        </paging>
+                        <script type="text/javascript">
+                            jQuery( document ).ready( function( $ ) {
+                                var $table_dep1 = jQuery( '#table-dep-1' );
+
+                                // Initialize DataTable
+                                $table_dep1.DataTable( {
+                                    "sDom": "tip",
+                                    "ordering": false,
+                                    "paging": false,
+                                    "bInfo": false,
+                                    "bStateSave": true
+                                });
+                            } );
+                		</script>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane" ng-class="{'active': tab == 'staff'}">
+        <div class="row">
+            <div class="col-md-12">
+                <form role="form" style="margin-bottom:20px;">
+                    <div class="row form-group form-horizontal">
+                        <label class="control-label col-sm-2">员工 ID</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" ng-model="staff_filters.id"
+                                placeholder="员工 ID">
+                        </div>
+                        <label for="field-3" class="col-sm-2 control-label">手机号码</label>
+                        <div class="col-sm-3">
+                            <input type="text"
+                                class="form-control" id="field-3"
+                                ng-model="staff_filters.mobile"
+                                placeholder="手机号码"
+                            >
+                        </div>
+
+                    </div>
+                    <div class="row form-group form-horizontal">
+                        <label class="control-label col-sm-2">员工姓名</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" ng-model="staff_filters.name"
+                                placeholder="员工姓名">
+                        </div>
+
+                        <label class="col-sm-2 col-sm-offset control-label">员工创建时间</label>
+                        <datepicker
+                            date-format="yyyy-MM-dd"
+                            date-max-limit="{{staff_filters.created_time_r_1 || now}}"
+                            date-typer="true"
+                            class="picker col-sm-2"
+                        >
+                            <input
+                                ng-model="staff_filters.created_time_r_0"
+                                type="text"
+                                placeholder="From"
+                                class="form-control"
+                            />
+                        </datepicker>
+                        <span class="_style">-</span>
+                        <datepicker
+                            date-format="yyyy-MM-dd"
+                            date-min-limit="{{staff_filters.created_time_r_0}}"
+                            date-max-limit="{{now}}"
+                            date-typer="true"
+                            class="picker col-sm-2"
+                        >
+                            <input
+                                ng-model="staff_filters.created_time_r_1"
+                                type="text"
+                                placeholder="To"
+                                class="form-control"
+                            />
+                        </datepicker>
+
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-sm-2 col-sm-offset-8">
+                            <button type="button"
+                                class="btn btn-primary btn-block"
+                                ng-click="searchStaff()"
+                                style="max-width: 120px;"
+                            >查询</button>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button"
+                                class="btn btn-green btn-block"
+                                ng-click="createStaffRelation()"
+                                style="max-width: 120px;"
+                            >生成</button>
+                        </div>
+                        <!-- <div class="col-sm-2">
+                            <a type="button"
+                                class="btn btn-info btn-block"
+                                style="max-width:120px;"
+                                ui-sref="menu.content.upload({'upload_type':'department_staff'})"
+                                target="_blank"
+                            >批量导入</a>
+                        </div> -->
+                    </div>
+
+                </form>
+
+                <div>
+                    <table class="table table-bordered datatable" id="table-dep2">
+            			<thead>
+            				<tr>
+                                <th>
+                                    选择
+                                    <input type="checkbox"
+                                        ng-model="selected_all_staff"
+                                        ng-click="selectAllStaff()">
+                                </th>
+                                <th>员工 ID</th>
+                                <th>员工姓名</th>
+                                <th>手机号码</th>
+                                <th>邮箱地址</th>
+                                <th>员工角色</th>
+                                <th>员工状态</th>
+            				</tr>
+            			</thead>
+            			<tbody>
+                            <tr ng-repeat="staff in staff_list">
+                                <td>
+                                    <input type="checkbox"
+                                        ng-model="staff.selected"
+                                        ng-click="selectStaff($index)"
+                                    >
+                                </td>
+                                <td>{{staff.id}}</td>
+                                <td>{{staff.name}}</td>
+                                <td>{{staff.mobile}}</td>
+                                <td>{{staff.email}}</td>
+                                <td>
+                                    <select ng-model="staff.position"
+                                        style="width:100%;">
+                                        <option ng-value="role.id"
+                                            ng-repeat="role in staff_roles"
+                                        >{{role.position}}</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select ng-model="staff.status"
+                                        style="width:100%;">
+                                        <option value={{status}}
+                                            ng-repeat="(status,status_name) in staff_status"
+                                        >{{status_name}}</option>
+                                    </select>
+                                </td>
+                            </tr>
+            			</tfoot>
+            		</table>
+                    <paging
+                      page="staff_current_page"
+                      page-size="5"
+                      total="staff_count"
+                      show-prev-next="true"
+                      show-first-last="true"
+                      hide-if-empty="true"
+                      paging-action="staffPageChanged(page)"
+                      style="float: right;">
+                    </paging>
+                    <script type="text/javascript">
+                        jQuery( document ).ready( function( $ ) {
+                            var $table_dep2 = jQuery( '#table-dep2' );
+
+                            // Initialize DataTable
+                            $table_dep2.DataTable( {
+                                "sDom": "tip",
+                                "ordering": false,
+                                "paging": false,
+                                "bInfo": false,
+                                "bStateSave": true
+                            });
+                        } );
+            		</script>
+                </div>
+                <!-- <hr> -->
+                <div style="margin-top:80px;">
+                    <hr>
+                    <h4 style="margin: 30px 0;line-height:32px;">
+                        岗位信息编辑
+                        <button type="button" class="btn btn-danger col-sm-2"
+                            style="float:right;"
+                            ng-click="deleteStaffRelation()">
+                            删除
+                        </button>
+                    </h4>
+                    <!-- <div class="row">
+                        <div class="col-sm-2 col-sm-offset-10">
+                            <button type="button" class="btn btn-danger btn-block"
+                                style="max-width:120px;"
+                                ng-click="deleteStaffRelation()">
+                                删除
+                            </button>
+                        </div>
+                    </div> -->
+                    <table class="table table-bordered datatable" id="table-dep3">
+            			<thead>
+            				<tr>
+                                <th>
+                                    选择
+                                    <input type="checkbox"
+                                        ng-model="selected_all_staff_relation"
+                                        ng-click="selectAllStaffRelation()">
+                                </th>
+                                <th>员工 ID</th>
+                                <th>员工姓名</th>
+                                <th>手机号码</th>
+                                <th>邮箱地址</th>
+                                <th>员工职位</th>
+                                <th>员工状态</th>
+                                <th>操作</th>
+            				</tr>
+            			</thead>
+            			<tbody>
+                            <tr ng-repeat="relation in staff_relation_list">
+                                <td>
+                                    <input type="checkbox"
+                                        ng-model="relation.selected"
+                                        ng-click="selectStaffRelation($index)"
+                                    >
+                                </td>
+                                <td>{{relation.staff}}</td>
+                                <td>{{relation.staff__name}}</td>
+                                <td>{{relation.staff__mobile}}</td>
+                                <td>{{relation.staff__email}}</td>
+                                <td>
+                                    <select ng-model="relation.position"
+                                        style="width:100%;">
+                                        <option ng-value="role.id"
+                                            ng-repeat="role in staff_roles"
+                                        >{{role.position}}</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select ng-model="relation.status"
+                                        style="width:100%;">
+                                        <option value={{status}}
+                                            ng-repeat="(status,status_name) in staff_status"
+                                        >{{status_name}}</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <!-- <button type="button"
+                                        class="btn btn-primary"
+                                        ui-sref="menu.content.staff.detail({staff_id:relation.staff,department_id:department_id})"
+                                    >
+                                        查看详情
+                                    </button> -->
+                                    <button type="button"
+                                        class="btn btn-primary"
+                                        ng-click="updateStaffRelation(relation)"
+                                    >
+                                        保存
+                                    </button>
+                                </td>
+                            </tr>
+            			</tfoot>
+            		</table>
+                    <paging
+                      page="staff_relation_current_page"
+                      page-size="20"
+                      total="staff_relation_count"
+                      show-prev-next="true"
+                      show-first-last="true"
+                      hide-if-empty="true"
+                      paging-action="staffRelationPageChanged(page)"
+                      style="float: right;">
+                    </paging>
+                    <script type="text/javascript">
+                        jQuery( document ).ready( function( $ ) {
+                            var $table_dep3 = jQuery( '#table-dep3' );
+
+                            // Initialize DataTable
+                            $table_dep3.DataTable( {
+                                "sDom": "tip",
+                                "ordering": false,
+                                "paging": false,
+                                "bInfo": false,
+                                "bStateSave": true
+                            });
+                        } );
+            		</script>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="tab-content">
+
+
+</div>
+
+
+<script>

@@ -1,0 +1,1863 @@
+<div class="application-detail container-fluid">
+    <ol class="breadcrumb bc-3" style="margin: 0;padding-top: 0;">
+        <li>
+            <a ui-sref="menu.content.applications.list"
+                ng-if="current_state == 'applications'">贷前管理</a>
+            <a ui-sref="menu.content.postLoan.list"
+                ng-if="current_state == 'postLoan'">贷后管理</a>
+        </li>
+        <li class="active">
+            申请详情
+        </li>
+    </ol>
+    <div class="header">
+        <h3 class="title" ng-if="current_state == 'applications'">贷前管理</h3>
+        <h3 class="title" ng-if="current_state == 'postLoan'">贷后管理</h3>
+        <table class="info">
+            <tr>
+                <td>申请编号</td>
+                <td>
+                    {{application.app_id}}
+                    <span ng-if="application.source">{{'(' + application.source + ')'}}</span>
+                </td>
+                <td>申请状态</td>
+                <td>{{application.uw_status.application||'-'}}</td>
+                <td>金融方案审批</td>
+                <td ng-class="{
+                    'text-green':application.uw_status.uw_finance[0] == 'P',
+                    'text-red':application.uw_status.uw_finance[0] == 'R'
+                }">{{application.uw_status.uw_finance[1]}}</td>
+                <td>电话核实</td>
+                <td ng-class="{
+                    'text-green':application.uw_status.uw_credit.yujian_credit_invest[0] == 'P',
+                    'text-red':application.uw_status.uw_credit.yujian_credit_invest[0] == 'R'
+                }">{{application.uw_status.uw_credit.yujian_credit_invest[1]}}</td>
+                <td>云车征信结果</td>
+                <td ng-class="{
+                    'text-green':application.uw_status.uw_credit.pboc[0] == 'P',
+                    'text-red':application.uw_status.uw_credit.pboc[0] == 'R'
+                }">{{application.uw_status.uw_credit.pboc[1]}}</td>
+                <td rowspan="2" ng-if="!application.staff_owner">
+                    <button type="button" class="btn btn-blue"
+                        ng-click="open('ownApplication')">认领</button>
+                </td>
+                <td rowspan="2" ng-if="current_state == 'applications'">
+                    <button type="button" class="btn btn-blue"
+                        ng-click="open('dragBackApplication')">拖回</button>
+                </td>
+                <td rowspan="2" ng-if="current_state == 'applications'">
+                    <button type="button" class="btn btn-danger"
+                        ng-click="open('cancelApplication')">取消</button>
+                </td>
+                <td rowspan="2">
+                    <a type="button" class="btn btn-primary"
+                        ui-sref="menu.content.sendBack({app_id:app_id})"
+                        target="_blank">返审审批</a>
+                </td>
+            </tr>
+            <tr>
+                <td ng-repeat-start="(status_key,status) in application.uw_status.uw_img_plan">{{status[2]}}</td>
+                <td ng-repeat-end ng-class="{
+                    'text-green':status[0] == 'P',
+                    'text-red':status[0] == 'R'
+                }">{{status[1]}}</td>
+            </tr>
+        </table>
+
+        </p>
+    </div>
+    <div class="content-wrapper" ng-class="{'hide-bottom':hide_bottom,'show-bottom':!hide_bottom}">
+        <ul class="nav nav-tabs bordered" style="margin: 0;margin-top: 5px;"><!-- available classes "bordered", "right-aligned" -->
+            <li ng-class="{'active': basic_tab == 'vehicle'}">
+                <a ng-click="changeBasicTab('vehicle')" data-toggle="tab">
+                    <span class="visible-xs"><i class="entypo-home"></i></span>
+                    <span class="hidden-xs">基本信息</span>
+                </a>
+            </li>
+            <li ng-class="{'active': basic_tab == 'client'}">
+                <a ng-click="changeBasicTab('client')" data-toggle="tab">
+                    <span class="visible-xs"><i class="entypo-user"></i></span>
+                    <span class="hidden-xs">客户信息</span>
+                </a>
+            </li>
+            <li ng-class="{'active': basic_tab == 'guarantor'}" ng-if="application.client.guarantor&&keys(application.client.guarantor).length">
+                <a ng-click="changeBasicTab('guarantor')" data-toggle="tab">
+                    <span class="visible-xs"><i class="entypo-user"></i></span>
+                    <span class="hidden-xs">担保人信息</span>
+                </a>
+            </li>
+            <li ng-class="{'active': basic_tab == 'plan'}">
+                <a ng-click="changeBasicTab('plan')" data-toggle="tab">
+                    <span class="visible-xs"><i class="entypo-mail"></i></span>
+                    <span class="hidden-xs">金融方案信息</span>
+                </a>
+            </li>
+            <li ng-class="{'active': basic_tab == 'rate'}">
+                <a ng-click="changeBasicTab('rate')" data-toggle="tab">
+                    <span class="visible-xs"><i class="entypo-user"></i></span>
+                    <span class="hidden-xs">利率表</span>
+                </a>
+            </li>
+            <li ng-class="{'active': basic_tab == 'contracts'}">
+                <a ng-click="changeBasicTab('contracts')" data-toggle="tab">
+                    <span class="visible-xs"><i class="entypo-user"></i></span>
+                    <span class="hidden-xs">合同电子化</span>
+                </a>
+            </li>
+            <li ng-class="{'active': basic_tab == 'fields'}">
+                <a ng-click="changeBasicTab('fields')" data-toggle="tab">
+                    <span class="visible-xs"><i class="entypo-user"></i></span>
+                    <span class="hidden-xs">字段定义</span>
+                </a>
+            </li>
+            <li ng-class="{'active': basic_tab == 'comments'}">
+                <a ng-click="changeBasicTab('comments')" data-toggle="tab">
+                    <span class="visible-xs"><i class="entypo-doc-text"></i></span>
+                    <span class="hidden-xs">贷前流转备注</span>
+                </a>
+            </li>
+            <li ng-class="{'active': basic_tab == 'log'}">
+                <a ng-click="changeBasicTab('log')" data-toggle="tab">
+                    <span class="visible-xs"><i class="entypo-doc-text"></i></span>
+                    <span class="hidden-xs">日志</span>
+                </a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane" ng-class="{'active': basic_tab == 'vehicle'}">
+                <div class="content basic-content" data-height="120">
+                    <div class="row">
+            			<div class="col-md-8 col-sm-12">
+            				<h5>门店信息</h5>
+            				<table class="table table-bordered responsive">
+            					<tbody>
+                                    <tr>
+                                        <td>门店</td>
+                                        <td>{{application.dlr_nm||'-'}}</td>
+                                    </tr>
+            					</tbody>
+            				</table>
+                            <h5>金融专员信息</h5>
+            				<table class="table table-bordered responsive">
+            					<tbody>
+                                    <tr>
+                                        <td>姓名</td>
+                                        <td>
+                                            <a ui-sref="menu.content.employee.detail({
+                                                employee_id:application.dlr_dfim._id})"
+                                                class="link-underline"
+                                                target="_blank"
+                                            >
+                                                {{application.dlr_dfim.name||'-'}}
+                                            </a>
+                                        </td>
+                                        <td>手机号</td>
+                                        <td>{{application.dlr_dfim.mobile||'-'}}</td>
+                                    </tr>
+            					</tbody>
+            				</table>
+                            <h5>销售信息</h5>
+            				<table class="table table-bordered responsive">
+            					<tbody>
+                                    <tr>
+                                        <td>姓名</td>
+                                        <td>
+                                            <a ui-sref="menu.content.staff.detail({
+                                                staff_id:application.dlr_sales._id})"
+                                                class="link-underline"
+                                                target="_blank"
+                                            >
+                                                {{application.dlr_sales.name||'-'}}
+                                            </a>
+                                        </td>
+                                        <td>手机号</td>
+                                        <td>{{application.dlr_sales.mobile||'-'}}</td>
+                                    </tr>
+            					</tbody>
+            				</table>
+                            <h5>车辆情况</h5>
+            				<table class="table table-bordered responsive">
+            				    <tbody>
+                                    <tr>
+                                        <td>品牌</td>
+                                        <td>{{application.brand||'-'}}</td>
+                                        <td>车系</td>
+                                        <td>{{application.trix||'-'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>车型</td>
+                                        <td>{{application.model_name||'-'}}</td>
+                                        <td>颜色</td>
+                                        <td>{{application.vehicle_color||'-'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>厂商指导价（元）</td>
+                                        <td>{{(application.msrp|parseint)||'-'}}</td>
+                                        <td>车型开票价（元）</td>
+                                        <td>{{(application.vehicle_price|parseint)||'-'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>车辆贷款额（元）</td>
+                                        <td>{{(application.vehicle_loan_amt|parseint)||'-'}}</td>
+                                        <td>档案管理费（元）</td>
+                                        <td>{{(application.management_fee|parseint)||'-'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>其他费用（元）</td>
+                                        <td>{{(application.other_fee|parseint)||'-'}}</td>
+                                        <td>总贷款额（元）</td>
+                                        <td>{{(application.loan_amt|parseint)||'-'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>实际首付款</td>
+                                        <td>{{(application.vehicle_down_payment|parseint)||'-'}}</td>
+                                        <td>云车首付款</td>
+                                        <td>{{(application.down_payment|parseint)||'-'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>实际首付比例</td>
+                                        <td>{{rightDecimal(application.vehicle_down_payment_percent*100,100)||'-'}}%</td>
+                                        <td>云车首付比例</td>
+                                        <td>{{rightDecimal(application.yunche_down_payment_percent*100,100)||'-'}}%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>还款期限</td>
+                                        <td>{{application.nper||'-'}}</td>
+                                        <td>产品类型</td>
+                                        <td>{{application.product_type||'-'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td ng-class="{'bg-danger':application.can_dict.plate_reg_addr_excat == -1}">上牌地／预计上牌地</td>
+                                        <td ng-class="{'bg-danger':application.can_dict.plate_reg_addr_excat == -1}">{{application.plate_reg_addr||'-'}}</td>
+                                        <td>车主与主贷人关系</td>
+                                        <td>{{application.vehicle_owner_lender_relation||'-'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>予见费率</td>
+                                        <td>{{rightDecimal(application.rate*100,100)||'-'}}%</td>
+                                        <td>贷款银行</td>
+                                        <td>{{application.loan_bank||'-'}}</td>
+
+                                    </tr>
+            				    </tbody>
+            				</table>
+            			</div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" ng-class="{'active': basic_tab == 'client'}">
+                <div class="content basic-content">
+                    <form ng-submit="open('updateApplication')">
+                        <div class="row">
+                            <div class="col-md-8 col-sm-12">
+                                <h5>
+                                    申请人信息
+                                    <button type="button" class="btn btn-info"
+                                        style="margin-left:30px;"
+                                        ng-if="!page_state.show_edit && current_state == 'applications'"
+                                        ng-click="showEdit()">
+                                        编辑
+                                    </button>
+                                    <button type="button" class="btn btn-default"
+                                        style="margin-left:30px;"
+                                        ng-if="page_state.show_edit && current_state == 'applications'"
+                                        ng-click="cancelEdit()">
+                                        取消
+                                    </button>
+                                    <button type="submit" class="btn btn-primary"
+                                        style="margin-left:30px;"
+                                        ng-if="page_state.show_edit&&current_state == 'applications'">
+                                        保存
+                                    </button>
+                                    <a class="btn btn-info pull-right"
+                                        ui-sref="menu.content.tongdun({
+                                            name: application.client.clt_nm,
+                                            mobile: application.client.mobile,
+                                            id_number: application.client.id_no
+                                        })"
+                                        target="_blank"
+                                        ng-if="current_state == 'applications'">
+                                        同盾查询
+                                    </a>
+                                </h5>
+                                <table class="table table-bordered responsive">
+                                    <tr>
+                                        <td>购车人姓名</td>
+                                        <td>
+                                            <a ui-sref="menu.content.client.detail({
+                                                client_id:application.client._id})"
+                                                class="link-underline"
+                                                target="_blank"
+                                            >
+                                                {{application.client.clt_nm||'-'}}
+                                            </a>
+                                        </td>
+                                        <td>身份证号</td>
+                                        <td>{{application.client.id_no||'-'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>性别</td>
+                                        <td>{{application.client.gender||'-'}}</td>
+                                        <td>户籍地</td>
+                                        <td ng-if="!page_state.show_edit">{{application.reg_addr_info}}</td>
+                                        <td class="place-select" ng-if="page_state.show_edit">
+                                            <select class="form-control" name="reg_addr_info_province"
+                                                required
+                                                ng-model="page_state.reg_addr_info.province"
+                                                ng-change="changeProvince('reg_addr_info')">
+                                                <option value="" selected>全部</option>
+                                                <option value="{{province.areaname}}" ng-repeat="province in page_state.province_list">{{province.areaname}}</option>
+                                            </select>
+                                            <select class="form-control" name="reg_addr_info_city"
+                                                required
+                                                ng-model="page_state.reg_addr_info.city"
+                                                ng-change="changeCity('reg_addr_info')">
+                                                <option value="" selected>全部</option>
+                                                <option value="{{city.areaname}}" ng-repeat="city in page_state.reg_addr_info.city_list">{{city.areaname}}</option>
+                                            </select>
+                                            <select class="form-control" name="reg_addr_info_district"
+                                                required
+                                                ng-model="page_state.reg_addr_info.district">
+                                                <option value="" selected>全部</option>
+                                                <option value="{{district.areaname}}" ng-repeat="district in page_state.reg_addr_info.district_list">{{district.areaname}}</option>
+                                            </select>
+                                            <!-- <input type="text" name="reg_addr"
+                                                ng-model="post_data.reg_addr"
+                                                required> -->
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>手机号码</td>
+                                        <td>{{application.client.mobile||'-'}}</td>
+                                        <td>学历</td>
+                                        <td>{{application.client.edu||'-'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>婚姻状况</td>
+                                        <td>{{application.client.marriage||'-'}}</td>
+                                        <td>年龄</td>
+                                        <td>{{application.client.age||'-'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>身份证地址</td>
+                                        <td colspan="3">{{application.client.reg_addr_details||'-'}}</td>
+                                    </tr>
+                                </table>
+                                <h5>收入信息（主要收入来源）- {{application.client.major_income_type}}</h5>
+                                <table class="table table-bordered responsive"
+                                    ng-if="application.client.major_income_type == '工资'">
+                                    <tr>
+                                        <td>年收入（元）</td>
+                                        <td>{{application.client.major_income||'-'}}</td>
+                                        <td>单位名称</td>
+                                        <td ng-if="!page_state.show_edit">
+                                            {{application.client.major_company_name}}
+                                        </td>
+                                        <td ng-if="page_state.show_edit">
+                                            <input type="text" name="major_company_name"
+                                                ng-model="post_data.major_company_name"
+                                                required>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>职务</td>
+                                        <td ng-if="!page_state.show_edit">
+                                            {{application.client.major_work_position}}
+                                        </td>
+                                        <td ng-if="page_state.show_edit">
+                                            <input type="text" name="major_work_position"
+                                                ng-model="post_data.major_work_position"
+                                                required>
+                                        </td>
+                                        <td>单位座机</td>
+                                        <td ng-if="!page_state.show_edit">
+                                            {{application.client.major_work_phone_num}}
+                                        </td>
+                                        <td ng-if="page_state.show_edit">
+                                            <input type="text" name="major_work_phone_num"
+                                                ng-model="post_data.major_work_phone_num"
+                                                required>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>单位地址</td>
+                                        <td colspan="3" ng-if="!page_state.show_edit">
+                                            {{page_state.major_company_addr_details.province+'-'+page_state.major_company_addr_details.city+'-'+page_state.major_company_addr_details.district}}
+                                        </td>
+                                        <td colspan="3" class="place-select"
+                                            ng-if="page_state.show_edit">
+                                            <select class="form-control" required
+                                                name="major_company_addr_details_province"
+                                                ng-model="page_state.major_company_addr_details.province"
+                                                ng-change="changeProvince('major_company_addr_details')">
+                                                <option value="" selected>全部</option>
+                                                <option value="{{province.areaname}}" ng-repeat="province in page_state.province_list">{{province.areaname}}</option>
+                                            </select>
+                                            <select class="form-control" required
+                                                name="major_company_addr_details_city"
+                                                ng-model="page_state.major_company_addr_details.city"
+                                                ng-change="changeCity('major_company_addr_details')">
+                                                <option value="" selected>全部</option>
+                                                <option value="{{city.areaname}}" ng-repeat="city in page_state.major_company_addr_details.city_list">{{city.areaname}}</option>
+                                            </select>
+                                            <select class="form-control" required
+                                                name="major_company_addr_details_district"
+                                                ng-model="page_state.major_company_addr_details.district">
+                                                <option value="" selected>全部</option>
+                                                <option value="{{district.areaname}}" ng-repeat="district in page_state.major_company_addr_details.district_list">{{district.areaname}}</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>单位详细地址</td>
+                                        <td ng-if="!page_state.show_edit">
+                                            {{page_state.major_company_addr_details.address1}}
+                                        </td>
+                                        <td ng-if="page_state.show_edit">
+                                            <input type="text" required
+                                                name="major_company_addr_details_address1"
+                                                ng-model="page_state.major_company_addr_details.address1">
+                                        </td>
+                                        <td>单位地址门牌号</td>
+                                        <td ng-if="!page_state.show_edit">
+                                            {{page_state.major_company_addr_details.address2}}
+                                        </td>
+                                        <td ng-if="page_state.show_edit">
+                                            <input type="text" required
+                                                name="major_company_addr_details_address2"
+                                                ng-model="page_state.major_company_addr_details.address2">
+                                        </td>
+                                    </tr>
+                                </table>
+                                <table class="table table-bordered responsive"
+                                    ng-if="application.client.major_income_type == '自营'">
+                                    <tr>
+                                        <td>年收入（元）</td>
+                                        <td>{{application.client.major_income||'-'}}</td>
+                                        <td>业务类型</td>
+                                        <td>{{application.client.major_busi_type||'-'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>店铺名称</td>
+                                        <td ng-if="!page_state.show_edit">
+                                            {{application.client.major_company_name}}
+                                        </td>
+                                        <td ng-if="page_state.show_edit">
+                                            <input type="text" name="major_company_name"
+                                                ng-model="post_data.major_company_name"
+                                                required>
+                                        </td>
+                                        <td>经营项目地址</td>
+                                        <td ng-if="!page_state.show_edit">
+                                            {{page_state.major_company_addr_details.province+'-'+page_state.major_company_addr_details.city+'-'+page_state.major_company_addr_details.district}}
+                                        </td>
+                                        <td class="place-select"
+                                            ng-if="page_state.show_edit">
+                                            <select class="form-control" required
+                                                name="major_company_addr_details_province"
+                                                ng-model="page_state.major_company_addr_details.province"
+                                                ng-change="changeProvince('major_company_addr_details')">
+                                                <option value="" selected>全部</option>
+                                                <option value="{{province.areaname}}" ng-repeat="province in page_state.province_list">{{province.areaname}}</option>
+                                            </select>
+                                            <select class="form-control" required
+                                                name="major_company_addr_details_city"
+                                                ng-model="page_state.major_company_addr_details.city"
+                                                ng-change="changeCity('major_company_addr_details')">
+                                                <option value="" selected>全部</option>
+                                                <option value="{{city.areaname}}" ng-repeat="city in page_state.major_company_addr_details.city_list">{{city.areaname}}</option>
+                                            </select>
+                                            <select class="form-control" required
+                                                name="major_company_addr_details_district"
+                                                ng-model="page_state.major_company_addr_details.district">
+                                                <option value="" selected>全部</option>
+                                                <option value="{{district.areaname}}" ng-repeat="district in page_state.major_company_addr_details.district_list">{{district.areaname}}</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>经营项目详细地址</td>
+                                        <td ng-if="!page_state.show_edit">
+                                            {{page_state.major_company_addr_details.address1}}
+                                        </td>
+                                        <td ng-if="page_state.show_edit">
+                                            <input type="text" required
+                                                name="major_company_addr_details_address1"
+                                                ng-model="page_state.major_company_addr_details.address1">
+                                        </td>
+                                        <td>经营项目地址门牌号</td>
+                                        <td ng-if="!page_state.show_edit">
+                                            {{page_state.major_company_addr_details.address2}}
+                                        </td>
+                                        <td ng-if="page_state.show_edit">
+                                            <input type="text" required
+                                                name="major_company_addr_details_address2"
+                                                ng-model="page_state.major_company_addr_details.address2">
+                                        </td>
+                                    </tr>
+                                </table>
+                                <table class="table table-bordered responsive"
+                                    ng-if="application.client.major_income_type == '其他'">
+                                    <tr>
+                                        <td>年收入（元）</td>
+                                        <td>{{application.client.major_income||'-'}}</td>
+                                        <td>备注</td>
+                                        <td>{{application.client.major_remark||'-'}}</td>
+                                    </tr>
+                                </table>
+                                <h5 ng-if="application.client.extra_income_type == '工资'">
+                                    收入信息（额外收入来源）- {{application.client.extra_income_type}}
+                                </h5>
+                                <table class="table table-bordered responsive"
+                                    ng-if="application.client.extra_income_type == '工资'">
+                                    <tr>
+                                        <td>年收入（元）</td>
+                                        <td>{{application.client.extra_income||'-'}}</td>
+                                        <td>单位名称</td>
+                                        <td>{{application.client.extra_company_name||'-'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>职务</td>
+                                        <td>{{application.client.extra_work_position||'-'}}</td>
+                                        <td>单位座机</td>
+                                        <td>{{application.client.extra_work_phone_num||'-'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>单位地址</td>
+                                        <td colspan="3">{{application.client.extra_company_addr||'-'}}</td>
+                                    </tr>
+                                </table>
+                                <h5 style="overflow:hidden;">
+                                    配偶信息
+                                    <a class="btn btn-info pull-right"
+                                        ui-sref="menu.content.tongdun({
+                                            name: application.client.spouse.clt_nm,
+                                            mobile: application.client.spouse.mobile,
+                                            id_number: application.client.spouse.id_no
+                                        })"
+                                        target="_blank"
+                                        ng-if="current_state == 'applications'">
+                                        同盾查询
+                                    </a>
+                                </h5>
+                                <table class="table table-bordered responsive">
+                                    <tr>
+                                        <td>姓名</td>
+                                        <td>
+                                            <a ui-sref="menu.content.client.detail({
+                                                client_id:application.client.spouse._id})"
+                                                class="link-underline"
+                                                target="_blank"
+                                            >
+                                                {{application.client.spouse.clt_nm||'-'}}
+                                            </a>
+                                        </td>
+                                        <td>手机号码</td>
+                                        <td>{{application.client.spouse.mobile||'-'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>配偶身份证号</td>
+                                        <td>{{application.client.spouse.id_no||'-'}}</td>
+                                        <td>配偶户籍地</td>
+                                        <td>{{application.client.spouse.reg_addr_info||'-'}}</td>
+                                    </tr>
+                                </table>
+                                <h5>配偶收入信息（主要收入来源）- {{application.client.spouse.major_income_type}}</h5>
+                                <table class="table table-bordered responsive"
+                                    ng-if="application.client.spouse.major_income_type == '工资'">
+                                    <tr>
+                                        <td>年收入（元）</td>
+                                        <td>{{application.client.spouse.major_income||'-'}}</td>
+                                        <td>单位名称</td>
+                                        <td ng-if="!page_state.show_edit">
+                                            {{application.spouse_major_company_name}}
+                                        </td>
+                                        <td ng-if="page_state.show_edit">
+                                            <input type="text" name="spouse_major_company_name"
+                                                ng-model="post_data.spouse_major_company_name"
+                                                required>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>职务</td>
+                                        <td>
+                                            {{application.client.spouse.major_work_position||'-'}}</td>
+                                        <td>单位座机</td>
+                                        <td ng-if="!page_state.show_edit">
+                                            {{application.spouse_major_work_phone_num}}
+                                        </td>
+                                        <td ng-if="page_state.show_edit">
+                                            <input type="text" name="spouse_major_work_phone_num"
+                                                ng-model="post_data.spouse_major_work_phone_num"
+                                                required>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>单位地址</td>
+                                        <td colspan="3" ng-if="!page_state.show_edit">
+                                            {{page_state.spouse_major_company_addr_details.province+'-'+page_state.spouse_major_company_addr_details.city+'-'+page_state.spouse_major_company_addr_details.district}}
+                                        </td>
+                                        <td colspan="3" class="place-select"
+                                            ng-if="page_state.show_edit">
+                                            <select class="form-control" required
+                                                name="spouse_major_company_addr_details_province"
+                                                ng-model="page_state.spouse_major_company_addr_details.province"
+                                                ng-change="changeProvince('spouse_major_company_addr_details')">
+                                                <option value="" selected>全部</option>
+                                                <option value="{{province.areaname}}" ng-repeat="province in page_state.province_list">{{province.areaname}}</option>
+                                            </select>
+                                            <select class="form-control" required
+                                                name="spouse_major_company_addr_details_city"
+                                                ng-model="page_state.spouse_major_company_addr_details.city"
+                                                ng-change="changeCity('spouse_major_company_addr_details')">
+                                                <option value="" selected>全部</option>
+                                                <option value="{{city.areaname}}" ng-repeat="city in page_state.spouse_major_company_addr_details.city_list">{{city.areaname}}</option>
+                                            </select>
+                                            <select class="form-control" required
+                                                name="spouse_major_company_addr_details_district"
+                                                ng-model="page_state.spouse_major_company_addr_details.district">
+                                                <option value="" selected>全部</option>
+                                                <option value="{{district.areaname}}" ng-repeat="district in page_state.spouse_major_company_addr_details.district_list">{{district.areaname}}</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>单位详细地址</td>
+                                        <td ng-if="!page_state.show_edit">
+                                            {{page_state.spouse_major_company_addr_details.address1}}
+                                        </td>
+                                        <td ng-if="page_state.show_edit">
+                                            <input type="text" required
+                                                name="spouse_major_company_addr_details_address1"
+                                                ng-model="page_state.spouse_major_company_addr_details.address1">
+                                        </td>
+                                        <td>单位地址门牌号</td>
+                                        <td ng-if="!page_state.show_edit">
+                                            {{page_state.spouse_major_company_addr_details.address2}}
+                                        </td>
+                                        <td ng-if="page_state.show_edit">
+                                            <input type="text" required
+                                                name="spouse_major_company_addr_details_address2"
+                                                ng-model="page_state.spouse_major_company_addr_details.address2">
+                                        </td>
+                                    </tr>
+                                </table>
+                                <table class="table table-bordered responsive"
+                                    ng-if="application.client.spouse.major_income_type == '自营'">
+                                    <tr>
+                                        <td>年收入（元）</td>
+                                        <td>{{application.client.spouse.major_income||'-'}}</td>
+                                        <td>业务类型</td>
+                                        <td>{{application.client.spouse.major_busi_type||'-'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>店铺名称</td>
+                                        <td ng-if="!page_state.show_edit">
+                                            {{application.spouse_major_company_name}}
+                                        </td>
+                                        <td ng-if="page_state.show_edit">
+                                            <input type="text" name="spouse_major_company_name"
+                                                ng-model="post_data.spouse_major_company_name"
+                                            >
+                                        </td>
+                                        <td>经营项目地址</td>
+                                        <td ng-if="!page_state.show_edit">
+                                            {{page_state.spouse_major_company_addr_details.province+'-'+page_state.spouse_major_company_addr_details.city+'-'+page_state.spouse_major_company_addr_details.district}}
+                                        </td>
+                                        <td class="place-select"
+                                            ng-if="page_state.show_edit">
+                                            <select class="form-control" required
+                                                name="spouse_major_company_addr_details_province"
+                                                ng-model="page_state.spouse_major_company_addr_details.province"
+                                                ng-change="changeProvince('spouse_major_company_addr_details')">
+                                                <option value="" selected>全部</option>
+                                                <option value="{{province.areaname}}" ng-repeat="province in page_state.province_list">{{province.areaname}}</option>
+                                            </select>
+                                            <select class="form-control" required
+                                                name="spouse_major_company_addr_details_city"
+                                                ng-model="page_state.spouse_major_company_addr_details.city"
+                                                ng-change="changeCity('spouse_major_company_addr_details')">
+                                                <option value="" selected>全部</option>
+                                                <option value="{{city.areaname}}" ng-repeat="city in page_state.spouse_major_company_addr_details.city_list">{{city.areaname}}</option>
+                                            </select>
+                                            <select class="form-control" required
+                                                name="spouse_major_company_addr_details_district"
+                                                ng-model="page_state.spouse_major_company_addr_details.district">
+                                                <option value="" selected>全部</option>
+                                                <option value="{{district.areaname}}" ng-repeat="district in page_state.spouse_major_company_addr_details.district_list">{{district.areaname}}</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>经营项目详细地址</td>
+                                        <td ng-if="!page_state.show_edit">
+                                            {{page_state.spouse_major_company_addr_details.address1}}
+                                        </td>
+                                        <td ng-if="page_state.show_edit">
+                                            <input type="text" required
+                                                name="spouse_major_company_addr_details_address1"
+                                                ng-model="page_state.spouse_major_company_addr_details.address1">
+                                        </td>
+                                        <td>经营项目地址门牌号</td>
+                                        <td ng-if="!page_state.show_edit">
+                                            {{page_state.spouse_major_company_addr_details.address2}}
+                                        </td>
+                                        <td ng-if="page_state.show_edit">
+                                            <input type="text" required
+                                                name="spouse_major_company_addr_details_address2"
+                                                ng-model="page_state.spouse_major_company_addr_details.address2">
+                                        </td>
+                                    </tr>
+                                </table>
+                                <table class="table table-bordered responsive"
+                                    ng-if="application.client.spouse.major_income_type == '其他'">
+                                    <tr>
+                                        <td>年收入（元）</td>
+                                        <td>{{application.client.spouse.major_income||'-'}}</td>
+                                        <td>备注</td>
+                                        <td>{{application.client.spouse.major_remark||'-'}}</td>
+                                    </tr>
+                                </table>
+                                <h5 ng-if="application.client.spouse.extra_income_type == '工资'">
+                                    配偶收入信息（额外收入来源）- {{application.client.spouse.extra_income_type}}
+                                </h5>
+                                <table class="table table-bordered responsive"
+                                    ng-if="application.client.spouse.extra_income_type == '工资'">
+                                    <tr>
+                                        <td>年收入（元）</td>
+                                        <td>{{application.client.spouse.extra_income||'-'}}</td>
+                                        <td>单位名称</td>
+                                        <td>{{application.client.spouse.extra_company_name||'-'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>职务</td>
+                                        <td>{{application.client.spouse.extra_work_position||'-'}}</td>
+                                        <td>单位座机</td>
+                                        <td>{{application.client.spouse.extra_work_phone_num||'-'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>单位地址</td>
+                                        <td colspan="3">{{application.client.spouse.extra_company_addr||'-'}}</td>
+                                    </tr>
+                                </table>
+                                <h5>居住地址信息</h5>
+                                <table class="table table-bordered responsive">
+                                    <tr>
+                                        <td>现住地址</td>
+                                        <td>{{application.client.current_addr_details||'-'}}</td>
+                                    </tr>
+                                </table>
+                                <h5>驾照信息</h5>
+                                <table class="table table-bordered responsive">
+                                    <tr>
+                                        <td>驾照</td>
+                                        <td>{{application.client.driving_lic||'-'}}</td>
+                                        <td>驾照持有人与主贷人关系</td>
+                                        <td>{{application.client.drv_lic_relationship||'-'}}</td>
+                                    </tr>
+                                </table>
+                                <h5>房屋信息</h5>
+                                <table class="table table-bordered responsive">
+                                    <tr>
+                                        <td>房屋性质</td>
+                                        <td>{{application.client.house_type||'-'}}</td>
+                                        <td>房屋面积（平米）</td>
+                                        <td>{{application.client.house_area||'-'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>住房所有权（人）</td>
+                                        <td>{{application.client.house_owner_name||'-'}}</td>
+                                        <td>与申请人关系</td>
+                                        <td>{{application.client.house_owner_relation||'-'}}</td>
+                                    </tr>
+                                </table>
+                                <h5>紧急联系人信息</h5>
+                                <table class="table table-bordered responsive">
+                                    <tr>
+                                        <td>紧急联系人1</td>
+                                        <td ng-if="!page_state.show_edit">
+                                            {{application.client.urg_contact1}}
+                                        </td>
+                                        <td ng-if="page_state.show_edit">
+                                            <input type="text" name="urg_contact1"
+                                                ng-model="post_data.urg_contact1"
+                                                required>
+                                        </td>
+                                        <td>手机号码</td>
+                                        <td ng-if="!page_state.show_edit">
+                                            {{application.client.urg_mobile1}}
+                                        </td>
+                                        <td ng-if="page_state.show_edit">
+                                            <input type="text" name="urg_mobile1"
+                                                ng-model="post_data.urg_mobile1"
+                                                required>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>与申请人关系</td>
+                                        <td>{{application.client.urg_relation1}}</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </table>
+                                <table class="table table-bordered responsive">
+                                    <tr>
+                                        <td>紧急联系人2</td>
+                                        <td ng-if="!page_state.show_edit">
+                                            {{application.client.urg_contact2}}
+                                        </td>
+                                        <td ng-if="page_state.show_edit">
+                                            <input type="text" name="urg_contact2"
+                                                ng-model="post_data.urg_contact2"
+                                                required>
+                                        </td>
+                                        <td>手机号码</td>
+                                        <td ng-if="!page_state.show_edit">
+                                            {{application.client.urg_mobile2}}
+                                        </td>
+                                        <td ng-if="page_state.show_edit">
+                                            <input type="text" name="urg_mobile2"
+                                                ng-model="post_data.urg_mobile2"
+                                                required>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>与申请人关系</td>
+                                        <td>{{application.client.urg_relation2}}</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+            <div class="tab-pane" ng-class="{'active': basic_tab == 'guarantor'}">
+                <div class="content basic-content">
+                    <div class="row">
+                        <div class="col-md-8 col-sm-12">
+                            <h5>担保人信息</h5>
+                            <table class="table table-bordered responsive">
+                                <tr>
+                                    <td>担保人姓名</td>
+                                    <td>
+                                        <a ui-sref="menu.content.client.detail({
+                                            client_id:application.client.guarantor._id})"
+                                            class="link-underline"
+                                            target="_blank"
+                                        >
+                                            {{application.client.guarantor.clt_nm||'-'}}
+                                        </a>
+                                    </td>
+                                    <td>身份证号</td>
+                                    <td>{{application.client.guarantor.id_no||'-'}}</td>
+                                </tr>
+                                <tr>
+                                    <td>性别</td>
+                                    <td>{{application.client.guarantor.gender||'-'}}</td>
+                                    <td>户籍地</td>
+                                    <td>{{application.client.guarantor.reg_addr||'-'}}</td>
+                                </tr>
+                                <tr>
+                                    <td>手机号码</td>
+                                    <td>{{application.client.guarantor.mobile||'-'}}</td>
+                                    <td>学历</td>
+                                    <td>{{application.client.guarantor.edu||'-'}}</td>
+                                </tr>
+                                <tr>
+                                    <td>婚姻状况</td>
+                                    <td>{{application.client.guarantor.marriage||'-'}}</td>
+                                    <td>身份证地址</td>
+                                    <td>{{application.client.guarantor.reg_addr_details||'-'}}</td>
+                                </tr>
+                            </table>
+                            <h5>配偶信息</h5>
+                            <table class="table table-bordered responsive">
+                                <tr>
+                                    <td>姓名</td>
+                                    <td>{{application.client.guarantor.spouse.clt_nm||'-'}}</td>
+                                    <td>配偶身份证号</td>
+                                    <td>{{application.client.guarantor.spouse.id_no||'-'}}</td>
+                                </tr>
+                                <tr>
+                                    <td>单位名称</td>
+                                    <td>{{application.client.guarantor.spouse.major_company_name||'-'}}</td>
+                                    <td>单位地址</td>
+                                    <td>{{application.client.guarantor.spouse.major_company_addr||'-'}}</td>
+                                </tr>
+                                <tr>
+                                    <td>单位电话</td>
+                                    <td>{{application.client.guarantor.spouse.major_work_phone_num||'-'}}</td>
+                                    <td>职务</td>
+                                    <td>{{application.client.guarantor.spouse.major_work_position||'-'}}</td>
+                                </tr>
+                                <tr>
+                                    <td>月收入（元）</td>
+                                    <td>{{application.client.guarantor.spouse.major_income||'-'}}</td>
+                                    <td>手机号码</td>
+                                    <td>{{application.client.guarantor.spouse.mobile||'-'}}</td>
+                                </tr>
+                            </table>
+                            <h5>居住地址信息</h5>
+                            <table class="table table-bordered responsive">
+                                <tr>
+                                    <td>现住地址</td>
+                                    <td>{{application.client.guarantor.current_addr||'-'}}</td>
+                                </tr>
+                            </table>
+                            <h5 ng-if="application.client.guarantor.major_income_type">收入信息（主要收入来源）- {{application.client.guarantor.major_income_type}}</h5>
+                            <table class="table table-bordered responsive"
+                                ng-if="application.client.guarantor.major_income_type == '工资'">
+                                <tr>
+                                    <td>年收入（元）</td>
+                                    <td>{{application.client.guarantor.major_income||'-'}}</td>
+                                    <td>单位名称</td>
+                                    <td>{{application.client.guarantor.major_company_name||'-'}}</td>
+                                </tr>
+                                <tr>
+                                    <td>职务</td>
+                                    <td>{{application.client.guarantor.major_work_position||'-'}}</td>
+                                    <td>单位座机</td>
+                                    <td>{{application.client.guarantor.major_work_phone_num||'-'}}</td>
+                                </tr>
+                                <tr>
+                                    <td>单位地址</td>
+                                    <td colspan="3">{{application.client.guarantor.major_company_addr||'-'}}</td>
+                                </tr>
+                            </table>
+                            <table class="table table-bordered responsive"
+                                ng-if="application.client.guarantor.major_income_type == '自营'">
+                                <tr>
+                                    <td>年收入（元）</td>
+                                    <td>{{application.client.guarantor.major_income||'-'}}</td>
+                                    <td>业务类型</td>
+                                    <td>{{application.client.guarantor.major_busi_type||'-'}}</td>
+                                </tr>
+                                <tr>
+                                    <td>店铺名称</td>
+                                    <td>{{application.client.guarantor.major_company_name||'-'}}</td>
+                                    <td>经营项目地址</td>
+                                    <td colspan="3">{{application.client.guarantor.major_company_addr||'-'}}</td>
+                                </tr>
+                            </table>
+                            <table class="table table-bordered responsive"
+                                ng-if="application.client.guarantor.major_income_type == '其他'">
+                                <tr>
+                                    <td>年收入（元）</td>
+                                    <td>{{application.client.guarantor.major_income||'-'}}</td>
+                                    <td>备注</td>
+                                    <td>{{application.client.guarantor.major_remark||'-'}}</td>
+                                </tr>
+                            </table>
+                            <h5 ng-if="application.client.guarantor.extra_income_type == '工资'">
+                                收入信息（额外收入来源）- {{application.client.guarantor.extra_income_type}}
+                            </h5>
+                            <table class="table table-bordered responsive"
+                                ng-if="application.client.guarantor.extra_income_type == '工资'">
+                                <tr>
+                                    <td>年收入（元）</td>
+                                    <td>{{application.client.guarantor.extra_income||'-'}}</td>
+                                    <td>单位名称</td>
+                                    <td>{{application.client.guarantor.extra_company_name||'-'}}</td>
+                                </tr>
+                                <tr>
+                                    <td>职务</td>
+                                    <td>{{application.client.guarantor.extra_work_position||'-'}}</td>
+                                    <td>单位座机</td>
+                                    <td>{{application.client.guarantor.extra_work_phone_num||'-'}}</td>
+                                </tr>
+                                <tr>
+                                    <td>单位地址</td>
+                                    <td colspan="3">{{application.client.guarantor.extra_company_addr||'-'}}</td>
+                                </tr>
+                            </table>
+                            <h5 ng-if="application.client.guarantor.spouse.major_income_type">
+                                配偶收入信息（主要收入来源）- {{application.client.guarantor.spouse.major_income_type}}
+                            </h5>
+                            <table class="table table-bordered responsive"
+                                ng-if="application.client.guarantor.spouse.major_income_type == '工资'">
+                                <tr>
+                                    <td>年收入（元）</td>
+                                    <td>{{application.client.guarantor.spouse.major_income||'-'}}</td>
+                                    <td>单位名称</td>
+                                    <td>{{application.client.guarantor.spouse.major_company_name||'-'}}</td>
+                                </tr>
+                                <tr>
+                                    <td>职务</td>
+                                    <td>{{application.client.guarantor.spouse.major_work_position||'-'}}</td>
+                                    <td>单位座机</td>
+                                    <td>{{application.client.guarantor.spouse.major_work_phone_num||'-'}}</td>
+                                </tr>
+                                <tr>
+                                    <td>单位地址</td>
+                                    <td colspan="3">{{application.client.guarantor.spouse.major_company_addr||'-'}}</td>
+                                </tr>
+                            </table>
+                            <table class="table table-bordered responsive"
+                                ng-if="application.client.guarantor.spouse.major_income_type == '自营'">
+                                <tr>
+                                    <td>年收入（元）</td>
+                                    <td>{{application.client.guarantor.spouse.major_income||'-'}}</td>
+                                    <td>业务类型</td>
+                                    <td>{{application.client.guarantor.spouse.major_busi_type||'-'}}</td>
+                                </tr>
+                                <tr>
+                                    <td>店铺名称</td>
+                                    <td>{{application.client.guarantor.spouse.major_company_name||'-'}}</td>
+                                    <td>经营项目地址</td>
+                                    <td colspan="3">{{application.client.guarantor.spouse.major_company_addr||'-'}}</td>
+                                </tr>
+                            </table>
+                            <table class="table table-bordered responsive"
+                                ng-if="application.client.guarantor.spouse.major_income_type == '其他'">
+                                <tr>
+                                    <td>年收入（元）</td>
+                                    <td>{{application.client.guarantor.spouse.major_income||'-'}}</td>
+                                    <td>备注</td>
+                                    <td>{{application.client.guarantor.spouse.major_remark||'-'}}</td>
+                                </tr>
+                            </table>
+                            <h5 ng-if="application.client.guarantor.spouse.extra_income_type == '工资'">
+                                配偶收入信息（额外收入来源）- {{application.client.guarantor.spouse.extra_income_type}}
+                            </h5>
+                            <table class="table table-bordered responsive"
+                                ng-if="application.client.guarantor.spouse.extra_income_type == '工资'">
+                                <tr>
+                                    <td>年收入（元）</td>
+                                    <td>{{application.client.guarantor.spouse.extra_income||'-'}}</td>
+                                    <td>单位名称</td>
+                                    <td>{{application.client.guarantor.spouse.extra_company_name||'-'}}</td>
+                                </tr>
+                                <tr>
+                                    <td>职务</td>
+                                    <td>{{application.client.guarantor.spouse.extra_work_position||'-'}}</td>
+                                    <td>单位座机</td>
+                                    <td>{{application.client.guarantor.spouse.extra_work_phone_num||'-'}}</td>
+                                </tr>
+                                <tr>
+                                    <td>单位地址</td>
+                                    <td colspan="3">{{application.client.guarantor.spouse.extra_company_addr||'-'}}</td>
+                                </tr>
+                            </table>
+                            <h5>驾照信息</h5>
+                            <table class="table table-bordered responsive">
+                                <tr>
+                                    <td>驾照</td>
+                                    <td>{{application.client.guarantor.driving_lic||'-'}}</td>
+                                </tr>
+                            </table>
+                            <h5>房屋信息</h5>
+                            <table class="table table-bordered responsive">
+                                <tr>
+                                    <td>房屋性质</td>
+                                    <td>{{application.client.guarantor.house_type||'-'}}</td>
+                                    <td>房屋面积（平米）</td>
+                                    <td>{{application.client.guarantor.house_area||'-'}}</td>
+                                </tr>
+                                <tr>
+                                    <td>住房所有权（人）</td>
+                                    <td>{{application.client.guarantor.house_owner_name||'-'}}</td>
+                                    <td>与申请人关系</td>
+                                    <td>{{application.client.guarantor.house_owner_relation||'-'}}</td>
+                                </tr>
+                            </table>
+                            <h5>紧急联系人信息</h5>
+                            <table class="table table-bordered responsive">
+                                <tr>
+                                    <td>紧急联系人1</td>
+                                    <td>{{application.client.guarantor.urg_contact1||'-'}}</td>
+                                    <td>手机号码</td>
+                                    <td>{{application.client.guarantor.urg_mobile1||'-'}}</td>
+                                </tr>
+                                <tr>
+                                    <td>与申请人关系</td>
+                                    <td>{{application.client.guarantor.urg_relation1||'-'}}</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                            <table class="table table-bordered responsive">
+                                <tr>
+                                    <td>紧急联系人2</td>
+                                    <td>{{application.client.guarantor.urg_contact2||'-'}}</td>
+                                    <td>手机号码</td>
+                                    <td>{{application.client.guarantor.urg_mobile2||'-'}}</td>
+                                </tr>
+                                <tr>
+                                    <td>与申请人关系</td>
+                                    <td>{{application.client.guarantor.urg_relation2||'-'}}</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="tab-pane" ng-class="{'active': basic_tab == 'plan'}">
+                <div class="content basic-content">
+                    <!-- <h3 ng-if="has_plan">已批复</h3>
+                    <h3 ng-if="!has_plan">未批复</h3> -->
+                    <div class="row">
+            			<div class="col-md-8 col-sm-12">
+                            <div class="header">
+                                <h4>用户申请方案</h4>
+                                <p class="info">&nbsp;</p>
+                            </div>
+                            <table class="table table-bordered responsive">
+                                <tbody>
+                                    <tr>
+                                        <td style="width:50%;">车辆开票价格（元）</td>
+                                        <td>
+                                            {{(application.vehicle_price|parseint)||'-'}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <tr>
+                                            <td>实际首付款（元）</td>
+                                            <td>
+                                                {{(application.vehicle_down_payment|parseint)||'-'}}
+                                            </td>
+                                        </tr>
+                                    </tr>
+                                    <tr>
+                                        <td>实际首付比例（％）</td>
+                                        <td>{{rightDecimal(application.vehicle_down_payment_percent*100,100)||'-'}}%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>贷款总额（元）</td>
+                                        <td>{{(application.loan_amt|parseint)||'-'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <tr>
+                                            <td>车辆贷款额（元）</td>
+                                            <td>
+                                                {{(application.vehicle_loan_amt|parseint)||'-'}}
+                                            </td>
+                                        </tr>
+                                    </tr>
+                                    <tr>
+                                        <tr>
+                                            <td>管理费贷款额（元）</td>
+                                            <td>
+                                                {{(application.management_fee|parseint)||'-'}}
+                                            </td>
+                                        </tr>
+                                    </tr>
+                                    <tr>
+                                        <td>其他费用（元）</td>
+                                        <td>
+                                            {{(application.other_fee|parseint)||'-'}}
+                                    </tr>
+                                    <tr>
+                                        <td>费率</td>
+                                        <td>{{rightDecimal(application.rate*100,100)||'-'}}%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>期数（月）</td>
+                                        <td>
+                                            {{application.nper||'-'}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>合同本金（元）</td>
+                                        <td>{{(application.principal_ex|parseint)||'-'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>本息合计（元）</td>
+                                        <td>{{(application.principal_interest|parseint)||'-'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>月供（元）</td>
+                                        <td>{{(application.monthly_payment|parseint)||'-'}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="header" style="position:relative;">
+                                <h4>审批方案</h4>
+                                <p class="info">
+                                    <span class="apply-info">
+                                        审批人
+                                        <span class="info-value">{{application.uw_fin_plan.staff_name||'-'}}</span>
+                                    </span>
+                                </p>
+                            </div>
+                            <table class="table table-bordered responsive">
+                                <tbody>
+                                    <tr>
+                                        <td style="width:50%;">车辆开票价格（元）</td>
+                                        <td>
+                                            {{(application.uw_fin_plan.vehicle_price|parseint)||'-'}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <tr>
+                                            <td>实际首付款（元）</td>
+                                            <td>
+                                                {{(application.uw_fin_plan.vehicle_down_payment|parseint)||'-'}}
+                                            </td>
+                                        </tr>
+                                    </tr>
+                                    <tr>
+                                        <td>实际首付比例（％）</td>
+                                        <td>{{rightDecimal(application.uw_fin_plan.vehicle_down_payment_percent*100,100)||'-'}}%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>贷款总额（元）</td>
+                                        <td>{{(application.uw_fin_plan.loan_amt|parseint)||'-'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <tr>
+                                            <td>车辆贷款额（元）</td>
+                                            <td>
+                                                {{(application.uw_fin_plan.vehicle_loan_amt|parseint)||'-'}}
+                                            </td>
+                                        </tr>
+                                    </tr>
+                                    <tr>
+                                        <tr>
+                                            <td>管理费贷款额（元）</td>
+                                            <td>
+                                                {{(application.uw_fin_plan.management_fee|parseint)||'-'}}
+                                            </td>
+                                        </tr>
+                                    </tr>
+                                    <tr>
+                                        <td>其他费用（元）</td>
+                                        <td>
+                                            {{(application.uw_fin_plan.other_fee|parseint)||'-'}}
+                                    </tr>
+                                    <tr>
+                                        <td>费率</td>
+                                        <td>{{rightDecimal(application.uw_fin_plan.rate*100,100)||'-'}}%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>期数（月）</td>
+                                        <td>
+                                            {{application.uw_fin_plan.nper||'-'}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>合同本金（元）</td>
+                                        <td>{{(application.uw_fin_plan.principal_ex|parseint)||'-'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>本息合计（元）</td>
+                                        <td>{{(application.uw_fin_plan.principal_interest|parseint)||'-'}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>月供（元）</td>
+                                        <td>{{(application.uw_fin_plan.monthly_payment|parseint)||'-'}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+            			</div>
+            		</div>
+
+                </div>
+
+            </div>
+            <div class="tab-pane" ng-class="{'active': basic_tab == 'rate'}">
+                <div class="content basic-content" data-height="120">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="table table-bordered responsive">
+                                <tr>
+                                    <th>银行</th>
+                                    <th>产品名称</th>
+                                    <th>利率</th>
+                                    <th>费率（3年）</th>
+                                    <th>费率（2年）</th>
+                                    <th>万元系数（3年）</th>
+                                    <th>万元系数（2年）</th>
+                                    <th>银行费率（3年）</th>
+                                    <th>银行费率（2年）</th>
+                                </tr>
+                                <tr ng-repeat="list in application.mine_rate">
+                                    <td>{{application.bank.name}}</td>
+                                    <td>{{list.rate__detail.name}}</td>
+                                    <td>{{rightDecimal(list.rate__detail.interest_rate*100,100)}}%</td>
+                                    <td>{{rightDecimal(list.rate__detail.rate_36*100,100)}}%</td>
+                                    <td>{{rightDecimal(list.rate__detail.rate_24*100,100)}}%</td>
+                                    <td>{{list.rate__detail.million_coefficient_36}}</td>
+                                    <td>{{list.rate__detail.million_coefficient_24}}</td>
+                                    <td>{{rightDecimal(application.bank.rate_36*100,100)}}%</td>
+                                    <td>{{rightDecimal(application.bank.rate_24*100,100)}}%</td>
+                                </tr>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" ng-class="{'active': basic_tab == 'contracts'}">
+                <div class="content basic-content" data-height="120">
+                    <div class="row">
+            			<div class="col-sm-12">
+                            <table class="table table-bordered responsive">
+                                <tr>
+                                    <th>
+                                        选择
+                                    </th>
+                                    <th>
+                                        No.
+                                    </th>
+                                    <th>
+                                        合同名称
+                                    </th>
+                                    <th>
+                                        操作
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" name="" value="">
+                                    </td>
+                                    <td>1</td>
+                                    <td>问询表</td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary"
+                                            ng-click="openContract('ask')">
+                                            新标签打开
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" name="" value="">
+                                    </td>
+                                    <td>2</td>
+                                    <td>问话调查表</td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary"
+                                            ng-click="openContract('investigate')">
+                                            新标签打开
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" name="" value="">
+                                    </td>
+                                    <td>3</td>
+                                    <td>专项分期付款业务信息登记表</td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary"
+                                            ng-click="openContract('register')">
+                                            新标签打开
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr ng-if="application.client.spouse">
+                                    <td>
+                                        <input type="checkbox" name="" value="">
+                                    </td>
+                                    <td>4</td>
+                                    <td>购车分期付款担保审批单（配偶）</td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary"
+                                            ng-click="openContract('installment')">
+                                            新标签打开
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr ng-if="application.client.guarantor">
+                                    <td>
+                                        <input type="checkbox" name="" value="">
+                                    </td>
+                                    <td ng-if="!application.client.spouse">4</td>
+                                    <td ng-if="application.client.spouse">5</td>
+                                    <td>购车分期付款担保审批单（担保人）</td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary"
+                                            ng-click="openContract('installment','guarantor')">
+                                            新标签打开
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr ng-if="!application.client.guarantor&&!application.client.spouse">
+                                    <td>
+                                        <input type="checkbox" name="" value="">
+                                    </td>
+                                    <td>4</td>
+                                    <td>购车分期付款担保审批单</td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary"
+                                            ng-click="openContract('installment')">
+                                            新标签打开
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" name="" value="">
+                                    </td>
+                                    <td ng-if="!(application.client.spouse&&application.client.guarantor)">5</td>
+                                    <td ng-if="application.client.spouse&&application.client.guarantor">6</td>
+                                    <td>贷款审批表</td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary"
+                                            ng-click="openContract('loan')">
+                                            新标签打开
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" name="" value="">
+                                    </td>
+                                    <td ng-if="!(application.client.spouse&&application.client.guarantor)">6</td>
+                                    <td ng-if="application.client.spouse&&application.client.guarantor">7</td>
+                                    <td>上门家访登记表</td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary"
+                                            ng-click="openContract('home_visit_file')">
+                                            新标签打开
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+
+            			</div>
+            		</div>
+                </div>
+            </div>
+            <div class="tab-pane" ng-class="{'active': basic_tab == 'fields'}">
+                <div class="content basic-content" data-height="120">
+                    <div class="row">
+            			<div class="col-sm-12">
+                            <table class="table table-bordered responsive">
+                              <thead>
+                                <tr>
+                                  <th>编号</th>
+                                  <th>字段名</th>
+                                  <th>Type</th>
+                                  <th>获取方式</th>
+                                  <th>说明</th>
+                                  <th>公式</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <td>a</td>
+                                  <td>车价</td>
+                                  <td>input</td>
+                                  <td>门店输入</td>
+                                  <td>车辆开票价</td>
+                                  <td>车辆开票价</td>
+                                </tr>
+                                <tr>
+                                  <td>b</td>
+                                  <td>实际首付款</td>
+                                  <td>input</td>
+                                  <td>1.门店输入<br>2.Auto Calculate</td>
+                                  <td>1.用户愿意支付的车辆首付款<br>2. =车价-车辆贷款金额</td>
+                                  <td>1.用户愿意支付的车辆首付款<br>2.lost focus : = a -c</td>
+                                </tr>
+                                <tr>
+                                  <td>c</td>
+                                  <td>车辆贷款金额</td>
+                                  <td>label</td>
+                                  <td>1.门店输入<br>2.Auto Calculate</td>
+                                  <td>1.用户希望贷款的车辆贷款金额<br>2. =车价-实际首付款</td>
+                                  <td>1.用户希望贷款的车辆贷款金额<br>2.lost focus : = a -b</td>
+                                </tr>
+                                <tr>
+                                  <td>d</td>
+                                  <td>档案管理费</td>
+                                  <td>label</td>
+                                  <td>固定，DLR.FEE</td>
+                                  <td>档案管理费</td>
+                                  <td>档案管理费</td>
+                                </tr>
+                                <tr>
+                                  <td>e</td>
+                                  <td>其他费用</td>
+                                  <td>input</td>
+                                  <td>门店输入</td>
+                                  <td>GPS 等其他费用</td>
+                                  <td>GPS 等其他费用</td>
+                                </tr>
+                                <tr>
+                                  <td>f</td>
+                                  <td>实际贷款金额</td>
+                                  <td>label</td>
+                                  <td>Auto Calculate</td>
+                                  <td>=车辆贷款金额+档案管理费+其他费用</td>
+                                  <td>= c + d + e</td>
+                                </tr>
+                                <tr>
+                                  <td>g</td>
+                                  <td>首付比例_实际</td>
+                                  <td>label</td>
+                                  <td>Auto Calculate</td>
+                                  <td>=实际首付款/车价* 100%</td>
+                                  <td>= b / a * 100%</td>
+                                </tr>
+                                <tr>
+                                  <td>h</td>
+                                  <td>云车首付款</td>
+                                  <td>label</td>
+                                  <td>Auto Calculate</td>
+                                  <td>=实际首付款-档案管理费-其他费用</td>
+                                  <td>= a - f = b - d- e</td>
+                                </tr>
+                                <tr>
+                                  <td>i</td>
+                                  <td>首付比例_云车</td>
+                                  <td>label</td>
+                                  <td>Auto Calculate</td>
+                                  <td>=云车首付款/车价* 100%</td>
+                                  <td>=h / a * 100%</td>
+                                </tr>
+                                <tr>
+                                  <td>j</td>
+                                  <td>首付比例_风控</td>
+                                  <td>label</td>
+                                  <td>Auto Calculate</td>
+                                  <td>=车辆首付款/项目总额_风控* 100%</td>
+                                  <td>= b / m * 100%</td>
+                                </tr>
+                                <tr>
+                                  <td>k</td>
+                                  <td>费率</td>
+                                  <td>droplist</td>
+                                  <td>门店选择</td>
+                                  <td>直接影响用户的还款额</td>
+                                  <td>-</td>
+                                </tr>
+                                <tr>
+                                  <td>l</td>
+                                  <td>利率</td>
+                                  <td>-</td>
+                                  <td>-</td>
+                                  <td>予见产品的利率（年化）</td>
+                                  <td>-</td>
+                                </tr>
+                                <tr>
+                                  <td>m</td>
+                                  <td>项目总额_风控</td>
+                                  <td>label</td>
+                                  <td>Auto Calculate</td>
+                                  <td>=车价+档案管理费+其他费用</td>
+                                  <td>= a + d + e</td>
+                                </tr>
+                                <tr>
+                                  <td>n</td>
+                                  <td>总成本</td>
+                                  <td>label</td>
+                                  <td>Auto Calculate</td>
+                                  <td>=实际贷款金额*(1+费率)</td>
+                                  <td>= f * (1 + k)</td>
+                                </tr>
+                                <tr>
+                                  <td>o</td>
+                                  <td>银行费率</td>
+                                  <td>label</td>
+                                  <td>-</td>
+                                  <td>银行给出的资金成本</td>
+                                  <td>-</td>
+                                </tr>
+                                <tr>
+                                  <td>p</td>
+                                  <td>合同本金_未精确</td>
+                                  <td>label</td>
+                                  <td>Auto Calculate</td>
+                                  <td>=总成本/(1+银行费率)</td>
+                                  <td>= n / (1 + o)</td>
+                                </tr>
+                                <tr>
+                                  <td>p&#39;</td>
+                                  <td>合同本金</td>
+                                  <td>label</td>
+                                  <td>Auto Calculate</td>
+                                  <td>p 精确到百位，后一位四舍五入</td>
+                                  <td>p 精确到百位，后一位四舍五入</td>
+                                </tr>
+                                <tr>
+                                  <td>q</td>
+                                  <td>本息合计</td>
+                                  <td>label</td>
+                                  <td>Auto Calculate</td>
+                                  <td>=合同本金*(1+银行费率)</td>
+                                  <td>= p&#39; * (1 + o)</td>
+                                </tr>
+                                <tr>
+                                  <td>r</td>
+                                  <td>期数</td>
+                                  <td>droplist</td>
+                                  <td>门店选择</td>
+                                  <td>24期/36期</td>
+                                  <td>24期/36期</td>
+                                </tr>
+                                <tr>
+                                  <td>s</td>
+                                  <td>月供</td>
+                                  <td>label</td>
+                                  <td>Auto Calculate</td>
+                                  <td>1. = q / r<br>2. 精确到个位，四舍五入</td>
+                                  <td>1. = q / r<br>2. 精确到个位，四舍五入</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" ng-class="{'active': basic_tab == 'comments'}">
+                <div class="content basic-content" data-height="120">
+                    <form>
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <textarea rows="8" style="width:100%;"
+                                    ng-disabled="current_state == 'postLoan'"
+                                    ng-class="{'disabled-textarea':current_state == 'postLoan'}"
+                                    ng-model="loan_flow_note.note"
+                                ></textarea>
+                                <span style="position: absolute;right: -32px;bottom: 4px;">
+                                    <span ng-class="{
+                                        'text-danger':loan_flow_note.note.length>500,
+                                        'flow-note-num': loan_flow_note.note.length<=500,
+                                    }"
+                                    >{{loan_flow_note.note.length || 0}}</span>/500
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <p ng-if="loan_flow_note.id">
+                                    最后更新时间：
+                                    <span>{{loan_flow_note.update_time | date: 'yyyy-MM-dd HH:mm:ss'}}</span>
+                                    （贷前专员：
+                                    <a class="link-underline" target="_blank"
+                                        ui-sref="menu.content.staff.detail({staff_id:loan_flow_note.staff})">
+                                        {{loan_flow_note.staff_name}}
+                                    </a>）
+                                </p>
+                                <div class="text-right" ng-if="current_state == 'applications'">
+                                    <button type="button" class="btn btn-primary"
+                                        ng-disabled="!loan_flow_note.note.length||loan_flow_note.note.length>500"
+                                        ng-click="updateLoanFlowNote(loan_flow_note.id,loan_flow_note.note)">
+                                        提交
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+            <div class="tab-pane" ng-class="{'active': basic_tab == 'log'}">
+                <div class="content basic-content log">
+                    <ul class="cbp_tmtimeline">
+
+                        <li ng-repeat="log in log_list">
+                            <!-- <time class="cbp_tmtime" datetime="{{log.app_plan.app_ts | date:'yyyy-MM-dd HH:mm:ss' }}"><span></span></time> -->
+
+                            <div class="cbp_tmicon bg-primary">
+                                <i class="entypo-location"></i>
+                            </div>
+
+                            <div class="cbp_tmlabel" ng-if="log.note.dtype=='table'">
+                                <h4 class="title">
+                                    {{log.action}}
+                                    <span class="sub-title">{{log.result}}</span>
+                                    <span class="pull-right time"
+                                        ng-if="log.action!='授信审批'">
+                                        {{log.uw_time|date:'yyyy-MM-dd HH:mm:ss'}}
+                                    </span>
+                                </h4>
+                                <div class="row">
+                                    <div class="col-sm-12" ng-if="log.action=='授信审批'">
+                                        <h5>
+                                            操作人：{{log.staff}}
+                                            <span class="pull-right">{{log.uw_time|date:'yyyy-MM-dd HH:mm:ss'}}</span>
+                                        </h5>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <hr>
+                                        <h5 ng-if="log.action=='订单提交'">经销商信息</h5>
+                                        <table class="table table-bordered responsive"
+                                            ng-if="log.action=='订单提交'">
+                                            <tr>
+                                                <td>经销商</td>
+                                                <td>
+                                                    <a class="link-underline" target="_blank"
+                                                        ui-sref="menu.content.dealer.detail({dealer_id:log.note.content.dealer.dlr_id})">
+                                                        {{log.note.content.dealer.dlr_nm}}
+                                                    </a>
+                                                </td>
+                                                <td>报单员</td>
+                                                <td>
+                                                    <a class="link-underline" target="_blank"
+                                                        ui-sref="menu.content.employee.detail({employee_id:log.note.content.dealer.dfim_id})">
+                                                        {{log.note.content.dealer.dfim_name}}
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <h5>方案信息</h5>
+                                        <table class="table table-bordered responsive"
+                                            ng-if="log.action != '修改订单资料'">
+                                            <tr>
+                                                <td>车辆开票价格（元）</td>
+                                                <td>{{log.note.content.vehicle_price||'-'}}</td>
+                                                <td>实际首付款（元）</td>
+                                                <td>{{log.note.content.vehicle_down_payment||'-'}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>实际首付比例（元）</td>
+                                                <td>{{log.note.content.vehicle_down_payment_percent||'-'}}</td>
+                                                <td>贷款总额（元）</td>
+                                                <td>{{log.note.content.loan_amt||'-'}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>车辆贷款额（元）</td>
+                                                <td>{{log.note.content.vehicle_loan_amt||'-'}}</td>
+                                                <td>其他项目贷款额（元）</td>
+                                                <td>{{log.note.content.other_fee||'-'}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>管理费贷款额（元）</td>
+                                                <td>{{log.note.content.management_fee||'-'}}</td>
+                                                <td>期数（月）</td>
+                                                <td>{{log.note.content.nper||'-'}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>费率</td>
+                                                <td>{{log.note.content.rate||'-'}}</td>
+                                                <td>本金（元）</td>
+                                                <td>{{log.note.content.principal_ex||'-'}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>本息合计（元）</td>
+                                                <td>{{log.note.content.principal_interest||'-'}}</td>
+                                                <td>月供（元）</td>
+                                                <td>{{log.note.content.monthly_payment||'-'}}</td>
+                                            </tr>
+                                        </table>
+                                        <table class="table table-bordered responsive"
+                                            ng-if="log.action == '修改订单资料'">
+                                            <tr>
+                                                <th colspan="2" style="background:none;">更改前</th>
+                                                <th colspan="2">更改后</th>
+                                            </tr>
+                                            <tr ng-repeat="(key,value) in log.note.content.new_data">
+                                                <td>{{edit_fields_dict[key]}}</td>
+                                                <td>{{log.note.content.old_data[key]}}</td>
+                                                <td>{{edit_fields_dict[key]}}</td>
+                                                <td>{{value}}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="cbp_tmlabel" ng-if="log.note.dtype!='table'">
+                                <h4 class="title">
+                                    {{log.action}}
+                                    <span class="sub-title">{{log.result}}</span>
+                                    <span class="pull-right source" ng-if="log.source">{{log.source}}</span>
+                                </h4>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <h5>
+                                            操作人：{{log.staff}}
+                                            <span class="pull-right">{{log.uw_time|date:'yyyy-MM-dd HH:mm:ss'}}</span>
+                                        </h5>
+                                        <div ng-if="log.note.comments">
+                                            <hr>
+                                            <h5>
+                                                审批备注：
+                                            </h5>
+                                            <p class="comments">{{log.note.comments}}</p>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-wrapper exam-wrapper" ng-if="!hide_bottom">
+        <ul class="nav nav-tabs bordered" style="margin: 0;margin-top: 5px;">
+            <!-- <li ng-class="{'active':current_tab == 'credit'}"
+                ng-if="current_state == 'applications'">
+                <a ng-click="changeTab('credit')">征信资料审批</a>
+            </li> -->
+            <li ng-class="{'active':current_tab == 'yujian_credit_invest'}"
+                ng-if="current_state == 'applications'">
+                <a ng-click="changeTab('yujian_credit_invest')">电话审核</a>
+            </li>
+            <li ng-class="{'active': current_tab == 'plan'}"
+                ng-if="current_state == 'applications'">
+                <a ng-click="changeTab('plan')">金融方案审批</a>
+            </li>
+            <li ng-repeat="(tab_key,tab) in application.uw_img_plan_list[0].checker"
+                ng-class="{'active':current_tab == tab_key}"
+                ng-hide="tab_key=='credit'&&current_state != 'applications'">
+                <a ng-click="changeImageTab(tab_key)">{{tab.name}}</a>
+            </li>
+            <!-- <li ng-class="{'active':current_tab == 'pickup_car'}">
+                <a ng-click="changeTab('pickup_car')">提车资料审批</a>
+            </li>
+            <li ng-class="{'active':current_tab == 'mortgage'}">
+                <a ng-click="changeTab('mortgage')">抵押资料审批</a>
+            </li> -->
+            <li ng-class="{'active':current_tab == 'home_visit'}">
+                <a ng-click="changeTab('home_visit')">家访材料</a>
+            </li>
+            <!-- <li ng-class="{'active':current_tab == 'home_visit_photo'}">
+                <a ng-click="changeTab('home_visit_photo')">家访影像件审核</a>
+            </li> -->
+            <!-- <li ng-class="{'active':current_tab == 'contract_photo'}"
+                ng-if="current_state == 'postLoan'">
+                <a ng-click="changeTab('contract_photo')">合同预审</a>
+            </li> -->
+            <li ng-class="{'active':current_tab == 'post_loan'}"
+                ng-if="current_state == 'postLoan'">
+                <a ng-click="changeTab('post_loan')">贷后资料管理</a>
+            </li>
+        </ul>
+
+        <div ui-view="applicationExam" class="tab-content">
+        </div>
+    </div>
+
+    <a class="link-underline"
+        style="position: absolute;
+            top: 280px;
+            right: 20px;
+            line-height: 40px;
+            z-index: 999;"
+        ng-click="toggleBottom(true)"
+        ng-if="!hide_bottom"
+    >
+        收起
+        <i class="fa fa-angle-down"></i>
+    </a>
+    <a class="link-underline"
+        style="position: absolute;
+            bottom:0;
+            right: 20px;
+            line-height: 40px;
+            z-index: 999;"
+        ng-click="toggleBottom(false)"
+        ng-if="hide_bottom"
+    >
+        展开
+        <i class="fa fa-angle-up"></i>
+    </a>
+</div>
+<link rel="stylesheet" href="lib/assets/js/vertical-timeline/css/component.css">
+<script src="lib/assets/js/zurb-responsive-tables/responsive-tables.js"></script>

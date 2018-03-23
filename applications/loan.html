@@ -1,0 +1,122 @@
+<div class="row">
+    <div class="col-sm-12">
+        <h3 class="text-center">贷款审批表</h3>
+        <table border="1" class="bg-white print-table" width="100%">
+          <tr>
+            <td rowspan="2">客户信息</td>
+            <td>姓名</td>
+            <td>{{application.client.clt_nm||'-'}}</td>
+            <td>身份证号</td>
+            <td>{{application.client.id_no||'-'}}</td>
+          </tr>
+          <tr>
+            <td>手机</td>
+            <td>{{application.client.mobile||'-'}}</td>
+            <td>住址</td>
+            <td>{{application.client.current_addr_details||'-'}}</td>
+          </tr>
+          <tr>
+            <td rowspan="3">车辆信息</td>
+            <td>品牌</td>
+            <td>{{application.brand||'-'}}</td>
+            <td>车型</td>
+            <td>{{application.model_name||'-'}}</td>
+          </tr>
+          <tr>
+            <td>车辆开票价(元）</td>
+            <td>{{(application.uw_fin_plan.vehicle_price||application.vehicle_price|parseint)||'-'}}</td>
+            <td>类型</td>
+            <td>新车</td>
+          </tr>
+          <tr>
+            <td>上牌地</td>
+            <td>{{application.plate_reg_addr||'-'}}</td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td rowspan="5">申请信息</td>
+            <td>车辆首付款（元）</td>
+            <td>{{(application.vehicle_down_payment|parseint)||'-'}}</td>
+            <td>首付比例</td>
+            <td>{{rightDecimal(application.vehicle_down_payment_percent*100,100)||'-'}}%</td>
+          </tr>
+          <tr>
+            <td>贷款总额（元）</td>
+            <td>{{(application.loan_amt|parseint)||'-'}}</td>
+            <td>车款贷款额（元）</td>
+            <td>{{(application.vehicle_loan_amt|parseint)||'-'}}</td>
+          </tr>
+          <tr>
+            <td>其它项目贷款额（元）</td>
+            <td>{{(application.other_fee|parseint)||'-'}}</td>
+            <td>管理费贷款额（元）</td>
+            <td>{{(application.management_fee|parseint)||'-'}}</td>
+          </tr>
+          <tr>
+            <td>费率</td>
+            <td>{{rightDecimal(application.rate*100,100)||'-'}}%</td>
+            <td>期数</td>
+            <td>{{application.nper||'-'}}</td>
+          </tr>
+          <tr>
+            <td>本息合计（元）</td>
+            <td>{{(application.principal_interest|parseint)||'-'}}</td>
+            <td>月供（元）</td>
+            <td>{{(application.monthly_payment|parseint)||'-'}}</td>
+          </tr>
+          <tr>
+            <td rowspan="5">批复信息</td>
+            <td>车辆首付款（元）</td>
+            <td>{{(application.uw_fin_plan.vehicle_down_payment|parseint)||'-'}}</td>
+            <td>首付比例（元）</td>
+            <td>{{rightDecimal(application.uw_fin_plan.vehicle_down_payment_percent*100,100)||'-'}}%</td>
+          </tr>
+          <tr>
+            <td>贷款总额（元）</td>
+            <td>{{(application.uw_fin_plan.loan_amt|parseint)||'-'}}</td>
+            <td>车款贷款额（元）</td>
+            <td>{{(application.uw_fin_plan.vehicle_loan_amt|parseint)||'-'}}</td>
+          </tr>
+          <tr>
+            <td>其它项目贷款额（元）</td>
+            <td>{{(application.uw_fin_plan.other_fee|parseint)||'-'}}</td>
+            <td>管理费贷款额（元）</td>
+            <td>{{(application.uw_fin_plan.management_fee|parseint)||'-'}}</td>
+          </tr>
+          <tr>
+            <td>费率</td>
+            <td>{{rightDecimal(application.uw_fin_plan.rate*100,100)||'-'}}%</td>
+            <td>期数</td>
+            <td>{{application.uw_fin_plan.nper||'-'}}</td>
+          </tr>
+          <tr>
+            <td>本息合计（元）</td>
+            <td>{{(application.uw_fin_plan.principal_interest|parseint)||'-'}}</td>
+            <td>月供（元）</td>
+            <td>{{(application.uw_fin_plan.monthly_payment|parseint)||'-'}}</td>
+          </tr>
+        </table>
+        <table border="1" class="bg-white print-table" width="100%">
+          <tr>
+            <td rowspan="3">问话调查表</td>
+            <td colspan="6">贷款及车辆信息</td>
+          </tr>
+          <tr>
+            <td>品牌型号</td>
+            <td>{{application.brand + '-' + application.trix||'-'}}</td>
+            <td>车价</td>
+            <td>{{(application.uw_fin_plan.vehicle_price||application.vehicle_price|parseint)||'-'}}</td>
+            <td>贷款年限</td>
+            <td>{{(application.uw_fin_plan.nper||application.nper)/12+'年'||'-'}}</td>
+          </tr>
+          <tr>
+            <td>本息合计</td>
+            <td colspan="2">{{(application.uw_fin_plan.principal_interest||application.principal_interest|parseint)||'-'}}</td>
+            <td>月还</td>
+            <td colspan="2">{{(application.uw_fin_plan.monthly_payment||application.monthly_payment|parseint)||'-'}}</td>
+          </tr>
+        </table>
+
+    </div>
+</div>

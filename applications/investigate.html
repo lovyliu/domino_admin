@@ -1,0 +1,68 @@
+<div class="row">
+    <div class="col-sm-12">
+        <h3 class="text-center">问话调查表</h3>
+        <table border="1" class="bg-white print-table" width="100%">
+            <tr>
+              <td colspan="7" class="text-center">借款人基本情况</td>
+            </tr>
+            <tr>
+              <td class="bg-gray">借款人姓名</td>
+              <td>{{application.client.clt_nm}}</td>
+              <td class="bg-gray">身份证号码</td>
+              <td colspan="2">{{application.client.id_no}}</td>
+              <td class="bg-gray">婚姻状况</td>
+              <td>{{application.client.marriage}}</td>
+            </tr>
+            <tr>
+              <td class="bg-gray">家庭地址</td>
+              <td colspan="3">{{application.client.current_addr_details}}（同现住地址）</td>
+              <td class="bg-gray">家庭电话</td>
+              <td colspan="2">{{application.client.mobile}}</td>
+            </tr>
+            <tr>
+              <td class="bg-gray">工作单位</td>
+              <td colspan="3">
+                  <span ng-if="application.client.major_income_type == '工资'">
+                      {{application.client.major_company_name}}
+                  </span>
+                  <span ng-if="application.client.major_income_type == '自营'">
+                      {{application.client.major_busi_type}}
+                  </span>
+              </td>
+              <td class="bg-gray">职务</td>
+              <td colspan="2">
+                  <span ng-if="application.clientmajor_income_type == '工资'">
+                      {{application.client.major_work_position}}
+                  </span>
+                  <span ng-if="application.client.major_income_type != '工资'">
+                      其他
+                  </span>
+              </td>
+            </tr>
+            <tr>
+              <td class="bg-gray">工作地址</td>
+              <td colspan="3">{{application.client.major_company_addr_details}}</td>
+              <td class="bg-gray">工作电话</td>
+              <td colspan="2">{{application.client.major_work_phone_num || application.client.mobile}}</td>
+            </tr>
+            <tr>
+              <td colspan="7" class="text-center">贷款及车辆信息</td>
+            </tr>
+            <tr>
+              <td class="bg-gray">品牌型号</td>
+              <td>{{application.brand + '-' + application.trix + '-' + application.model_name}}</td>
+              <td class="bg-gray">车价</td>
+              <td colspan="2">{{(application.uw_fin_plan.vehicle_price||application.vehicle_price|parseint)}} 元</td>
+              <td class="bg-gray">贷款年限</td>
+              <td>{{application.nper/12}} 年</td>
+            </tr>
+            <tr>
+              <td class="bg-gray">本息合计</td>
+              <td colspan="2">{{(application.uw_fin_plan.principal_interest||application.principal_interest|parseint)}} 元</td>
+              <td colspan="2">月还</td>
+              <td colspan="2">{{(application.uw_fin_plan.monthly_payment||application.monthly_payment|parseint)}} 元</td>
+            </tr>
+        </table>
+
+    </div>
+</div>

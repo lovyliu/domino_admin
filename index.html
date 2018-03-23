@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <title>admin</title>
+
+    <link rel="icon" href="lib/assets/images/favicon.ico">
+    <!-- {% load staticfiles %} -->
+
+    <!-- <link rel="stylesheet" href="{% static 'node_modules/bootstrap/dist/css/bootstrap.min.css' %}"> -->
+    <link rel="stylesheet" href="lib/assets/js/jquery-ui/css/no-theme/jquery-ui-1.10.3.custom.min.css">
+	<link rel="stylesheet" href="lib/assets/css/font-icons/entypo/css/entypo.css">
+	<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noto+Sans:400,700,400italic">
+	<link rel="stylesheet" href="lib/assets/css/bootstrap.css">
+	<link rel="stylesheet" href="lib/assets/css/neon-core.css">
+	<link rel="stylesheet" href="lib/assets/css/neon-theme.css">
+	<link rel="stylesheet" href="lib/assets/css/neon-forms.css">
+	<link rel="stylesheet" href="lib/assets/css/custom.css">
+
+    <link rel="stylesheet" href="lib/assets/js/datatables/datatables.css">
+
+    <link rel="stylesheet" href="node_modules/angular-ui-bootstrap/release/ui-bootstrap-csp.css">
+    <link rel="stylesheet" href="node_modules/angularjs-datepicker/release/angular-datepicker.min.css">
+    <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="node_modules/angular-pan-zoom/release/panzoomwidget.css">
+    <link rel="stylesheet" href="node_modules/angular-ui-switch/angular-ui-switch.min.css">
+    <link rel="stylesheet" href="node_modules/angularjs-bootstrap-datetimepicker/src/css/datetimepicker.css">
+    <link rel="stylesheet" href="node_modules/angularjs-slider/dist/rzslider.min.css">
+    <link rel="stylesheet" href="lib/css/style.css">
+    <link rel="stylesheet" href="applications/applications.css">
+    <link rel="stylesheet" href="account/accout.css">
+    <link rel="stylesheet" href="dealer/dealer.css">
+    <link rel="stylesheet" href="employee/employee.css">
+    <link rel="stylesheet" href="client/client.css">
+    <link rel="stylesheet" href="dashboard/dashboard.css">
+
+    <script src="lib/assets/js/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="node_modules/angular/angular.min.js"></script>
+    <script type="text/javascript" src="node_modules/angular-sanitize/angular-sanitize.min.js"></script>
+    <script type="text/javascript" src="node_modules/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <script type="text/javascript" src="node_modules/angular-animate/angular-animate.min.js"></script>
+    <script type="text/javascript" src="node_modules/angular-ui-bootstrap/release/ui-bootstrap-tpls.js"></script>
+    <script type="text/javascript" src="node_modules/angular-local-storage/release/angular-local-storage.min.js"></script>
+    <script type="text/javascript" src="node_modules/angularjs-datepicker/release/angular-datepicker.min.js"></script>
+
+    <script type="text/javascript" src="node_modules/angular-paging/release/paging.min.js"></script>
+    <script type="text/javascript" src="node_modules/angular-pan-zoom/bower_components/hamsterjs/hamster.js"></script>
+    <script type="text/javascript" src="node_modules/angular-pan-zoom/bower_components/angular-mousewheel/mousewheel.js"></script>
+    <script type="text/javascript" src="node_modules/angular-pan-zoom/release/panzoom.min.js"></script>
+    <script type="text/javascript" src="node_modules/angular-pan-zoom/scripts/directives/panzoomwidget.js"></script>
+    <script type="text/javascript" src="node_modules/angular-pan-zoom/scripts/services/PanZoomService.js"></script>
+    <script type="text/javascript" src="node_modules/angular-ui-switch/angular-ui-switch.min.js"></script>
+    <script type="text/javascript" src="node_modules/moment/moment.js"></script>
+    <script type="text/javascript" src="node_modules/angularjs-bootstrap-datetimepicker/src/js/datetimepicker.js"></script>
+    <script type="text/javascript" src="node_modules/angularjs-bootstrap-datetimepicker/src/js/datetimepicker.templates.js"></script>
+    <script type="text/javascript" src="node_modules/angularjs-slider/dist/rzslider.min.js"></script>
+
+    <script src="lib/assets/js/datatables/datatables.js"></script>
+
+    <script type="text/javascript" src="node_modules/jssha/src/sha1.js"></script>
+
+    <script type="text/javascript" src="lib/js/server_address.js"></script>
+    <script type="text/javascript" src="lib/js/api_service.js"></script>
+    <script type="text/javascript" src="lib/js/commonService.js"></script>
+    <script type="text/javascript" src="lib/js/directives.js"></script>
+    <script type="text/javascript" src="oss/services.js"></script>
+
+    <script type="text/javascript" src="dashboard/services.js"></script>
+    <script type="text/javascript" src="dashboard/controllers.js"></script>
+
+    <script type="text/javascript" src="upload/services.js"></script>
+    <script type="text/javascript" src="upload/controllers.js"></script>
+
+    <script type="text/javascript" src="applications/services.js"></script>
+    <script type="text/javascript" src="applications/controllers.js"></script>
+
+    <script type="text/javascript" src="protoRate/services.js"></script>
+    <script type="text/javascript" src="protoRate/controllers.js"></script>
+
+    <script type="text/javascript" src="bank/services.js"></script>
+    <script type="text/javascript" src="bank/controllers.js"></script>
+
+    <script type="text/javascript" src="dealer/services.js"></script>
+    <script type="text/javascript" src="dealer/controllers.js"></script>
+
+    <script type="text/javascript" src="employee/services.js"></script>
+    <script type="text/javascript" src="employee/controllers.js"></script>
+
+    <script type="text/javascript" src="vehicle/services.js"></script>
+    <script type="text/javascript" src="vehicle/controllers.js"></script>
+
+    <script type="text/javascript" src="calculator/services.js"></script>
+    <script type="text/javascript" src="calculator/controllers.js"></script>
+
+    <script type="text/javascript" src="account/services.js"></script>
+    <script type="text/javascript" src="account/controllers.js"></script>
+
+    <script type="text/javascript" src="staff/services.js"></script>
+    <script type="text/javascript" src="staff/controllers.js"></script>
+
+    <script type="text/javascript" src="department/services.js"></script>
+    <script type="text/javascript" src="department/controllers.js"></script>
+
+    <script type="text/javascript" src="client/services.js"></script>
+    <script type="text/javascript" src="client/controllers.js"></script>
+
+    <script type="text/javascript" src="report/services.js"></script>
+    <script type="text/javascript" src="report/controllers.js"></script>
+
+
+</head>
+<body
+    ng-app="wdAdmin"
+    ng-controller="wdAdmin.menuController"
+    class="page-body page-fade"
+>
+<!-- wd-admin  -->
+    <div ui-view="content"></div>
+
+    <div ui-view="login"></div>
+
+    <div ui-view="table" class="table-view"></div>
+
+
+    <script type="text/ng-template" id="myModalContent.html">
+        <div class="modal-header">
+            <h3 class="modal-title" id="modal-title" ng-bind-html="modal.title"></h3>
+        </div>
+        <div class="modal-body" id="modal-body" ng-bind-html="modal.content"></div>
+        <div class="modal-footer">
+            <button class="btn wd-btn-dark" type="button" ng-click="ok()">{{modal.okText}}</button>
+            <button class="btn btn-default" type="button" ng-click="cancel()">{{modal.cancelText}}</button>
+        </div>
+    </script>
+    <div class="modal fade" id="modal-confirm" data-backdrop="static">
+		<div class="modal-dialog">
+			<div class="modal-content">
+
+				<div class="modal-header">
+					<h4 class="modal-title">{{modal.title}}</h4>
+				</div>
+
+				<div class="modal-body">
+
+					{{modal.content}}
+
+				</div>
+
+				<div class="modal-footer">
+					<button type="button"
+                        class="btn btn-info"
+                        data-dismiss="modal"
+                        id="modal-confirm-button"
+                        ng-class="{
+                            'logout':modal.use == 'logout',
+                            'credit-jump': modal.use == 'credit-jump',
+                            'delete-confirm': modal.use == 'delete-confirm'
+                        }"
+                    >{{modal.confirmText}}</button>
+				</div>
+			</div>
+		</div>
+	</div>
+    <div class="modal fade" id="modal-basic">
+		<div class="modal-dialog">
+			<div class="modal-content">
+
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" ng-bind-html="modal.title"></h4>
+				</div>
+
+				<div class="modal-body" ng-bind-html="modal.content">
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" id="modal-ok-button"
+                        data-dismiss="modal"
+                        ng-class="{'credit':modal.use == 'credit',
+                        'checker': modal.use == 'checker',
+                        'img': modal.use == 'img',
+                        'yujian_credit_invest': modal.use == 'yujian_credit_invest',
+                        'pboc': modal.use == 'pboc',
+                        'yunche_loan': modal.use == 'yunche_loan',
+                        'query_credit': modal.use == 'query_credit',
+                        'delete-confirm': modal.use == 'delete-confirm',
+                        'ownApplication': modal.use == 'ownApplication',
+                        'cancelApplication': modal.use == 'cancelApplication',
+                        'dragBackApplication': modal.use == 'dragBackApplication',
+                        'updateApplication': modal.use == 'updateApplication',
+                        'updateExpress': modal.use == 'updateExpress',
+                        'resetProject': modal.use == 'resetProject',
+                        'send_back': modal.use == 'send_back',
+                    }"
+                    >{{modal.okText}}</button>
+					<button type="button" class="btn btn-info" data-dismiss="modal">{{modal.cancelText}}</button>
+				</div>
+			</div>
+		</div>
+	</div>
+    <!-- <script type="text/ng-template" id="image-modal.html"> -->
+        <div class="backdrop" ng-if="show_image_modal" ng-click="hideImageModal($event)">
+            <div class="image">
+                <img ng-src="{{image_modal_src}}">
+            </div>
+
+            <div class="rotate-wrapper">
+                <button type="button" class="fa fa-rotate-left"
+                    rotate-modal direction="left" rotate-deg="transform.rotate_deg"
+                    zoom-level="transform.zoom_level"
+                ></button>
+                <button type="button" class="fa fa-rotate-right"
+                    rotate-modal direction="right" rotate-deg="transform.rotate_deg"
+                    zoom-level="transform.zoom_level"
+                ></button>
+                <button type="button" class="fa fa-search-plus"
+                    zoom direction="in" rotate-deg="transform.rotate_deg"
+                    zoom-level="transform.zoom_level"
+                ></button>
+                <button type="button" class="fa fa-search-minus"
+                    zoom direction="out" rotate-deg="transform.rotate_deg"
+                    zoom-level="transform.zoom_level"
+                ></button>
+            </div>
+            <button type="button" class="fa fa-close"
+                ng-click="hideImageModal()"
+                style="position:absolute;right:5px;top:5px;"
+            ></button>
+        </div>
+    <!-- </script> -->
+
+    <!-- <div class="backdrop"> -->
+        <!-- <div class="row">
+            <div class="col-sm-4 col-sm-offset-4">
+                <div class="alert alert-success">alert message</div>
+            </div>
+        </div> -->
+        <!-- {{alert_message}} -->
+
+    <!-- </div> -->
+
+    <script src="lib/assets/js/gsap/TweenMax.min.js"></script>
+	<script src="lib/assets/js/jquery-ui/js/jquery-ui-1.10.3.minimal.min.js"></script>
+	<script src="lib/assets/js/bootstrap.js"></script>
+	<script src="lib/assets/js/joinable.js"></script>
+	<script src="lib/assets/js/resizeable.js"></script>
+	<script src="lib/assets/js/neon-api.js"></script>
+    <script type="text/javascript" src="app.js"></script>
+    <script src="http://gosspublic.alicdn.com/aliyun-oss-sdk-4.4.4.min.js"></script>
+    <script src="lib/vendor/echarts.min.js"></script>
+    <script src="lib/vendor/bmap.min.js"></script>
+    <script src="http://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
+    <!-- <script src="http://api.map.baidu.com/api?v=2.0&ak=juq1XVYDmGIRyBxm4WAZThAt2pXZNAeG"></script> -->
+</body>
+</html>

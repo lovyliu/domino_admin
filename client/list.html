@@ -1,0 +1,160 @@
+<h2>客户管理</h2>
+<br />
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="panel panel-primary">
+
+            <div class="panel-body">
+
+                <form role="form">
+                    <div class="row form-group form-horizontal">
+                        <label for="field-1" class="col-sm-2 control-label">客户 ID</label>
+                        <div class="col-sm-2">
+                            <input type="text"
+                                class="form-control" id="field-1"
+                                ng-model="page_state.filters.display_id"
+                                placeholder="客户 ID"
+                            >
+                        </div>
+
+                        <label for="field-2" class="col-sm-2 control-label">姓名</label>
+                        <div class="col-sm-2">
+                            <input type="text"
+                                 class="form-control" id="field-2"
+                                ng-model="page_state.filters.name"
+                                placeholder="姓名"
+                            >
+                        </div>
+
+                        <label for="field-3" class="col-sm-2 control-label">手机号码</label>
+                        <div class="col-sm-2">
+                            <input type="text"
+                                class="form-control" id="field-3"
+                                ng-model="page_state.filters.mobile"
+                                placeholder="手机号码"
+                            >
+                        </div>
+
+                    </div>
+
+                    <div class="row form-group form-horizontal">
+
+
+                        <label class="col-sm-2 control-label">户籍地（省）</label>
+                        <div class="col-sm-2">
+                            <select class="form-control"
+                                ng-model="page_state.filters.reg_addr__province">
+                                <option value="" selected>全部</option>
+                                <option value="{{province.areaname}}" ng-repeat="province in province_list">{{province.areaname}}</option>
+                            </select>
+                        </div>
+                        <label class="col-sm-2 control-label">户籍地（市）</label>
+                        <div class="col-sm-2">
+                            <select class="form-control"
+                                ng-model="page_state.filters.reg_addr__city">
+                                <option value="" selected>全部</option>
+                                <option value="{{city.areaname}}" ng-repeat="city in city_list">{{city.areaname}}</option>
+                            </select>
+                        </div>
+                        <label class="col-sm-2 control-label">户籍地（区）</label>
+                        <div class="col-sm-2">
+                            <select class="form-control"
+                                ng-model="page_state.filters.reg_addr__district">
+                                <option value="" selected>全部</option>
+                                <option value="{{district.areaname}}" ng-repeat="district in district_list">{{district.areaname}}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row form-group form-horizontal">
+
+                        <div class="col-sm-2 col-sm-offset-8">
+                            <button type="button"
+                                class="btn btn-primary btn-block"
+                                ng-click="searchFirstClients()"
+                            >查询</button>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+        <!-- <button type="button" class="btn btn-danger delete-btn"
+            ng-click="deleteMultipleClient()">删除已选中记录</button> -->
+        <table class="table table-bordered datatable" id="table-emp-list">
+			<thead>
+				<tr>
+                    <!-- <th>
+                        选择
+                        <input type="checkbox" ng-model="page_state.select_all"
+                            ng-click="selectAllClient()">
+                    </th> -->
+                    <th>客户 ID</th>
+                    <th>姓名</th>
+                    <th>身份证</th>
+                    <th>户籍地</th>
+                    <th>性别</th>
+                    <th>生日</th>
+                    <th>手机号</th>
+                    <th>现住地址</th>
+                    <th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+                <tr ng-repeat="client in client_list" ng-if="client_list.length">
+                    <!-- <td>
+                        <input type="checkbox" ng-model="client.selected">
+                    </td> -->
+                    <td>
+                        <a ui-sref="menu.content.client.detail({
+                            client_id:client.clt_id})"
+                            class="link-underline"
+                            target="_blank"
+                        >{{client.display_id}}</a>
+                    </td>
+                    <td>{{client.clt_nm||'-'}}</td>
+                    <td>{{client.id_no||'-'}}</td>
+                    <td>{{client.reg_addr||'-'}}</td>
+                    <td>{{client.gender||'-'}}</td>
+                    <td>{{client.birthday||'-'}}</td>
+                    <td>{{client.mobile||'-'}}</td>
+                    <td>{{client.current_addr||'-'}}</td>
+                    <td>
+                        <a class="btn btn-primary"
+                            ui-sref="menu.content.client.detail({
+                                client_id:client.clt_id})"
+                            target="_blank"
+                        >编辑</a>
+                    </td>
+                </tr>
+			</tfoot>
+		</table>
+        <paging
+          page="page_state.current_page"
+          page-size="20"
+          total="page_state.count"
+          show-prev-next="true"
+          show-first-last="true"
+          hide-if-empty="true"
+          paging-action="pageChanged(page)"
+          style="float: right;">
+        </paging>
+        <script type="text/javascript">
+        jQuery( document ).ready( function( $ ) {
+            var $table_emp_list = jQuery( '#table-emp-list' );
+
+            // Initialize DataTable
+            $table_emp_list.DataTable( {
+                "sDom": "tip",
+                "ordering": false,
+                "paging": false,
+                "bInfo": false,
+                "bStateSave": true
+            });
+        } );
+		</script>
+    </div>
+</div>

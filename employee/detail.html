@@ -1,0 +1,878 @@
+<ol class="breadcrumb bc-3" >
+    <li>
+        <a ui-sref="menu.content.employee.list">经销商员工管理</a>
+    </li>
+    <li class="active">
+        <strong>经销商员工详情</strong>
+    </li>
+</ol>
+<h2>经销商员工管理</h2>
+<br>
+<ul class="nav nav-tabs bordered" style="margin: 0;margin-top: 5px;">
+    <li ng-class="{'active': tab == 'basic'}">
+        <a ng-click="changeTab('basic')" data-toggle="tab">
+            <span class="visible-xs"><i class="entypo-info-circle"></i></span>
+            <span class="hidden-xs">经销商员工信息</span>
+        </a>
+    </li>
+    <li ng-class="{'active': tab == 'contact'}">
+        <a ng-click="changeTab('contact')" data-toggle="tab">
+            <span class="visible-xs"><i class="entypo-mobile"></i></span>
+            <span class="hidden-xs">手机联系人</span>
+        </a>
+    </li>
+    <li ng-class="{'active': tab == 'message'}">
+        <a ng-click="changeTab('message')" data-toggle="tab">
+            <span class="visible-xs"><i class="entypo-message-o"></i></span>
+            <span class="hidden-xs">手机短信</span>
+        </a>
+    </li>
+    <li ng-class="{'active': tab == 'ubt'}">
+        <a ng-click="changeTab('ubt')" data-toggle="tab">
+            <span class="visible-xs"><i class="entypo-bar-chart"></i></span>
+            <span class="hidden-xs">UBT</span>
+        </a>
+    </li>
+</ul>
+
+<div class="tab-content" style="min-height:500px;">
+    <div class="tab-pane client-detail" ng-class="{'active': tab == 'basic'}">
+        <div class="row employee-info">
+            <form ng-submit="updateEmployee()" name="form">
+                <div class="col-sm-5">
+                    <h4>人员基础信息编辑</h4>
+                    <table class="table table-bordered">
+            			<tbody>
+                            <tr>
+                                <td>员工 ID</td>
+                                <td>
+                                    {{employee.id}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>经销商员工姓名</td>
+                                <td>
+                                    <input type="text" class="form-control" ng-model="post_data.name">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>经销商员工性别</td>
+                                <td>
+                                    <select class="form-control" ng-model="post_data.gender">
+                                        <option value="男">男</option>
+                                        <option value="女">女</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>生日</td>
+                                <td>
+                                    <datepicker
+                                        date-format="yyyy-MM-dd"
+                                        date-typer="true"
+                                        class="picker"
+                                    >
+                                        <input
+                                            ng-model="post_data.birthday"
+                                            type="text"
+                                            class="form-control"
+                                        />
+                                    </datepicker>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>身份证件类型</td>
+                                <td>
+                                    身份证
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>证件号码</td>
+                                <td>
+                                    <input type="text" class="form-control" ng-model="post_data.id_no">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>手机号码</td>
+                                <td>
+                                    <input type="tel" class="form-control" ng-model="post_data.mobile">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>邮箱地址</td>
+                                <td>
+                                    <input type="text" class="form-control" ng-model="post_data.email">
+                                </td>
+                            </tr>
+            			</tfoot>
+            		</table>
+                </div>
+                <div class="col-sm-5 col-sm-offset-1" ng-if="dealer_id">
+                    <h4>当前经销商信息</h4>
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td>经销商识别码</td>
+                                <td>{{dealer.dlr_id}}</td>
+                            </tr>
+                            <tr>
+                                <td>经销商名称</td>
+                                <td>{{dealer.dlr_nm}}</td>
+                            </tr>
+                            <tr>
+                                <td>经销商类型</td>
+                                <td>{{dealer.dtype}}</td>
+                            </tr>
+                            <tr>
+                                <td>工商注册号</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-sm-12 save-button">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <button type="submit" class="btn btn-primary"
+                                style="width: 100%;max-width: 120px;">保存</button>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" class="btn btn-danger"
+                                style="width: 100%;max-width: 120px;"
+                                ng-click="deleteEmployee()">删除</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+        <hr>
+
+        <h4>
+            岗位信息编辑
+            <button type="button" class="btn btn-sm btn-primary "
+                style="margin-left:20px;"
+                ui-sref="menu.content.employee.detail.bindDealer({employee_id:employee.id})">
+                新建
+            </button>
+        </h4>
+        <div class="row">
+            <div class="col-md-10">
+                <table class="table table-bordered datatable">
+        			<thead>
+        				<tr>
+                            <th>No</th>
+                            <th>经销商代码</th>
+                            <th>经销商名称</th>
+                            <th>角色名称</th>
+                            <th>角色状态</th>
+                            <th>操作</th>
+        				</tr>
+        			</thead>
+        			<tbody>
+                        <tr ng-repeat="dealeremployee in dealeremployee_list">
+                            <td>{{index + 1}}</td>
+                            <td>{{dealeremployee.dealer_info.dlr_id}}</td>
+                            <td>{{dealeremployee.dealer_info.dlr_nm}}</td>
+                            <td>{{employee_role[dealeremployee.role]}}</td>
+                            <td>{{employee_status[dealeremployee.status]}}</td>
+                            <td>
+                                <button type="button" class="btn btn-primary"
+                                    ui-sref="menu.content.employee.detail.bindDealer({
+                                        employee_id:employee.id,
+                                        ship_index:$index
+                                    })"
+                                >编辑</button>
+                            </td>
+                        </tr>
+        			</tfoot>
+        		</table>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane client-detail" ng-class="{'active': tab == 'contact'}">
+        <div class="row">
+            <div class="col-md-12">
+                <div ng-if="!imei_list || !imei_list.length"
+                    class="text-danger">
+                    当前客户无设备信息
+                </div>
+
+                <div class="tabs-vertical-env" ng-if="imei_list && imei_list.length">
+
+					<ul class="nav tabs-vertical" style="width:15%;">
+						<li ng-repeat="imei in imei_list"
+                            ng-class="{'active':$index == 0}">
+                            <a ng-click="changeDevice(imei)" data-toggle="tab">
+                                手机设备{{$index+1}}<br>
+                                <span>({{imei.imei}})</span>
+                            </a>
+                        </li>
+					</ul>
+
+					<div class="tab-content client-basic" style="width:85%;">
+						<div class="tab-pane active">
+                            <div class="row device">
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">IMEI：</div>
+                                    <div class="col-sm-6">{{page_state.device.imei}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">手机厂商：</div>
+                                    <div class="col-sm-6">{{page_state.device.factory}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">品牌：</div>
+                                    <div class="col-sm-6">{{page_state.device.brand}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">手机型号：</div>
+                                    <div class="col-sm-6">{{page_state.device.model}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">操作系统：</div>
+                                    <div class="col-sm-6">{{page_state.device.system}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">系统版本号：</div>
+                                    <div class="col-sm-6">{{page_state.device.os_version}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">是否已越狱：</div>
+                                    <div class="col-sm-6">
+                                        <span ng-if="page_state.device.rooted">
+                                            {{page_state.device.rooted == 'True' ? '是' : '否'}}
+                                        </span>
+                                    </div>
+                                </di>
+                            </div>
+                            <div class="panel panel-primary">
+
+                                <div class="panel-body">
+
+                                    <form role="form">
+
+                                        <div class="row form-group form-horizontal">
+                                            <label for="field-1" class="col-sm-2 control-label">联系人姓名</label>
+                                            <div class="col-sm-3">
+                                                <input type="text" class="form-control"
+                                                    id="field-1" placeholder="联系人姓名"
+                                                    ng-model="page_state.contact_filters.n">
+                                            </div>
+
+                                            <label for="field-2" class="col-sm-2 control-label">联系人号码</label>
+                                            <div class="col-sm-3">
+                                                <input type="text" class="form-control"
+                                                    id="field-1" placeholder="联系人号码"
+                                                    ng-model="page_state.contact_filters.m">
+                                            </div>
+
+                                            <div class="col-sm-2">
+                                                <button type="button"
+                                                    class="btn btn-primary btn-block btn-search"
+                                                    ng-click="searchContact()"
+                                                    style="max-width:120px;"
+                                                >查询</button>
+                                            </div>
+
+                                        </div>
+
+                                    </form>
+
+                                </div>
+
+                            </div>
+                            <h4>当前设备联系人列表</h4>
+                            <div class="row contact-list">
+                                <div class="col-md-3 col-sm-4 col-xs-6"
+                                    ng-repeat="contact in contact_list">
+                                    <div>
+                                        <!-- <div class="labels">
+                                            <span>征信禁入</span>
+                                            <span>多头借贷</span>
+                                        </div>
+                                        <span class="right-icon">库内</span> -->
+                                        <h5>{{contact.display_name}}</h5>
+                                        <div class="contact-footer">
+                                            <i class="glyphicon glyphicon-phone"></i>
+                                            {{contact.mobile}}
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <paging
+                              page="page_state.contact_current_page"
+                              page-size="16"
+                              total="page_state.contact_count"
+                              show-prev-next="true"
+                              show-first-last="true"
+                              hide-if-empty="true"
+                              paging-action="contactPageChanged(page)"
+                              style="float: right;">
+                            </paging>
+                            <script type="text/javascript">
+                            jQuery( document ).ready( function( $ ) {
+                                var $table_contact_list = jQuery( '#table-contact-list' );
+
+                                // Initialize DataTable
+                                $table_contact_list.DataTable( {
+                                    "sDom": "tip",
+                                    "ordering": false,
+                                    "paging": false,
+                                    "bInfo": false,
+                                    "bStateSave": true
+                                });
+                            } );
+                    		</script>
+						</div>
+					</div>
+
+				</div>
+
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane client-detail" ng-class="{'active': tab == 'message'}">
+        <div class="row">
+            <div class="col-md-12">
+                <div ng-if="!message_imei_list || !message_imei_list.length"
+                    class="text-danger">
+                    当前客户无设备信息
+                </div>
+
+                <div class="tabs-vertical-env" ng-if="message_imei_list && message_imei_list.length">
+
+					<ul class="nav tabs-vertical" style="width:15%;">
+						<li ng-repeat="imei in message_imei_list"
+                            ng-class="{'active':$index == 0}">
+                            <a ng-click="changeDevice(imei)" data-toggle="tab">
+                                手机设备{{$index+1}}<br>
+                                <span>({{imei.imei}})</span>
+                            </a>
+                        </li>
+					</ul>
+
+					<div class="tab-content client-basic" style="width:85%;">
+						<div class="tab-pane active">
+                            <div class="row device">
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">IMEI：</div>
+                                    <div class="col-sm-6">{{page_state.device.imei}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">手机厂商：</div>
+                                    <div class="col-sm-6">{{page_state.device.factory}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">品牌：</div>
+                                    <div class="col-sm-6">{{page_state.device.brand}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">手机型号：</div>
+                                    <div class="col-sm-6">{{page_state.device.model}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">操作系统：</div>
+                                    <div class="col-sm-6">{{page_state.device.system}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">系统版本号：</div>
+                                    <div class="col-sm-6">{{page_state.device.os_version}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">是否已越狱：</div>
+                                    <div class="col-sm-6">
+                                        <span ng-if="page_state.device.rooted">
+                                            {{page_state.device.rooted == 'True' ? '是' : '否'}}
+                                        </span>
+                                    </div>
+                                </di>
+                            </div>
+                            <!-- <div class="panel panel-primary">
+
+                                <div class="panel-body">
+
+                                    <form role="form">
+
+                                        <div class="row form-group form-horizontal">
+                                            <label for="field-1" class="col-sm-2 control-label">联系人姓名</label>
+                                            <div class="col-sm-3">
+                                                <input type="text" class="form-control"
+                                                    id="field-1" placeholder="联系人姓名"
+                                                    ng-model="page_state.message_filters.n">
+                                            </div>
+
+                                            <label for="field-2" class="col-sm-2 control-label">联系人号码</label>
+                                            <div class="col-sm-3">
+                                                <input type="text" class="form-control"
+                                                    id="field-1" placeholder="联系人号码"
+                                                    ng-model="page_state.message_filters.m">
+                                            </div>
+
+                                            <div class="col-sm-2">
+                                                <button type="button"
+                                                    class="btn btn-primary btn-block btn-search"
+                                                    ng-click="searchmessage()"
+                                                    style="max-width:120px;"
+                                                >查询</button>
+                                            </div>
+
+                                        </div>
+
+                                    </form>
+
+                                </div>
+
+                            </div> -->
+                            <h4>当前设备短信列表</h4>
+                            <div class="panel panel-primary message-list">
+
+                                <div class="panel-body" style="padding: 0;">
+                                    <div class="row contact-list">
+                                        <div class="col-sm-4" style="border-right: 1px solid #ebebeb;">
+                                            <div class="message-contact"
+                                                ng-repeat="phone in sms_phone_list"
+                                                ng-click="getSmsMessageList(phone.phone)"
+                                                ng-class="{'active':page_state.sms_message_filters.phone == phone.phone}"
+                                            >
+                                                <!-- <h4>粒粒</h4> -->
+                                                <p>
+                                                    <i class="glyphicon glyphicon-phone"></i>
+                                                    {{phone.phone}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-8 row">
+                                            <div class="col-sm-8"
+                                                ng-repeat="message in sms_message_list"
+                                                ng-class="{'col-sm-offset-4':message.type=='snd'}"
+                                            >
+                                                <div class="message-content">
+                                                    <p>{{message.content}}</p>
+                                                    <div class="time">
+                                                        <span class="pull-right">{{message.ts | date:'yyyy-MM-dd HH:mm'}}</span>
+                                                    </div>
+                                                </div>
+                                                <!-- <p class="text-right"
+                                                    ng-if="message.type=='snd'">
+                                                    SIM卡：<span class="text-green">{{client.mobile}}</span>
+                                                </p> -->
+                                            </div>
+                                        </div>
+                                        <!-- <div class="col-md-3 col-sm-4 col-xs-6"
+                                            ng-repeat="contact in contact_list">
+                                            <div>
+                                                <div class="labels">
+                                                    <span>征信禁入</span>
+                                                    <span>多头借贷</span>
+                                                </div>
+                                                <span class="right-icon">库内</span>
+                                                <h5>{{contact.display_name}}</h5>
+                                                <div class="contact-footer">
+                                                    <i class="glyphicon glyphicon-phone"></i>
+                                                    {{contact.mobile}}
+                                                </div>
+                                            </div>
+
+                                        </div> -->
+                                    </div>
+                                </div>
+
+                            </div>
+
+						</div>
+					</div>
+
+				</div>
+
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane client-detail" ng-class="{'active': tab == 'ubt'}">
+        <div class="row">
+            <div class="col-md-12">
+                <div ng-if="!ubt_imei_list || !ubt_imei_list.length"
+                    class="text-danger">
+                    当前客户无设备信息
+                </div>
+
+                <div class="tabs-vertical-env" ng-if="ubt_imei_list && ubt_imei_list.length">
+
+					<ul class="nav tabs-vertical" style="width:15%;">
+						<li ng-repeat="imei in ubt_imei_list"
+                            ng-class="{'active':$index == 0}">
+                            <a ng-click="changeDevice(imei,$index)" data-toggle="tab">
+                                手机设备{{$index+1}}<br>
+                                <span>({{imei.imei}})</span>
+                            </a>
+                        </li>
+					</ul>
+
+					<div class="tab-content client-basic tab-ubt" style="width:85%;">
+                        <div class="tab-pane active"
+                            ng-repeat="(imei_index,imei) in ubt_imei_list"
+                            ng-if="page_state.imei == imei.imei"
+                        >
+                            <div class="row device">
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">IMEI：</div>
+                                    <div class="col-sm-6">{{page_state.device.imei}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">手机厂商：</div>
+                                    <div class="col-sm-6">{{page_state.device.factory}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">品牌：</div>
+                                    <div class="col-sm-6">{{page_state.device.brand}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">手机型号：</div>
+                                    <div class="col-sm-6">{{page_state.device.model}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">操作系统：</div>
+                                    <div class="col-sm-6">{{page_state.device.system}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">系统版本号：</div>
+                                    <div class="col-sm-6">{{page_state.device.os_version}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">是否已越狱：</div>
+                                    <div class="col-sm-6">
+                                        <span ng-if="page_state.device.rooted">
+                                            {{page_state.device.rooted == 'True' ? '是' : '否'}}
+                                        </span>
+                                    </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div>
+                                        <div class="pull-left" style="">年月次</div>
+                                        <!-- <div class="col-sm-3" style="padding: 7px 0;">
+                                            当前选中：
+                                            <span>{{page_state.ubt_pv_count_filters.st}}</span>~<span>{{page_state.ubt_pv_count_filters.ed}}</span>
+                                        </div> -->
+                                        <div class="pull-right text-right">
+                                            <div class="dropdown form-group dropdown-start-parent">
+                                                <a class="dropdown-toggle" id="dropdownStart1"
+                                                    role="button" data-toggle="dropdown"
+                                                    data-target=".dropdown-start-parent"
+                                                    href="javascript:void(0);">
+                                                    <div class="input-group date">
+                                                        <input type="text" class="form-control"
+                                                            data-ng-model="page_state.ubt_pv_count_filters.st">
+                                                        <span class="input-group-addon">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </span>
+                                                    </div>
+                                                </a>
+                                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                    <datetimepicker data-ng-model="page_state.ubt_pv_count_filters.st"
+                                                        data-datetimepicker-config="{
+                                                            dropdownSelector: '#dropdownStart1',
+                                                            minView: 'month',
+                                                            startView: 'month',
+                                                            modelType: 'YYYY-MM'
+                                                        }"/>
+                                                </ul>
+                                            </div>
+                                            <div class="_calendar">-</div>
+                                            <div class="dropdown form-group dropdown-end-parent">
+                                                <a class="dropdown-toggle" id="dropdownEnd1"
+                                                    role="button" data-toggle="dropdown"
+                                                    data-target=".dropdown-end-parent" href="javascript:void(0);">
+                                                    <div class="input-group date">
+                                                        <input type="text" class="form-control"
+                                                            data-ng-model="page_state.ubt_pv_count_filters.ed">
+                                                        <span class="input-group-addon">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </span>
+                                                    </div>
+                                                </a>
+                                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                    <datetimepicker data-ng-model="page_state.ubt_pv_count_filters.ed"
+                                                        data-datetimepicker-config="{
+                                                            dropdownSelector: '#dropdownEnd1',
+                                                            minView: 'month',
+                                                            startView: 'month',
+                                                            modelType: 'YYYY-MM'
+                                                        }"/>
+                                                </ul>
+                                            </div>
+                                            <button type="button" class="btn btn-blue"
+                                                ng-click="ubtPvCount()">搜索</button>
+                                        </div>
+                                    </div>
+
+                                    <i class="glyphicon"
+                                        ng-class="{
+                                            'glyphicon-menu-down': page_state.calendar_chart,
+                                            'glyphicon-menu-right': !page_state.calendar_chart}"
+                                        ng-click="toggleShowChart('calendar_chart')"
+                                    ></i>
+                                </div>
+
+                                <div class="panel-body" ng-if="page_state.calendar_chart">
+                                    <h5>日历缩放比例（数值越大，圆点越小）：</h5>
+                                    <div ng-if="page_state.imei == imei.imei">
+                                        <rzslider
+                                             rz-slider-model="page_state.calendar_num"
+                                             rz-slider-options="{floor: 1, ceil: 100}"></rzslider>
+                                    </div>
+                                    <div class="yj-chart" id="{{'calender-chart' + imei_index}}"
+                                        eoption="calendar_config"
+                                        style="width:100%;height:300px;"
+                                        callback="showDateGraph(date)"
+                                        ng-if="!loading&&calendar_config"
+                                    ></div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div>
+                                        <div class="pull-left" style="">日次</div>
+                                        <!-- <div class="col-sm-3" style="padding: 7px 0;">
+                                            当前选中：
+                                            <span>{{page_state.ubt_pv_count_filters.st}}</span>~<span>{{page_state.ubt_pv_count_filters.ed}}</span>
+                                        </div> -->
+                                        <div class="pull-right text-right">
+                                            <div class="dropdown form-group dropdown-start-parent2">
+                                                <a class="dropdown-toggle" id="dropdownStart2"
+                                                    role="button" data-toggle="dropdown"
+                                                    data-target=".dropdown-start-parent2"
+                                                    href="javascript:void(0);">
+                                                    <div class="input-group date">
+                                                        <input type="text" class="form-control"
+                                                            data-ng-model="page_state.ubt_pv_count_hour_filters.st">
+                                                        <span class="input-group-addon">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </span>
+                                                    </div>
+                                                </a>
+                                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                    <datetimepicker data-ng-model="page_state.ubt_pv_count_hour_filters.st"
+                                                        data-datetimepicker-config="{
+                                                            dropdownSelector: '#dropdownStart2',
+                                                            minView: 'day',
+                                                            startView: 'day',
+                                                            modelType: 'YYYY-MM-DD'
+                                                        }"/>
+                                                </ul>
+                                            </div>
+                                            <div class="_calendar">-</div>
+                                            <div class="dropdown form-group dropdown-end-parent2">
+                                                <a class="dropdown-toggle" id="dropdownEnd2"
+                                                    role="button" data-toggle="dropdown"
+                                                    data-target=".dropdown-end-parent2" href="javascript:void(0);">
+                                                    <div class="input-group date">
+                                                        <input type="text" class="form-control"
+                                                            data-ng-model="page_state.ubt_pv_count_hour_filters.ed">
+                                                        <span class="input-group-addon">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </span>
+                                                    </div>
+                                                </a>
+                                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                    <datetimepicker data-ng-model="page_state.ubt_pv_count_hour_filters.ed"
+                                                        data-datetimepicker-config="{
+                                                            dropdownSelector: '#dropdownEnd2',
+                                                            minView: 'day',
+                                                            startView: 'day',
+                                                            modelType: 'YYYY-MM-DD'
+                                                        }"/>
+                                                </ul>
+                                            </div>
+                                            <button type="button" class="btn btn-blue"
+                                                ng-click="getPvCountHours()">搜索</button>
+                                        </div>
+                                    </div>
+
+                                    <i class="glyphicon"
+                                        ng-class="{
+                                            'glyphicon-menu-down': page_state.line_chart,
+                                            'glyphicon-menu-right': !page_state.line_chart}"
+                                        ng-click="toggleShowChart('line_chart')"
+                                    ></i>
+                                </div>
+
+                                <div class="panel-body" ng-if="page_state.line_chart">
+
+                                    <div class="yj-chart" id="line-chart" eoption="line_config"
+                                        style="width:100%;height:500px;"
+                                        ng-if="line_config"
+                                    ></div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div>
+                                        <div class="pull-left" style="">日次明细</div>
+                                        <!-- <div class="col-sm-3" style="padding: 7px 0;">
+                                            当前选中：
+                                            <span>{{page_state.ubt_pv_count_filters.st}}</span>~<span>{{page_state.ubt_pv_count_filters.ed}}</span>
+                                        </div> -->
+                                        <div class="pull-right text-right">
+                                            <div class="dropdown form-group dropdown-start-parent3">
+                                                <a class="dropdown-toggle" id="dropdownStart3"
+                                                    role="button" data-toggle="dropdown"
+                                                    data-target=".dropdown-start-parent3"
+                                                    href="javascript:void(0);">
+                                                    <div class="input-group date">
+                                                        <input type="text" class="form-control"
+                                                            data-ng-model="page_state.ubt_pv_list_filters.st">
+                                                        <span class="input-group-addon">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </span>
+                                                    </div>
+                                                </a>
+                                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                    <datetimepicker data-ng-model="page_state.ubt_pv_list_filters.st"
+                                                        data-datetimepicker-config="{
+                                                            dropdownSelector: '#dropdownStart3',
+                                                            minView: 'hour',
+                                                            startView: 'hour',
+                                                            modelType: 'YYYY-MM-DD HH:mm:SS'
+                                                        }"/>
+                                                </ul>
+                                            </div>
+                                            <div class="_calendar">-</div>
+                                            <div class="dropdown form-group dropdown-end-parent3">
+                                                <a class="dropdown-toggle" id="dropdownEnd3"
+                                                    role="button" data-toggle="dropdown"
+                                                    data-target=".dropdown-end-parent3" href="javascript:void(0);">
+                                                    <div class="input-group date">
+                                                        <input type="text" class="form-control"
+                                                            data-ng-model="page_state.ubt_pv_list_filters.ed">
+                                                        <span class="input-group-addon">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </span>
+                                                    </div>
+                                                </a>
+                                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                    <datetimepicker data-ng-model="page_state.ubt_pv_list_filters.ed"
+                                                        data-datetimepicker-config="{
+                                                            dropdownSelector: '#dropdownEnd3',
+                                                            minView: 'hour',
+                                                            startView: 'hour',
+                                                            modelType: 'YYYY-MM-DD HH:mm:SS'
+                                                        }"/>
+                                                </ul>
+                                            </div>
+                                            <button type="button" class="btn btn-blue"
+                                                ng-click="getUbtPvList()">搜索</button>
+                                        </div>
+                                    </div>
+
+                                    <i class="glyphicon"
+                                        ng-class="{
+                                            'glyphicon-menu-down': page_state.pv_chart,
+                                            'glyphicon-menu-right': !page_state.pv_chart}"
+                                        ng-click="toggleShowChart('pv_chart')"
+                                    ></i>
+                                </div>
+
+                                <div class="panel-body" ng-if="page_state.pv_chart"
+                                    style="padding: 0;">
+
+                                    <table class="table table-bordered ubt-table">
+                                        <thead>
+                                            <tr style="border-bottom: 1px solid #F0F0F1;">
+                                                <th class="text-center">
+                                                    Timestamp
+                                                </th>
+                                                <th class="text-center">
+                                                    App Lv
+                                                </th>
+                                                <th class="text-center">
+                                                    Page Lv
+                                                </th>
+                                                <th class="text-center">
+                                                    Widget
+                                                </th>
+                                                <th class="text-center">
+                                                    Widget Type
+                                                </th>
+                                                <th class="text-center">
+                                                    Event
+                                                </th>
+                                                <th class="text-center" style="width:30%;">
+                                                    UBT Details
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="pv in ubt_pv_list"
+                                                ng-class="{'extra-space':pv.action=='app_end'}">
+                                                <td class="text-center">
+                                                    {{pv.ts}}
+                                                </td>
+                                                <td class="text-center">
+                                                    <span ng-if="pv.action.indexOf('app_') == 0"
+                                                        ng-class="{
+                                                            'app-start':pv.action=='app_start',
+                                                            'app-pause':pv.action=='app_pause',
+                                                            'app-awake':pv.action=='app_awake',
+                                                            'app-end':pv.action=='app_end'
+                                                        }">
+                                                        {{pv.action}}
+                                                    </span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span ng-if="pv.action.indexOf('page_') == 0"
+                                                        ng-class="{
+                                                            'page-show':pv.action=='page_show',
+                                                            'page-leave':pv.action=='page_leave'
+                                                        }">
+                                                        {{pv.action}}
+                                                    </span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span class="widget"
+                                                        ng-if="pv.action.indexOf('focus_') == 0 ||
+                                                        pv.action.indexOf('click_') == 0 ||
+                                                        pv.action.indexOf('text_') == 0">{{pv.widget_cn}}</span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span class="widget-type"
+                                                        ng-if="pv.action.indexOf('focus_') == 0 ||
+                                                        pv.action.indexOf('click_') == 0 ||
+                                                        pv.action.indexOf('text_') == 0">{{pv.object}}</span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span class="event"
+                                                        ng-if="pv.action.indexOf('focus_') == 0 ||
+                                                        pv.action.indexOf('click_') == 0 ||
+                                                        pv.action.indexOf('text_') == 0">{{pv.action}}</span>
+                                                </td>
+                                                <td class="text-center">
+                                                    {{pv.action_value||pv.page_cn}}
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+
+                                </div>
+
+                            </div>
+
+
+
+
+						</div>
+					</div>
+
+				</div>
+
+            </div>
+        </div>
+    </div>
+</div>

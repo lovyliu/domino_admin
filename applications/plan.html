@@ -1,0 +1,293 @@
+<div class="content credit-content" ng-controller="applicationsPlanController">
+    <div class="content-fixed">
+        <div class="row">
+            <div class="col-md-8 col-sm-12">
+                <form ng-submit="open()" name="form">
+                    <table class="table table-bordered cols3_table responsive">
+                        <tbody>
+                            <tr>
+                                <td></td>
+                                <td>申请</td>
+                                <td>批复</td>
+                            </tr>
+                            <tr>
+                                <td>车辆开票价格（元）</td>
+                                <td>
+                                    {{(application.vehicle_price|parseint)||'-'}}
+                                    <go-right
+                                        original={{application.vehicle_price}}
+                                        goes-to="post_data.vehicle_price"
+                                        ng-disabled="application.can_dict.can_approval!=0"
+                                    ></go-right>
+                                </td>
+                                <td>
+                                    <input type="number" class="plan-input"
+                                        placeholder="请输入车辆开票价格"
+                                        ng-model="post_data.vehicle_price"
+                                        min="0"
+                                        name="vehicle_price"
+                                        required
+                                        ng-disabled="application.can_dict.can_approval!=0"
+                                        ng-blur="autoCalculate('vehicle_price')"
+                                        ng-class="{'invalid':form.vehicle_price.$error.required||form.vehicle_price.$error.min}">
+                                    <!-- auto-calculate -->
+                                    <span class="error-msg"
+                                         ng-show="(form.vehicle_price.$dirty || submitted) && form.vehicle_price.$error.required"
+                                    >请输入车辆开票价格</span>
+                                    <span class="error-msg"
+                                         ng-show="(form.vehicle_price.$dirty || submitted) && form.vehicle_price.$error.min"
+                                    >车辆开票价格必须大于0</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <tr>
+                                    <td>实际首付款（元）</td>
+                                    <td>
+                                        {{(application.vehicle_down_payment|parseint)||'-'}}
+                                        <i class="fa fa-exclamation-circle tooltip-secondary"
+                                            style="color:#EE606E;"
+                                            data-toggle="tooltip"
+                                            data-placement="top"
+                                            title=""
+                                            data-original-title={{error_tip.vehicle_down_payment}}
+                                            ng-if="error_tip.vehicle_down_payment"></i>
+                                    </td>
+                                    <td>
+                                        <input type="number" class="plan-input"
+                                            placeholder="请输入首付款金额"
+                                            ng-model="post_data.vehicle_down_payment"
+                                            name="vehicle_down_payment"
+                                            min={{post_data.vehicle_price*0.2}}
+                                            max={{post_data.vehicle_price}}
+                                            disabled
+                                            ng-class="{'invalid':form.vehicle_down_payment.$error.required||form.vehicle_down_payment.$error.min||form.vehicle_down_payment.$error.max}">
+                                        <span class="error-msg"
+                                             ng-show="(form.vehicle_down_payment.$dirty || submitted) && form.vehicle_down_payment.$error.required"
+                                        >请输入车辆首付款</span>
+                                        <span class="error-msg"
+                                             ng-show="(form.vehicle_down_payment.$dirty || submitted) && form.vehicle_down_payment.$error.min"
+                                        >车辆首付款必须大于车辆开票价的20%</span>
+                                        <span class="error-msg"
+                                             ng-show="(form.vehicle_down_payment.$dirty || submitted) && form.vehicle_down_payment.$error.max"
+                                        >车辆首付款必须小于车辆开票价</span>
+                                    </td>
+                                </tr>
+                            </tr>
+                            <tr>
+                                <td>实际首付比例</td>
+                                <td>{{rightDecimal(application.vehicle_down_payment_percent*100,100)||'-'}}％</td>
+                                <td>
+                                    {{rightDecimal(post_data.vehicle_down_payment_percent*100,100)+'％'}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>贷款总额（元）</td>
+                                <td>
+                                    {{(application.loan_amt|parseint)||'-'}}
+                                    <i class="fa fa-exclamation-circle tooltip-secondary"
+                                        style="color:#EE606E;"
+                                        data-toggle="tooltip"
+                                        data-placement="top"
+                                        title=""
+                                        data-original-title={{error_tip.loan_amt}}
+                                        ng-if="error_tip.loan_amt"></i>
+                                </td>
+                                <td>
+                                    <input type="number"
+                                        ng-model="post_data.loan_amt"
+                                        name="loan_amt"
+                                        min="10000"
+                                        max={{post_data.vehicle_price*0.8}}
+                                        disabled
+                                        ng-class="{'invalid':form.loan_amt.$error.min||form.loan_amt.$error.max}">
+                                    <span class="error-msg"
+                                         ng-show="form.loan_amt.$error.min"
+                                    >贷款总额必须大于10000</span>
+                                    <span class="error-msg"
+                                         ng-show="form.loan_amt.$error.max"
+                                    >贷款总额必须小于车辆开票价的80%</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <tr>
+                                    <td>车辆贷款额（元）</td>
+                                    <td>
+                                        {{(application.vehicle_loan_amt|parseint)||'-'}}
+                                        <i class="fa fa-exclamation-circle tooltip-secondary"
+                                            style="color:#EE606E;"
+                                            data-toggle="tooltip"
+                                            data-placement="top"
+                                            title=""
+                                            data-original-title={{error_tip.vehicle_loan_amt}}
+                                            ng-if="error_tip.vehicle_loan_amt"></i>
+                                        <go-right
+                                            original={{application.vehicle_loan_amt}}
+                                            goes-to="post_data.vehicle_loan_amt"
+                                            ng-disabled="application.can_dict.can_approval!=0">
+                                        </go-right>
+                                    </td>
+                                    <td>
+                                        <input type="number" class="plan-input"
+                                            placeholder="请输入车辆贷款额"
+                                            ng-model="post_data.vehicle_loan_amt"
+                                            name="vehicle_loan_amt"
+                                            required
+                                            min="0"
+                                            max={{post_data.vehicle_price*0.8}}
+                                            ng-disabled="application.can_dict.can_approval!=0"
+                                            ng-blur="autoCalculate('vehicle_loan_amt')"
+                                            ng-class="{'invalid':form.vehicle_loan_amt.$error.required||form.vehicle_loan_amt.$error.min||form.vehicle_loan_amt.$error.max}">
+                                        <span class="error-msg"
+                                             ng-show="(form.vehicle_loan_amt.$dirty || submitted) && form.vehicle_loan_amt.$error.required"
+                                        >请输入车辆贷款额</span>
+                                        <span class="error-msg"
+                                             ng-show="(form.vehicle_loan_amt.$dirty || submitted) && form.vehicle_loan_amt.$error.min"
+                                        >车辆贷款额必须大于0</span>
+                                        <span class="error-msg"
+                                            ng-show="(form.vehicle_loan_amt.$dirty || submitted) && form.vehicle_loan_amt.$error.max"
+                                       >车辆贷款额必须小于车辆开票价的80%</span>
+                                        <!-- {{form.vehicle_loan_amt.$dirty}} -->
+                                        <!-- {{form.vehicle_loan_amt.$error.max}} -->
+                                        <!-- {{post_data.vehicle_loan_amt < post_data.vehicle_down_payment*0.8}} -->
+                                    </td>
+                                </tr>
+                            </tr>
+                            <tr>
+                                <td>其他项目贷款额（元）</td>
+                                <td>
+                                    {{(application.other_fee|parseint)||'-'}}
+                                    <go-right
+                                        original={{application.other_fee}}
+                                        goes-to="post_data.other_fee"
+                                        ng-disabled="application.can_dict.can_approval!=0">
+                                    </go-right>
+                                </td>
+                                <td>
+                                    <input type="number" class="plan-input"
+                                        placeholder="请输入其他项目贷款额"
+                                        ng-model="post_data.other_fee"
+                                        min="0"
+                                        name="other_fee"
+                                        required
+                                        ng-disabled="application.can_dict.can_approval!=0"
+                                        ng-blur="autoCalculate('other_fee')"
+                                        ng-class="{'invalid':form.other_fee.$error.required||form.other_fee.$error.min}">
+                                    <span class="error-msg"
+                                         ng-show="(form.other_fee.$dirty || submitted) && form.other_fee.$error.required"
+                                    >请输入其他项目贷款额</span>
+                                    <span class="error-msg"
+                                         ng-show="(form.other_fee.$dirty || submitted) && form.other_fee.$error.min"
+                                    >其他项目贷款额必须大于0</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <tr>
+                                    <td>管理费贷款额（元）</td>
+                                    <td>
+                                        {{(application.management_fee|parseint)||'-'}}
+                                        <go-right
+                                            original={{application.management_fee}}
+                                            goes-to="post_data.management_fee"
+                                            ng-disabled="application.can_dict.can_approval!=0">
+                                        </go-right>
+                                    </td>
+                                    <td>
+                                        <input type="number" class="plan-input"
+                                            placeholder="请输入管理费贷款额"
+                                            ng-model="post_data.management_fee"
+                                            min="0"
+                                            name="management_fee"
+                                            required
+                                            ng-disabled="application.can_dict.can_approval!=0"
+                                            ng-blur="autoCalculate('management_fee')"
+                                            ng-class="{'invalid':form.management_fee.$error.required||form.management_fee.$error.min}">
+                                        <span class="error-msg"
+                                             ng-show="(form.management_fee.$dirty || submitted) && form.management_fee.$error.required"
+                                        >请输入管理费贷款额</span>
+                                        <span class="error-msg"
+                                             ng-show="(form.management_fee.$dirty || submitted) && form.management_fee.$error.min"
+                                        >管理费贷款额必须大于0</span>
+                                    </td>
+                                </tr>
+                            </tr>
+                            <tr>
+                                <td>期数（月）</td>
+                                <td>
+                                    {{application.nper||'-'}}
+                                </td>
+                                <td>
+                                    {{post_data.nper}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>费率</td>
+                                <td>{{rightDecimal(application.rate*100,100)+'％'||'-'}}</td>
+                                <td>{{rightDecimal(post_data.rate*100,100)+'％'}}</td>
+                            </tr>
+                            <tr>
+                                <td>合同本金（元）</td>
+                                <td>
+                                    {{(application.principal_ex|parseint)||'-'}}
+                                    <i class="fa fa-exclamation-circle tooltip-secondary"
+                                        style="color:#EE606E;"
+                                        data-toggle="tooltip"
+                                        data-placement="top"
+                                        title=""
+                                        data-original-title={{error_tip.principal_ex}}
+                                        ng-if="error_tip.principal_ex"></i>
+                                </td>
+                                <td>{{post_data.principal_ex|parseint}}</td>
+                            </tr>
+                            <tr>
+                                <td>本息合计（元）</td>
+                                <td>{{(application.principal_interest|parseint)||'-'}}</td>
+                                <td>{{post_data.principal_interest|parseint}}</td>
+                            </tr>
+                            <tr>
+                                <td>月供（元）</td>
+                                <td>{{(application.monthly_payment|parseint)||'-'}}</td>
+                                <td>{{post_data.monthly_payment|parseint}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h5>审批备注</h5>
+                    <textarea rows="8" cols="80" ng-model="post_data.comments"
+                        placeholder="请填写审批备注，若审批拒绝则必须填写"
+                        ng-disabled="application.can_dict.can_approval!=0"
+                    ></textarea>
+                    <div class="credit-btns">
+                        <button type="submit"
+                            class="btn btn-primary btn-sm"
+                            ng-model="page_state.P"
+                            ng-click="page_state.P=true"
+                            ng-disabled="application.can_dict.can_approval!=0"
+                        >审批通过</button>
+                        <button
+                            type="submit"
+                            class="btn btn-danger btn-sm"
+                            ng-model="page_state.R"
+                            ng-click="page_state.R=true"
+                            ng-disabled="!post_data.comments||application.can_dict.can_approval!=0"
+                        >审批拒绝</button>
+                        <button
+                            type="submit"
+                            class="btn btn-default btn-sm"
+                            ng-model="page_state.S"
+                            ng-click="page_state.S=true"
+                            ng-disabled="application.uw_status.uw_finance[0]=='N'"
+                        >发送邮件给经销商</button>
+                    </div>
+                    <p>
+                        <input type="checkbox" ng-model="send_email"
+                        ng-disabled="application.can_dict.can_approval!=0"
+                        > 审批并发送邮件
+                    </p>
+                </form>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+<script src="lib/assets/js/neon-custom.js"></script>

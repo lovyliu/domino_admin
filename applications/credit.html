@@ -1,0 +1,405 @@
+<div class="content loans"
+    ng-controller="applicationsCreditController"
+>
+    <div class="content-fixed">
+        <div class="loans-container">
+            <div class="list-group check-item">
+                <a href="" class="list-group-item active"
+                    ng-click="toggleExamName('img')">
+                    {{application.uw_status.uw_img_plan.credit[0]}} 影像件
+                </a>
+                <div ng-repeat="(item_index,item) in application.uw_img_plan_list"
+                    ng-if="exam_name == 'img' && item.checker[current_name]">
+                    <a href="" class="list-group-item item-list"
+                        ng-click="toggleExamItem(item_index)"
+                    >
+                        <span>{{item.ch}}</span>
+                    </a>
+                    <a href="" class="list-group-item"
+                        ng-repeat="check_item in check_list"
+                        ng-click="toggleExamSubItem($index)"
+                        ng-if="selected_item_index == item_index"
+                        ng-class="{'selected': selected_sub_item_index == $index}"
+                    >
+                        <span>{{check_item.result + ' ' + check_item.ch}}</span>
+                    </a>
+                </div>
+
+                <a href="" class="list-group-item active"
+                    ng-click="toggleExamName('pboc')"
+                    ng-if="current_name=='credit'"
+                >
+                    {{application.uw_status.uw_credit.pboc[0]}} 云车征信结果
+                </a>
+                <button type="button" class="btn btn-block btn-info"
+                    ng-click="downloadImgPlan()" style="margin-top:5px;"
+                    >
+                    <i class='glyphicon glyphicon-circle-arrow-down'></i>
+                    下载图片包</button>
+                <button type="button" class="btn btn-block btn-success btn-sm"
+                    ng-click="open('img','P','postUwImg')"
+                    ng-disabled="application.can_dict.can_approval!=0"
+                    ng-if="application.uw_img_plan_list[selected_item_index].checker[current_name].business_belong=='pre_loan'||
+                        application.uw_img_plan_list[selected_item_index].checker[current_name].business_belong=='both'"
+                >
+                    <!-- ||img_result=='P'||img_result=='R' -->
+                    审批通过
+                </button>
+                <button type="button" class="btn btn-block btn-danger btn-sm"
+                    ng-click="open('img','R','postUwImg')"
+                     ng-disabled="application.can_dict.can_approval!=0"
+                     ng-if="application.uw_img_plan_list[selected_item_index].checker[current_name].business_belong=='pre_loan'||
+                         application.uw_img_plan_list[selected_item_index].checker[current_name].business_belong=='both'"
+                >
+                    <!-- ||img_result=='P'||img_result=='R' -->
+                    退回修改
+                </button>
+                <button type="button" class="btn btn-block btn-orange btn-sm"
+                    ng-click="open('query_credit','P','queryCredit')"
+                    style="margin-top:5px;"
+                    ng-if="current_name=='credit'"
+                >
+                    查询征信
+                </button>
+            </div>
+            <div class="row" ng-if="exam_name == 'img'">
+                <div class="image col-xs-6" ng-if="!images_list.length || check_list[selected_sub_item_index].category.indexOf('video') == -1">
+                    <div>
+                        <div uib-carousel active="active_index">
+                            <div class="image-item" uib-slide
+                                ng-repeat="image in images_list track by $index"
+                                index="$index" style="position:relative"
+                            >
+                                <panzoom id="{{'PanZoom'+ $index}}"
+                                    config="panzoomConfig"
+                                    model="panzoomModel"
+                                    style="width:auto; height: 100%;"
+                                >
+                                   <img ng-src="{{image.url}}"
+                                        rotate-deg="{{rotate.rotate_deg}}"
+                                   >
+                                </panzoom>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rotate-wrapper" ng-if="images_list.length">
+                        <button type="button" class="fa fa-rotate-left"
+                            rotate direction="left" rotate-deg="rotate.rotate_deg"
+                            zoom-scale="{{zoom.scale}}"
+                        ></button>
+                        <button type="button" class="fa fa-rotate-right"
+                            rotate direction="right" rotate-deg="rotate.rotate_deg"
+                            zoom-scale="{{zoom.scale}}"
+                        ></button>
+                        <button type="button" class="fa fa-search-plus"
+                            ng-click="zoomIn()"
+                        ></button>
+                        <button type="button" class="fa fa-search-minus"
+                            ng-click="zoomOut()"
+                        ></button>
+                    </div>
+                    <span class="num" ng-if="images_list.length">{{active_index+1}}/{{images_list.length}}</span>
+                </div>
+
+
+                <div class="image col-xs-6" ng-if="images_list.length && check_list[selected_sub_item_index].category.indexOf('video') != -1">
+                    <div>
+                        <div uib-carousel active="active_index">
+                            <div class="image-item" uib-slide
+                                ng-repeat="image in images_list track by $index"
+                                index="$index" style="position:relative"
+                            >
+                                <a class="fa fa-play-circle"
+                                    style="font-size: 40px;
+                                        color: #fff;
+                                        position: absolute;
+                                        left: 50%;
+                                        top: 50%;
+                                        transform: translate(-50%,-50%);
+                                        -webkit-transform: translate(-50%,-50%);"
+                                    href={{image.url}}
+                                    target="_blank"></a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="loans-content-wrapper col-xs-6">
+                    <h5 class="loans-content-header">
+                        <span>
+                            <span>{{check_list[selected_item_index].list[selected_sub_item_index].ch}}</span>
+                        </span>
+                        <button
+                            class="btn btn-default btn-sm prev"
+                            ng-disabled="selected_sub_item_index==0"
+                            ng-click="toggleExamSubItem(selected_sub_item_index - 1)"
+                        >&lt;上一项<span>{{check_list[selected_item_index].list[selected_sub_item_index-1].ch || '无'}}</span></button>
+                        <button
+                            class="btn btn-default btn-sm next"
+                            ng-disabled="selected_sub_item_index==check_list[selected_item_index].list.length-1"
+                            ng-click="toggleExamSubItem(selected_sub_item_index + 1)"
+                        >下一项&gt;<span>{{check_list[selected_item_index].list[selected_sub_item_index+1].ch || '无'}}</span></button>
+                    </h5>
+                    <div class="loans-content">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <!-- <h5>申请摘要信息</h5> -->
+                                <div ng-bind-html="check_items"></div>
+                                <!-- <table class="table table-bordered responsive" ng-repeat="(item_name,item_list) in check_items">
+                                    <tbody>
+                                        <tr ng-repeat="item in item_list">
+                                            <td>{{item}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table> -->
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="textarea"
+                        ng-if="application.uw_img_plan_list[selected_item_index].checker[current_name].business_belong=='pre_loan'||
+                            application.uw_img_plan_list[selected_item_index].checker[current_name].business_belong=='both'">
+                        <textarea rows="2"
+                            ng-model="checker_data.comments"
+                            placeholder="请输入检测备注，若「检测不通过」则必须填写"
+                            ng-disabled="application.can_dict.can_approval!=0"
+                        ></textarea>
+                        <!-- ||img_result=='P'||img_result=='R' -->
+                    </div>
+                    <div class="submit-buttons">
+                        <div data-provides="fileinput" style="float:left;">
+                            <span class="btn btn-info btn-file" ng-disabled="page_state.uploading||application.can_dict.can_approval!=0">
+                                <span ng-if="!page_state.uploading">
+                                    <i class='glyphicon glyphicon-circle-arrow-up'>
+                                    </i>
+                                    上传
+                                </span>
+                                <span ng-if="page_state.uploading">
+                                    上传中...
+                                </span>
+                                <input type="file"
+                                    fileread="page_state.file"
+                                    accept="image/*"
+                                    ng-disabled="page_state.uploading||application.can_dict.can_approval!=0">
+                            </span>
+                            <!-- ||img_result=='P'||img_result=='R' -->
+                        </div>
+                        <button type="button"
+                            class="btn btn-success btn-sm"
+                            ng-click="open('checker','P','postChecker')"
+                            ng-disabled="application.can_dict.can_approval!=0"
+                            ng-if="application.uw_img_plan_list[selected_item_index].checker[current_name].business_belong=='pre_loan'||
+                                application.uw_img_plan_list[selected_item_index].checker[current_name].business_belong=='both'"
+                        >
+                        <!-- ||img_result=='P'||img_result=='R' -->
+                            检测通过
+                        </button>
+                        <button type="button"
+                            class="btn btn-danger btn-sm"
+                            ng-click="open('checker','R','postChecker')"
+                            ng-disabled="!checker_data.comments||application.can_dict.can_approval!=0"
+                            ng-if="application.uw_img_plan_list[selected_item_index].checker[current_name].business_belong=='pre_loan'||
+                                application.uw_img_plan_list[selected_item_index].checker[current_name].business_belong=='both'"
+                        >
+                        <!-- ||img_result=='P'||img_result=='R' -->
+                            检测不通过
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="row" ng-if="exam_name =='yujian_credit_invest'">
+                <div class="col-sm-12" style="position: absolute;
+                    left: 0;
+                    right: 0;
+                    top: 0;
+                    bottom: 125px;
+                    overflow-y: scroll;"
+                >
+                    <h3 class="text-center">问询表</h3>
+                    <table border="1" class="bg-white print-table" width="100%">
+                      <!-- 车辆请款 -->
+                      <tr>
+                        <td rowspan="3" colspan="2" class="bg-gray">车辆情况</td>
+                        <td class="bg-gray">车型</td>
+                        <td>{{application.brand + '-' + application.trix + '-' + application.model_name||'-'}}</td>
+                        <td class="bg-gray">车价</td>
+                        <td>{{(application.vehicle_price|parseint)||'-'}}</td>
+                        <td class="bg-gray">贷款金额</td>
+                        <td>{{(application.loan_amt|parseint)||'-'}}</td>
+                        <td class="bg-gray">贷款银行</td>
+                        <td>{{application.loan_bank||'-'}}</td>
+                      </tr>
+                      <tr>
+                        <td class="bg-gray">颜色</td>
+                        <td>{{application.vehicle_color||'-'}}</td>
+                        <td class="bg-gray">首付款</td>
+                        <td>{{(application.down_payment|parseint)||'-'}}</td>
+                        <td class="bg-gray">首付比例</td>
+                        <td>{{application.yunche_down_payment_percent||'-'}}</td>
+                        <td class="bg-gray">保险公司</td>
+                        <td>-</td>
+                      </tr>
+                      <tr>
+                        <td class="bg-gray">二手车</td>
+                        <td>否</td>
+                        <td class="bg-gray">新车</td>
+                        <td>是</td>
+                        <td class="bg-gray">月还款额</td>
+                        <td>{{(application.monthly_payment|parseint)||'-'}}</td>
+                        <td class="bg-gray">还款期限</td>
+                        <td>{{application.nper||'-'}}</td>
+                      </tr>
+                      <!-- 客户简况 -->
+                      <!-- 个人基本信息 -->
+                      <tr>
+                        <td rowspan="8" class="bg-gray" width="30">客户简况</td>
+                        <td rowspan="6" class="bg-gray" width="30">个人基本信息</td>
+                        <td class="bg-gray">购车人姓名</td>
+                        <td>{{application.clt_nm||'-'}}</td>
+                        <td class="bg-gray">性别</td>
+                        <td>{{application.gender||'-'}}</td>
+                        <td class="bg-gray">户籍地</td>
+                        <td>{{application.reg_addr.province+application.reg_addr.city}}</td>
+                        <td class="bg-gray">身份证号</td>
+                        <td>{{application.id_no||'-'}}</td>
+                      </tr>
+                      <tr>
+                        <td class="bg-gray">手机</td>
+                        <td>{{application.mobile||'-'}}</td>
+                        <td class="bg-gray">学历</td>
+                        <td>{{application.edu||'-'}}</td>
+                        <td class="bg-gray">婚否</td>
+                        <td colspan="3">{{application.marriage||'-'}}</td>
+                      </tr>
+                      <tr>
+                        <td class="bg-gray">现住地址</td>
+                        <td colspan="3">{{application.current_addr.province+application.current_addr.city+application.current_addr.district+ '-' + application.current_addr.address1+application.current_addr.address2||'-'}}</td>
+                        <td class="bg-gray">家庭地址</td>
+                        <td colspan="3">{{application.current_addr.province+application.current_addr.city+application.current_addr.district+ '-' + application.current_addr.address1+application.current_addr.address2||'-'}}（同现住地址）</td>
+                      </tr>
+                      <tr>
+                        <td class="bg-gray">单位名称</td>
+                        <td colspan="3">{{application.company_name||'-'}}</td>
+                        <td class="bg-gray">单位地址</td>
+                        <td colspan="3">{{application.company_addr.province+application.company_addr.city+application.company_addr.district+ '-' + application.company_addr.address1+application.company_addr.address2||'-'}}</td>
+                      </tr>
+                      <tr>
+                        <td class="bg-gray">职务</td>
+                        <td>{{application.work_position||'-'}}</td>
+                        <td class="bg-gray">月收入</td>
+                        <td>{{application.monthly_income||'-'}}</td>
+                        <td class="bg-gray">单位电话</td>
+                        <td>{{application.work_phone_num||'-'}}</td>
+                        <td class="bg-gray">驾照</td>
+                        <td>{{application.driving_lic}}</td>
+                      </tr>
+                      <tr>
+                        <td class="bg-gray">房屋所有权人</td>
+                        <td>{{application.house_owner_name||'-'}}</td>
+                        <td class="bg-gray">房屋性质</td>
+                        <td colspan="2">{{application.house_type||'-'}}</td>
+                        <td class="bg-gray">房屋面积</td>
+                        <td colspan="2">{{application.house_area||'-'}}</td>
+                      </tr>
+                      <tr>
+                        <td rowspan="2" class="bg-gray">其他联系人</td>
+                        <td class="bg-gray">紧急联系人1</td>
+                        <td colspan="2">{{application.urg_contact1||'-'}}</td>
+                        <td class="bg-gray">手机</td>
+                        <td colspan="2">{{application.urg_mobile1||'-'}}</td>
+                        <td class="bg-gray">关系</td>
+                        <td>{{application.urg_relation1}}</td>
+                      </tr>
+                      <tr>
+                        <td class="bg-gray">紧急联系人2</td>
+                        <td colspan="2">{{application.urg_contact2||'-'}}</td>
+                        <td class="bg-gray">手机</td>
+                        <td colspan="2">{{application.urg_mobile2||'-'}}</td>
+                        <td class="bg-gray">关系</td>
+                        <td>{{application.urg_relation2}}</td>
+                      </tr>
+                    </table>
+                </div>
+                <div class="col-sm-12 submit-block">
+                    <div class="textarea" style="border-top: 1px solid;padding-top: 4px;">
+                        <textarea rows="2"
+                            ng-model="uw_credit_data.comments"
+                            placeholder="请输入电核结果，若「不通过」则必须填写"
+                            style="width:50%;"
+                            ng-disabled="application.can_dict.can_approval!=0"
+                        ></textarea>
+                        <!-- ||application.uw_status.uw_credit.yujian_credit_invest[0]=='P'||application.uw_status.uw_credit.yujian_credit_invest[0]=='R' -->
+                    </div>
+                    <div class="submit-buttons" style="padding-bottom: 5px;">
+                        <!-- border-bottom: 1px solid; -->
+                        <button type="button"
+                            class="btn btn-success btn-sm"
+                            ng-click="open('yujian_credit_invest','P','postUwCredit')"
+                            ng-disabled="application.can_dict.can_approval!=0"
+                            style="margin-right:10px;"
+                        >
+                        <!-- ||application.uw_status.uw_credit.yujian_credit_invest[0]=='P'||application.uw_status.uw_credit.yujian_credit_invest[0]=='R' -->
+                            电核通过
+                        </button>
+                        <button type="button"
+                            class="btn btn-danger btn-sm"
+                            ng-disabled="!uw_credit_data.comments||application.can_dict.can_approval!=0"
+                            ng-click="open('yujian_credit_invest','R','postUwCredit')"
+                        >
+                        <!-- ||application.uw_status.uw_credit.yujian_credit_invest[0]=='P'||application.uw_status.uw_credit.yujian_credit_invest[0]=='R' -->
+                            电核不通过
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="row" ng-if="exam_name == 'pboc'">
+                <div class="col-sm-12" style="position: absolute;
+                    left: 0;
+                    right: 0;
+                    top: 0;
+                    bottom: 0;">
+                    <div class="textarea" style="    padding-top: 4px;
+                        position: absolute;
+                        left: 15px;
+                        right: 15px;
+                        top: 4px;
+                        bottom: 100px;">
+                        <textarea rows="5"
+                            ng-model="uw_credit_data.comments"
+                            placeholder="请输入云车征信结果"
+                            style="width: 50%;height: 100%;"
+                            ng-disabled="application.can_dict.can_approval!=0"
+                        ></textarea>
+                        <!-- ||application.uw_status.uw_credit.pboc[0]=='P'||application.uw_status.uw_credit.pboc[0]=='R' -->
+                    </div>
+                    <div class="submit-buttons" style="position: absolute;
+                        padding-bottom: 5px;
+                        bottom: 50px;">
+                        <button type="button"
+                            class="btn btn-success btn-sm"
+                            ng-click="open('pboc','P','postUwCredit')"
+                            ng-disabled="!uw_credit_data.comments||application.can_dict.can_approval!=0"
+                            style="margin-right:10px;"
+                        >
+                        <!-- ||application.uw_status.uw_credit.pboc[0]=='P'||application.uw_status.uw_credit.pboc[0]=='R' -->
+                            云车征信通过
+                        </button>
+                        <button type="button"
+                            class="btn btn-danger btn-sm"
+                            ng-click="open('pboc','R','postUwCredit')"
+                            ng-disabled="!uw_credit_data.comments||application.can_dict.can_approval!=0"
+                        >
+                        <!-- ||application.uw_status.uw_credit.pboc[0]=='P'||application.uw_status.uw_credit.pboc[0]=='R' -->
+                            云车征信不通过
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

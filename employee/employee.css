@@ -1,0 +1,16 @@
+.employee-info table tr td:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+.employee-info form h4{
+    margin-bottom: 16px;
+}
+.employee-info .save-button{
+    margin-top:20px;
+}
+
+.table-form .form-control{
+    display: inherit;
+}
+.table-form .error-msg{
+    line-height: 31px;
+}

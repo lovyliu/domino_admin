@@ -1,0 +1,109 @@
+<div class="dashboard">
+    <div class="row dashboard-title">
+        <h2 class="col-sm-12">
+            关键指标
+            <span style="font-size: 14px;color: #666;font-weight: normal;">（今日数据）</span>
+            <div class="btn-group pull-right" ng-if="kpi&&has_kpi_week">
+    			<button type="button" class="btn btn-default"
+                    ng-class="{'active':page_state.tab=='before'}"
+                    ng-click="changeTab('before')">贷前</button>
+    			<button type="button" class="btn btn-default"
+                    ng-class="{'active':page_state.tab=='after'}"
+                    ng-click="changeTab('after')">贷后</button>
+    		</div>
+        </h2>
+    </div>
+    <div class="row count" ng-if="kpi">
+        <div class="col-sm-2" ng-repeat="field in page_state[page_state.tab+'_fields']">
+            <div class="tile-stats tile-white-gray stats-{{field[2]}}">
+				<div class="icon">
+				    <img ng-src="{{'lib/img/dashboard/'+field[1]+'.png'}}">
+				</div>
+				<div class="num">
+                    <div class="num-icon">
+                        <span></span>
+                    </div>
+                    <div class="num-icon">
+                        <span></span>
+                    </div>
+                    <div>{{kpi[field[0]]}}</div>
+                </div>
+				<h3>{{field[1]}}</h3>
+			</div>
+        </div>
+    </div>
+
+    <div class="row chart" style="margin-top:5px;">
+        <div class="col-sm-12">
+            <div style="background:#fff;">
+                <h4 class="chart-title" style="border-bottom: 1px solid #F2F2F2;">近一周进件/审批数据</h4>
+                <div class="yj-chart" id="dashboard-line"
+                    eoption="line_config"
+                    ng-if="line_config"
+                    style="width:100%;height:500px;padding:15px 20px 20px 20px;"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row map" style="margin-top:15px;">
+        <div class="col-sm-12">
+            <div style="background:#fff;">
+                <h4 class="chart-title" style="overflow:hidden;">
+                    <div class="pull-left">
+                        业绩地图
+                        <button type="button"
+                            class="btn btn-white"
+                            ng-repeat="field in page_state[page_state.tab+'_fields']"
+                            ng-click="selectOrding(field)"
+                            ng-class="{'active':page_state.ordering_name == field[1]}"
+                        >{{field[1]}}</button>
+                    </div>
+                    <div class="pull-right" style="font-size:14px;line-height: 30px;">
+                        {{page_state.ordering_name}}<img src="./lib/img/dashboard/降序@3x.png"
+                            style="width:14px;margin-left: 10px;margin-top: -2px;">
+                    </div>
+                </h4>
+                <div style="min-height:500px;">
+                    <div class="row" ng-if="map_config">
+                        <div class="col-sm-7">
+                            <div class="yj-chart" id="dashboard-map"
+                                eoption="map_config" style="width:100%;height:500px;padding-left:20px;"></div>
+                        </div>
+                        <div class="col-sm-5">
+                            <ul class="province-list">
+                                <li class="province-item"
+                                    ng-repeat="ranking in ranking_list">
+                                    <div class="row">
+                                        <div class="col-sm-6">{{$index+1+'.'+ranking.name}}</div>
+                                        <div class="col-sm-6 text-center">{{ranking.value[2]}}</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">{{start_date + '~' + end_date}}</div>
+                                        <div class="col-sm-6 text-center">
+                                            <span ng-if="page_state.ordering_name!='放款额'">
+                                                {{page_state.ordering_name}}（件）
+                                            </span>
+                                            <span ng-if="page_state.ordering_name=='放款额'">
+                                                {{page_state.ordering_name}}（元）
+                                            </span>
+                                    </div>
+                                    <img src="./lib/img/dashboard/01@3x.png"
+                                        class="top-icon"
+                                        ng-if="$index==0">
+                                    <img src="./lib/img/dashboard/02@3x.png"
+                                        class="top-icon"
+                                        ng-if="$index==1">
+                                    <img src="./lib/img/dashboard/03@3x.png"
+                                        class="top-icon"
+                                        ng-if="$index==2">
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

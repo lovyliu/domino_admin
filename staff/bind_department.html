@@ -1,0 +1,117 @@
+<ol class="breadcrumb bc-3" >
+    <li>
+        <a ui-sref="menu.content.staff.list">予见员工管理</a>
+    </li>
+    <li>
+        <a ui-sref="menu.content.staff.detail({staff_id:staff_id})">予见员工详情</a>
+    </li>
+    <li class="active">
+        <strong>配置予见员工职位信息</strong>
+    </li>
+</ol>
+<h2>予见员工管理</h2>
+<br>
+<div class="row staff-info">
+    <form ng-submit="updateStaff()" name="form">
+        <div class="col-sm-8">
+            <h4>人员基础信息编辑</h4>
+            <table class="table table-bordered">
+    			<tbody>
+                    <tr>
+                        <td>员工 ID</td>
+                        <td>
+                            {{staff.id||'-'}}
+                        </td>
+                        <td>姓名</td>
+                        <td>
+                            {{staff.name||'-'}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>手机号码</td>
+                        <td>{{staff.mobile||'-'}}</td>
+                        <td>性别</td>
+                        <td>
+                            {{staff.gender||'-'}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>身份证件类型</td>
+                        <td>
+                            身份证
+                        </td>
+                        <td>生日</td>
+                        <td>
+                            {{staff.birthday||'-'}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>证件号码</td>
+                        <td>
+                            {{staff.id_no||'-'}}
+                        </td>
+                        <td>邮箱地址</td>
+                        <td>
+                            {{staff.email||'-'}}
+                        </td>
+                    </tr>
+    			</tfoot>
+    		</table>
+        </div>
+    </form>
+
+</div>
+<hr>
+<h4>
+    配置予见员工职位信息
+</h4>
+<div class="row">
+    <div class="col-md-5">
+        <table class="table table-bordered datatable">
+            <tbody>
+                <tr>
+                    <td>部门名称</td>
+                    <td>
+                        <select ng-model="department_staff_relation.department"
+                            ng-change="changeDepartment()"
+                            style="width:100%;">
+                            <option ng-value={{department.id}}
+                                ng-repeat="department in department_list"
+                            >{{department.name}}</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>职位名称</td>
+                    <td>
+                        <select ng-model="department_staff_relation.position"
+                            style="width:100%;">
+                            <option ng-value="role.id"
+                                ng-repeat="role in staff_roles"
+                            >{{role.position}}</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>角色状态</td>
+                    <td>
+                        <select ng-model="department_staff_relation.status"
+                            style="width:100%;">
+                            <option value="A">已激活</option>
+                            <option value="N">未激活</option>
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="row">
+            <div class="col-sm-4">
+                <button type="button" class="btn btn-primary btn-block"
+                    ng-click="saveRelation()" ng-disabled="!department_staff_relation.department">保存</button>
+            </div>
+        </div>
+
+
+    </div>
+</div>

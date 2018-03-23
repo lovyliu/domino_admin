@@ -1,0 +1,217 @@
+<div class="content loans"
+    ng-controller="applicationsCreditController"
+>
+    <div class="content-fixed">
+        <div class="loans-container">
+            <div class="list-group check-item">
+                <a href="" class="list-group-item active"
+                    ng-click="toggleExamName('img')">
+                    {{application.uw_status.uw_img_plan.credit[0]}} 影像件
+                </a>
+                <div ng-repeat="(item_index,item) in application.uw_img_plan_list"
+                    ng-if="exam_name == 'img' && item.checker[current_name]">
+                    <a href="" class="list-group-item item-list"
+                        ng-click="toggleExamItem(item_index)"
+                    >
+                        <span>{{item.ch}}</span>
+                    </a>
+                    <a href="" class="list-group-item"
+                        ng-repeat="check_item in check_list"
+                        ng-click="toggleExamSubItem($index)"
+                        ng-if="selected_item_index == item_index"
+                        ng-class="{'selected': selected_sub_item_index == $index}"
+                    >
+                        <span>{{check_item.result + ' ' + check_item.ch}}</span>
+                    </a>
+                </div>
+                <button type="button" class="btn btn-block btn-info"
+                    ng-click="downloadImgPlan()" style="margin-top:5px;"
+                    >
+                    <i class='glyphicon glyphicon-circle-arrow-down'></i>
+                    下载图片包</button>
+                <button type="button" class="btn btn-block btn-success btn-sm"
+                    ng-click="open('img','P','postUwImg')"
+                    ng-disabled="application.can_dict.can_approval!=0"
+                    ng-if="application.uw_img_plan_list[selected_item_index].checker[current_name].business_belong=='post_loan'||
+                        application.uw_img_plan_list[selected_item_index].checker[current_name].business_belong=='both'"
+                >
+                    <!-- ||img_result=='P'||img_result=='R' -->
+                    审批通过
+                </button>
+                <button type="button" class="btn btn-block btn-danger btn-sm"
+                    ng-click="open('img','R','postUwImg')"
+                    ng-disabled="application.can_dict.can_approval!=0"
+                    ng-if="application.uw_img_plan_list[selected_item_index].checker[current_name].business_belong=='post_loan'||
+                        application.uw_img_plan_list[selected_item_index].checker[current_name].business_belong=='both'"
+                >
+                    <!-- ||img_result=='P'||img_result=='R' -->
+                    退回修改
+                </button>
+                <!-- <button type="button" class="btn btn-block btn-orange"
+                    ng-click="open('yunche_loan','P','yuncheLoan')"
+                    style="margin-top:5px;"
+                    ng-if="current_name=='base_info'&&current_state == 'applications'"
+                >
+                    一键报单(云车)
+                </button> -->
+            </div>
+            <div class="row" ng-if="exam_name == 'img'">
+                <div class="image col-xs-6" ng-if="!images_list.length || check_list[selected_sub_item_index].category.indexOf('video') == -1">
+                    <div>
+                        <div uib-carousel active="active_index">
+                            <div class="image-item" uib-slide
+                                ng-repeat="image in images_list track by $index"
+                                index="$index" style="position:relative"
+                            >
+                                <panzoom id="{{'PanZoom'+ $index}}"
+                                    config="panzoomConfig"
+                                    model="panzoomModel"
+                                    style="width:auto; height: 100%;"
+                                >
+                                   <img ng-src="{{image.url}}"
+                                        rotate-deg="{{rotate.rotate_deg}}"
+                                   >
+                                </panzoom>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rotate-wrapper" ng-if="images_list.length">
+                        <button type="button" class="fa fa-rotate-left"
+                            rotate direction="left" rotate-deg="rotate.rotate_deg"
+                            zoom-scale="{{zoom.scale}}"
+                        ></button>
+                        <button type="button" class="fa fa-rotate-right"
+                            rotate direction="right" rotate-deg="rotate.rotate_deg"
+                            zoom-scale="{{zoom.scale}}"
+                        ></button>
+                        <button type="button" class="fa fa-search-plus"
+                            ng-click="zoomIn()"
+                        ></button>
+                        <button type="button" class="fa fa-search-minus"
+                            ng-click="zoomOut()"
+                        ></button>
+                    </div>
+                    <span class="num" ng-if="images_list.length">{{active_index+1}}/{{images_list.length}}</span>
+                </div>
+
+
+                <div class="image col-xs-6" ng-if="images_list.length && check_list[selected_sub_item_index].category.indexOf('video') != -1">
+                    <div>
+                        <div uib-carousel active="active_index">
+                            <div class="image-item" uib-slide
+                                ng-repeat="image in images_list track by $index"
+                                index="$index" style="position:relative"
+                            >
+                                <a class="fa fa-play-circle"
+                                    style="font-size: 40px;
+                                        color: #fff;
+                                        position: absolute;
+                                        left: 50%;
+                                        top: 50%;
+                                        transform: translate(-50%,-50%);
+                                        -webkit-transform: translate(-50%,-50%);"
+                                    href={{image.url}}
+                                    target="_blank"></a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="loans-content-wrapper col-xs-6">
+                    <h5 class="loans-content-header">
+                        <span>
+                            <span>{{check_list[selected_item_index].list[selected_sub_item_index].ch}}</span>
+                        </span>
+                        <button
+                            class="btn btn-default btn-sm prev"
+                            ng-disabled="selected_sub_item_index==0"
+                            ng-click="toggleExamSubItem(selected_sub_item_index - 1)"
+                        >&lt;上一项<span>{{check_list[selected_item_index].list[selected_sub_item_index-1].ch || '无'}}</span></button>
+                        <button
+                            class="btn btn-default btn-sm next"
+                            ng-disabled="selected_sub_item_index==check_list[selected_item_index].list.length-1"
+                            ng-click="toggleExamSubItem(selected_sub_item_index + 1)"
+                        >下一项&gt;<span>{{check_list[selected_item_index].list[selected_sub_item_index+1].ch || '无'}}</span></button>
+                    </h5>
+                    <div class="loans-content">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <!-- <h5>申请摘要信息</h5> -->
+                                <div ng-bind-html="check_items"></div>
+                                <!-- <table class="table table-bordered responsive" ng-repeat="(item_name,item_list) in check_items">
+                                    <tbody>
+                                        <tr ng-repeat="item in item_list">
+                                            <td>{{item}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table> -->
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="textarea"
+                        ng-if="application.uw_img_plan_list[selected_item_index].checker[current_name].business_belong=='post_loan'||
+                            application.uw_img_plan_list[selected_item_index].checker[current_name].business_belong=='both'">
+                        <textarea rows="2"
+                            ng-model="checker_data.comments"
+                            placeholder="请输入检测备注，若「检测不通过」则必须填写"
+                            ng-disabled="application.can_dict.can_approval!=0"
+                        ></textarea>
+                        <!-- ||img_result=='P'||img_result=='R' -->
+                    </div>
+                    <div class="submit-buttons">
+                        <div
+                            data-provides="fileinput" style="float:left;">
+                            <span class="btn btn-info btn-file"
+                                ng-disabled="application.can_dict.can_approval!=0||img_result=='P'||img_result=='R'||page_state.uploading">
+                                <span ng-if="!page_state.uploading">
+                                    <i class='glyphicon glyphicon-circle-arrow-up'>
+                                    </i>
+                                    上传
+                                </span>
+                                <span ng-if="page_state.uploading">
+                                    上传中...
+                                </span>
+                                <input type="file"
+                                    fileread="page_state.file"
+                                    accept="image/*"
+                                    ng-if="check_list[selected_item_index].list[selected_sub_item_index].category.indexOf('video')==-1"
+                                    ng-disabled="application.can_dict.can_approval!=0||img_result=='P'||img_result=='R'||page_state.uploading">
+                                <input type="file"
+                                    fileread="page_state.file"
+                                    accept="video/*"
+                                    ng-if="check_list[selected_item_index].list[selected_sub_item_index].category.indexOf('video')!=-1"
+                                    ng-disabled="application.can_dict.can_approval!=0||img_result=='P'||img_result=='R'||page_state.uploading">
+                            </span>
+                            <!-- <span class="fileinput-filename"></span> -->
+                        </div>
+                        <button type="button"
+                            class="btn btn-success btn-sm"
+                            ng-click="open('checker','P','postChecker')"
+                            ng-disabled="application.can_dict.can_approval!=0"
+                            ng-if="application.uw_img_plan_list[selected_item_index].checker[current_name].business_belong=='post_loan'||
+                                application.uw_img_plan_list[selected_item_index].checker[current_name].business_belong=='both'"
+                        >
+                        <!-- ||img_result=='P'||img_result=='R' -->
+                            检测通过
+                        </button>
+                        <button type="button"
+                            class="btn btn-danger btn-sm"
+                            ng-click="open('checker','R','postChecker')"
+                            ng-disabled="application.can_dict.can_approval!=0"
+                            ng-if="application.uw_img_plan_list[selected_item_index].checker[current_name].business_belong=='post_loan'||
+                                application.uw_img_plan_list[selected_item_index].checker[current_name].business_belong=='both'"
+                        >
+                            检测不通过
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

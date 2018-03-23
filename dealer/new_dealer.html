@@ -1,0 +1,345 @@
+<ol class="breadcrumb bc-3" >
+    <li>
+        <a ui-sref="menu.content.dealer.list">经销商管理</a>
+    </li>
+    <li class="active">
+        <strong>新增经销商</strong>
+    </li>
+</ol>
+<h2>新增经销商</h2>
+<br>
+<div class="row new-dealer">
+    <div class="col-md-12">
+
+        <div class="panel panel-primary">
+
+            <div class="panel-body">
+                <form role="form" ng-submit="createDealer()" name="form">
+                    <h4>机构基本信息</h4>
+                    <div class="row form-group form-horizontal">
+                        <label for="field-1" class="control-label col-sm-2">*经销商名称</label>
+                        <div class="col-sm-3">
+                            <input type="text" id="field-1"
+                                name="dlr_nm"
+                                ng-model="post_data.dlr_nm"
+                                placeholder="经销商名称"
+                                class="form-control"
+                                required
+                            >
+                            <span class="error-msg"
+                                 ng-show="(form.dlr_nm.$dirty || submitted) && form.dlr_nm.$error.required"
+                            >请输入经销商名称</span>
+                        </div>
+
+                        <label class="control-label col-sm-2">*经销商类型</label>
+                        <div class="col-sm-2">
+                            <select class="form-control"
+                                ng-model="post_data.dtype"
+                                name="dtype"
+                                required>
+                                <option value=""></option>
+                                <option value="D" selected>直营店</option>
+                                <option value="SP" selected>SP</option>
+                            </select>
+                            <span class="error-msg"
+                                 ng-show="(form.dtype.$dirty || submitted) && form.dtype.$error.required"
+                            >请选择经销商类型</span>
+                        </div>
+                        <div class="col-sm-2" ng-if="post_data.dtype == 'D'">
+                            <select class="form-control"
+                                ng-model="post_data.sub_dtype"
+                                name="sub_dtype"
+                                required>
+                                <option value="1" selected>AID</option>
+                                <option value="2">综合汽贸</option>
+                                <option value="3">二网</option>
+                            </select>
+                            <span class="error-msg"
+                                 ng-show="(form.sub_dtype.$dirty || submitted) && form.sub_dtype.$error.required"
+                            >请选择直营子类型</span>
+                        </div>
+                    </div>
+                    <div class="row form-group form-horizontal">
+                        <label for="field-2" class="control-label col-sm-2">*工商注册号</label>
+                        <div class="col-sm-3">
+                            <input type="text" id="field-2"
+                                name="brn"
+                                ng-model="post_data.business_registration_number"
+                                placeholder="工商注册号"
+                                class="form-control"
+                                required
+                            >
+                            <!-- ng-model="post_data.brn" -->
+                            <span class="error-msg"
+                                 ng-show="(form.brn.$dirty || submitted) && form.brn.$error.required"
+                            >请输入工商注册号</span>
+                        </div>
+                    </div>
+
+                    <h4>机构银行账户信息</h4>
+                    <div class="row form-group form-horizontal">
+                        <label class="control-label col-sm-2">打款方式</label>
+                        <div class="col-sm-2">
+                            <select class="form-control"
+                                ng-model="post_data.pay_way">
+                                <option value="public" selected>公户</option>
+                                <option value="private">私户</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row form-group form-horizontal">
+
+                        <label for="field-3" class="control-label col-sm-2">账户名称</label>
+                        <div class="col-sm-3">
+                            <input type="text" id="field-3"
+                                name="bank_account_name"
+                                ng-model="post_data.bank_account_name"
+                                placeholder="账户名称"
+                                class="form-control"
+                            >
+                        </div>
+
+                        <label for="field-4" class="control-label col-sm-2">开户行支行名</label>
+                        <div class="col-sm-3">
+                            <input type="text" id="field-4"
+                                name="bank_branch_name"
+                                ng-model="post_data.bank_branch_name"
+                                placeholder="开户行支行名"
+                                class="form-control"
+                            >
+                        </div>
+                    </div>
+                    <div class="row form-group form-horizontal">
+                        <label for="field-5" class="control-label col-sm-2">银行账户（卡号）</label>
+                        <div class="col-sm-3">
+                            <input type="tel" id="field-5"
+                                name="bank_account_num"
+                                ng-model="post_data.bank_account_num"
+                                placeholder="银行账户"
+                                class="form-control"
+                            >
+                        </div>
+
+                        <label for="field-6" class="control-label col-sm-2"
+                            ng-if="post_data.pay_way == 'public'">收款银行电子联行号</label>
+                        <div class="col-sm-3" ng-if="post_data.pay_way == 'public'">
+                            <input type="text" id="field-6"
+                                name="bank_branch_id"
+                                ng-model="post_data.bank_branch_id"
+                                placeholder="开户银行编码"
+                                class="form-control"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="row form-group form-horizontal">
+                        <label class="control-label col-sm-2">开户银行所在省</label>
+                        <div class="col-sm-3">
+                            <select class="form-control" ng-model="post_data.bank_province">
+                                <option value="" selected>全部</option>
+                                <option value="{{province.areaname}}"
+                                    ng-repeat="province in province_list"
+                                >{{province.areaname}}</option>
+                            </select>
+                        </div>
+
+                        <label class="control-label col-sm-2">开户银行所在市</label>
+                        <div class="col-sm-3">
+                            <select class="form-control" ng-model="post_data.bank_city">
+                                <option value="" selected>全部</option>
+                                <option value={{city.areaname}} ng-repeat="city in bank_city_list">{{city.areaname}}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <h4>机构联系方式</h4>
+                    <div class="row form-group form-horizontal">
+                        <label for="field-7" class="control-label col-sm-2">营业电话</label>
+                        <div class="col-sm-3">
+                            <input type="text" id="field-7"
+                                name="tel_num"
+                                ng-model="post_data.tel_num"
+                                placeholder="营业电话"
+                                class="form-control"
+                            >
+                        </div>
+
+                        <label for="field-8" class="control-label col-sm-2">营业电子邮箱</label>
+                        <div class="col-sm-3">
+                            <input type="text" id="field-8"
+                                name="email"
+                                ng-model="post_data.email"
+                                placeholder="营业电子邮箱"
+                                class="form-control"
+                            >
+                        </div>
+                    </div>
+
+                    <h4>机构地址信息</h4>
+                    <div class="row form-group form-horizontal">
+                        <label class="control-label col-sm-2">省</label>
+                        <div class="col-sm-3">
+                            <select class="form-control" ng-model="post_data.province">
+                                <option value="" selected>全部</option>
+                                <option value="{{province.areaname}}"
+                                    ng-repeat="province in province_list"
+                                >{{province.areaname}}</option>
+                            </select>
+                        </div>
+
+                        <label class="control-label _style">市</label>
+                        <div class="col-sm-3">
+                            <select class="form-control" ng-model="post_data.city">
+                                <option value="" selected>全部</option>
+                                <option value="{{city.areaname}}" ng-repeat="city in city_list">{{city.areaname}}</option>
+                            </select>
+                        </div>
+
+                        <label class="control-label _style">区</label>
+                        <div class="col-sm-3">
+                            <select class="form-control" ng-model="post_data.district">
+                                <option value="" selected>全部</option>
+                                <option value="{{district.areaname}}" ng-repeat="district in district_list">{{district.areaname}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row form-group form-horizontal">
+                        <label for="field-9" class="control-label col-sm-2">详细地址</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="field-9"
+                                name="address1"
+                                ng-model="post_data.address1"
+                                placeholder="详细地址"
+                                class="form-control"
+                            >
+                        </div>
+
+                    </div>
+                    <h4>开店信息</h4>
+                    <div class="row form-group form-horizontal">
+                        <label class="control-label col-sm-2">开店经理</label>
+                        <div class="col-sm-3">
+                            <select class="form-control"
+                                name="manage_staff"
+                                ng-model="post_data.manage_staff">
+                                <option value=""></option>
+                                <option ng-value="staff.id"
+                                    ng-repeat="staff in staff_list">
+                                    {{staff.name}}
+                                </option>
+                            </select>
+                        </div>
+
+                        <label class="control-label col-sm-2">所属大区</label>
+                        <div class="col-sm-3">
+                            <select class="form-control"
+                                ng-model="post_data.region">
+                                <option ng-value="region_key" ng-repeat="(region_key,region) in regions">{{region}}</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="row form-group form-horizontal">
+                        <label class="control-label col-sm-2">门店状态</label>
+                        <div class="col-sm-3">
+                            <select class="form-control"
+                                ng-model="post_data.status">
+                                <option value={{status}}
+                                    ng-repeat="(status,status_name) in dealer_status">
+                                    {{status_name}}
+                                </option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="row form-group form-horizontal">
+                        <label class="col-sm-2 control-label">合同签订日期</label>
+                        <datepicker
+                            date-format="yyyy-MM-dd hh:mm:ss"
+                            date-typer="true"
+                            class="picker col-sm-3"
+                        >
+                            <input
+                                ng-model="post_data.effective_date"
+                                type="text"
+                                placeholder="合同签订日期"
+                                class="form-control"
+                            />
+                        </datepicker>
+
+                        <label for="field-10" class="control-label col-sm-2">合同有效期（月）</label>
+                        <div class="col-sm-3">
+                            <input type="text" id="field-10"
+                                name="month"
+                                ng-model="post_data.valid_month"
+                                placeholder="合同有效期（月）"
+                                class="form-control"
+                            >
+                        </div>
+
+                    </div>
+
+                    <hr>
+                    <h4>
+                        结算金额
+                    </h4>
+
+                    <div class="row form-group form-horizontal">
+                        <label for="field-13" class="control-label col-sm-2">档案管理费</label>
+                        <div class="col-sm-3">
+                            <input type="text" id="field-13"
+                                name="management_fee"
+                                ng-model="post_data.management_fee"
+                                placeholder="档案管理费"
+                                class="form-control"
+                            >
+                        </div>
+
+                        <label for="field-14" class="control-label col-sm-2">「其他费用」上限1</label>
+                        <div class="col-sm-3">
+                            <input type="text" id="field-14"
+                                name="other_fee"
+                                ng-model="post_data.other_fee"
+                                placeholder="「其他费用1」的最大值"
+                                class="form-control"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="row form-group form-horizontal">
+                        <label for="field-15" class="control-label col-sm-2">GPS 协议价</label>
+                        <div class="col-sm-3">
+                            <input type="text" id="field-15"
+                                name="gps_fee"
+                                ng-model="post_data.gps_fee"
+                                placeholder="AM 与门店谈妥的 GPS 报价"
+                                class="form-control"
+                            >
+                        </div>
+
+                        <label for="field-14" class="control-label col-sm-2">「其他费用」上限2</label>
+                        <div class="col-sm-3">
+                            <input type="text" id="field-14"
+                                name="other_fee2"
+                                ng-model="post_data.other_fee2"
+                                placeholder="「其他费用2」的最大值"
+                                class="form-control"
+                            >
+                        </div>
+
+                    </div>
+
+                    <div class="row form-group form-horizontal">
+                        <div class="col-sm-2">
+                            <button type="submit"
+                                class="btn btn-primary btn-block"
+                            >保存</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>

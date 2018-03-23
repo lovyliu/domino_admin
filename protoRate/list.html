@@ -1,0 +1,187 @@
+<h2>产品模型管理</h2>
+<br />
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="panel panel-primary">
+
+            <div class="panel-body">
+
+                <form role="form" ng-submit="createProtoRate()">
+                    <h4>
+                        金融产品配置
+                    </h4>
+                    <div class="row" style="margin:20px 10px 0 0;">
+                        <table class="table table-bordered table-color responsive col-sm-12">
+                            <tbody>
+                                <tr>
+                                    <td>产品名称</td>
+                                    <td>
+                                        <input type="text" name="name"
+                                            placeholder="请输入产品名称"
+                                            ng-model="post_data.name"
+                                            required
+                                            ng-class="{'invalid':form.interest_rate.$error.required}"
+                                        >
+                                    </td>
+                                    <td>2年返点参考值</td>
+                                    <td>
+                                        <input type="tel" class="plan-input"
+                                            placeholder="请输入2年返点参考"
+                                            ng-model="post_data.rebate_24"
+                                            min="0"
+                                            name="rebate_24"
+                                            required
+                                            ng-class="{'invalid':form.rebate_24.$error.required||form.rebate_24.$error.min}">
+                                    </td>
+                                    <td>2年费率</td>
+                                    <td>
+                                        {{post_data.rate_24||'----'}}
+                                    </td>
+                                    <td>2年万元系数</td>
+                                    <td>
+                                        {{post_data.million_coefficient_24||'----'}}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group button-toggle">
+                                            <label class="btn btn-default" ng-model="post_data.effect_24" uib-btn-radio="true">生效</label>
+                                            <label class="btn btn-default" ng-model="post_data.effect_24" uib-btn-radio="false">失效</label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>利率</td>
+                                    <td>
+                                        <input type="tel" class="plan-input"
+                                            placeholder="请输入利率"
+                                            ng-model="post_data.interest_rate"
+                                            min="0"
+                                            name="rate_24"
+                                            required
+                                            ng-class="{'invalid':form.interest_rate.$error.required||form.interest_rate.$error.min}"
+                                            ng-blur="autoCalculate()">
+                                    </td>
+                                    <td>3年返点参考值</td>
+                                    <td>
+                                        <input type="tel" class="plan-input"
+                                            placeholder="请输入3年返点参考"
+                                            ng-model="post_data.rebate_36"
+                                            min="0"
+                                            name="rebate_36"
+                                            required
+                                            ng-class="{'invalid':form.rebate_36.$error.required||form.rebate_36.$error.min}">
+                                    </td>
+                                    <td>3年费率</td>
+                                    <td>
+                                        {{post_data.rate_36||'----'}}
+                                    </td>
+                                    <td>3年万元系数</td>
+                                    <td>
+                                        {{post_data.million_coefficient_36||'----'}}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group button-toggle">
+                                            <label class="btn btn-default" ng-model="post_data.effect_36" uib-btn-radio="true">生效</label>
+                                            <label class="btn btn-default" ng-model="post_data.effect_36" uib-btn-radio="false">失效</label>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2 col-sm-offset-8">
+                            <button type="submit"
+                                class="btn btn-primary btn-block"
+                                style="max-width:120px;"
+                            >新建</button>
+                        </div>
+                        <div class="col-sm-2">
+                            <a type="button"
+                                class="btn btn-info btn-block"
+                                style="max-width:120px;"
+                                ui-sref="menu.content.upload({'upload_type':'proto_rate'})"
+                                target="_blank"
+                            >批量导入</a>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+
+        <button type="button" class="btn btn-danger delete-btn"
+            ng-click="deleteMultipleProtoRate()">删除已选中记录</button>
+
+        <table class="table table-bordered datatable" id="table-proto-list">
+			<thead>
+                <tr>
+                    <th>
+                        选择
+                        <input type="checkbox" ng-model="page_state.select_all"
+                            ng-click="selectAllProtoRate()">
+                    </th>
+                    <th>产品模型名称</th>
+                    <th>利率</th>
+                    <th>2年返点参考值</th>
+                    <th>2年万元系数</th>
+                    <th>2年费率</th>
+                    <th>3年返点参考值</th>
+                    <th>3年万元系数</th>
+                    <th>3年费率</th>
+                    <th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+                <tr ng-repeat="proto_rate in proto_rate_list" ng-if="proto_rate_list.length">
+                    <td>
+                        <input type="checkbox" ng-model="proto_rate.selected">
+                    </td>
+                    <td>{{proto_rate.name}}</td>
+                    <td>{{proto_rate.interest_rate}}</td>
+                    <td>{{proto_rate.rebate_24}}</td>
+                    <td>{{proto_rate.million_coefficient_24}}</td>
+                    <td>{{proto_rate.rate_24}}</td>
+                    <td>{{proto_rate.rebate_36}}</td>
+                    <td>{{proto_rate.million_coefficient_36}}</td>
+                    <td>{{proto_rate.rate_36}}</td>
+                    <td>
+                        <a class="btn btn-primary"
+                            ui-sref="menu.content.protoRate.detail({
+                                proto_rate_id:proto_rate.id})"
+                            target="_blank">
+                            编辑
+                        </a>
+                    </td>
+                </tr>
+			</tfoot>
+		</table>
+        <paging
+          page="page_state.current_page"
+          page-size="20"
+          total="page_state.count"
+          show-prev-next="true"
+          show-first-last="true"
+          hide-if-empty="true"
+          paging-action="pageChanged(page)"
+          style="float: right;">
+        </paging>
+        <script type="text/javascript">
+        jQuery( document ).ready( function( $ ) {
+            var $table_proto_list = jQuery( '#table-proto-list' );
+
+            // Initialize DataTable
+            $table_proto_list.DataTable( {
+                "sDom": "tip",
+                "ordering": false,
+                "paging": false,
+                "bInfo": false,
+                "bStateSave": true
+            });
+        } );
+		</script>
+    </div>
+</div>

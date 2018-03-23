@@ -1,0 +1,152 @@
+<div class="page-container" style="position:absolute;"><!-- add class "sidebar-collapsed" to close sidebar by default, "chat-visible" to make chat appear always -->
+
+	<div class="sidebar-menu">
+
+		<div class="sidebar-menu-inner">
+
+			<header class="logo-env">
+
+				<div class="logo" style="font-size: 24px;color:#fff;">
+					{{username}}
+				</div>
+
+				<div class="sidebar-collapse">
+					<a href="" class="sidebar-collapse-icon">
+						<i class="entypo-menu"></i>
+					</a>
+				</div>
+
+				<div class="sidebar-mobile-menu visible-xs">
+					<a ng-href="{{current_url}}" class="with-animation">
+						<i class="entypo-menu"></i>
+					</a>
+				</div>
+
+			</header>
+
+			<ul id="main-menu" class="main-menu">
+			    <!-- add class "multiple-expanded" to allow multiple submenus to open -->
+			    <!-- class "auto-inherit-active-class" will automatically add "active" class for parent elements who are marked already with class "active" -->
+				<li>
+				    <a ui-sref="menu.content.dashboard">
+				        <i class="fa fa-windows"></i>
+				        <span class="title">首页</span>
+				    </a>
+				</li>
+				<li ng-if="access_list.indexOf('application')!=-1">
+			        <a ui-sref="menu.content.applications.list">
+			            <i class="fa fa-hand-paper-o"></i>
+			            <span class="title">贷前管理</span>
+			        </a>
+			    </li>
+				<li ng-hide="access_list.indexOf('post_loan')==-1">
+					<a ui-sref="menu.content.postLoan.list">
+ 			            <i class="fa fa-archive"></i>
+ 			            <span class="title">贷后管理</span>
+ 			        </a>
+					<ul>
+						<li>
+							<a ui-sref="menu.content.postLoan.update">
+		 			            <i class="fa fa-pencil-square-o"></i>
+		 			            <span class="title">批量更新信息</span>
+		 			        </a>
+						</li>
+					</ul>
+				</li>
+				<li ng-if="access_list.indexOf('dealer')!=-1">
+					<a ui-sref="menu.content.dealer.list">
+						<i class="fa fa-home"></i>
+						<span class="title">经销商管理</span>
+					</a>
+				</li>
+				<li ng-if="access_list.indexOf('employee')!=-1">
+					<a ui-sref="menu.content.employee.list">
+						<i class="fa fa-users"></i>
+						<span class="title">经销商员工管理</span>
+					</a>
+				</li>
+				<li ng-if="access_list.indexOf('client')!=-1">
+					<a ui-sref="menu.content.client.list">
+						<i class="fa fa-user"></i>
+						<span class="title">客户管理</span>
+					</a>
+				</li>
+				<li ng-if="access_list.indexOf('bank')!=-1">
+					<a ui-sref="menu.content.bank.list">
+						<i class="fa fa-money"></i>
+						<span class="title">金融机构管理</span>
+					</a>
+				</li>
+				<li ng-if="access_list.indexOf('rate')!=-1">
+					<a ui-sref="menu.content.protoRate.list">
+						<i class="fa fa-product-hunt"></i>
+						<span class="title">产品模型管理</span>
+					</a>
+				</li>
+				<li ng-if="access_list.indexOf('vehicle')!=-1">
+					<a ui-sref="menu.content.vehicle.list">
+						<i class="fa fa-car"></i>
+						<span class="title">车型管理</span>
+					</a>
+				</li>
+				<li ng-if="access_list.indexOf('upload')!=-1">
+					<a ui-sref="menu.content.upload">
+						<i class="fa fa-upload"></i>
+						<span class="title">批量导入</span>
+					</a>
+				</li>
+				<li>
+					<a ui-sref="menu.content.calculator">
+						<i class="fa fa-calculator"></i>
+						<span class="title">融资计算器</span>
+					</a>
+				</li>
+				<li ng-if="access_list.indexOf('department')!=-1">
+					<a ui-sref="menu.content.department.list">
+						<i class="fa fa-sitemap"></i>
+						<span class="title">部门管理</span>
+					</a>
+				</li>
+				<li ng-if="access_list.indexOf('staff')!=-1">
+					<a ui-sref="menu.content.staff.list">
+						<i class="fa fa-briefcase"></i>
+						<span class="title">予见员工管理</span>
+					</a>
+				</li>
+				<li>
+					 <!-- ng-if="access_list.indexOf('tongdun')!=-1" -->
+					<a ui-sref="menu.content.report.list">
+						<i class="fa fa-flag"></i>
+						<span class="title">BI Report</span>
+					</a>
+				</li>
+				<li ng-if="access_list.indexOf('tongdun')!=-1">
+					<a ui-sref="menu.content.tongdun">
+						<i class="fa fa-eye"></i>
+						<span class="title">同盾数据</span>
+					</a>
+				</li>
+			    <li>
+			        <a href="" ng-click="logout()">
+			            <i class="fa fa-sign-out"></i>
+			            <span class="title">注销</span>
+			        </a>
+			    </li>
+
+			</ul>
+
+		</div>
+
+	</div>
+
+	<div class="main-content"
+		ng-class="{'dashboard-content':is_dashboard}"
+		style="padding-top: 10px;">
+
+        <div ui-view="menuContent"></div>
+
+	</div>
+
+
+</div>
+<script src="lib/assets/js/neon-custom.js"></script>

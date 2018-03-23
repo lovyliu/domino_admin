@@ -1,0 +1,1788 @@
+<ol class="breadcrumb bc-3" >
+    <li>
+        <a ui-sref="menu.content.client.list">客户管理</a>
+    </li>
+    <li class="active">
+        <strong>客户详情</strong>
+    </li>
+</ol>
+<h2>客户信息</h2>
+<br>
+<ul class="nav nav-tabs bordered" style="margin: 0;margin-top: 5px;">
+    <li ng-class="{'active': tab == 'basic'}">
+        <a ng-click="changeTab('basic')" data-toggle="tab">
+            <span class="visible-xs"><i class="entypo-info-circle"></i></span>
+            <span class="hidden-xs">客户信息</span>
+        </a>
+    </li>
+    <li ng-class="{'active': tab == 'image'}">
+        <a ng-click="changeTab('image')" data-toggle="tab">
+            <span class="visible-xs"><i class="entypo-picture"></i></span>
+            <span class="hidden-xs">客户影像件</span>
+        </a>
+    </li>
+    <li ng-class="{'active': tab == 'application'}">
+        <a ng-click="changeTab('application')" data-toggle="tab">
+            <span class="visible-xs"><i class="entypo-docs"></i></span>
+            <span class="hidden-xs">历史订单</span>
+        </a>
+    </li>
+    <!-- <li ng-class="{'active': tab == 'info'}">
+        <a ng-click="changeTab('info')" data-toggle="tab">
+            <span class="visible-xs"><i class="entypo-user"></i></span>
+            <span class="hidden-xs">用户画像</span>
+        </a>
+    </li> -->
+    <li ng-class="{'active': tab == 'contact'}">
+        <a ng-click="changeTab('contact')" data-toggle="tab">
+            <span class="visible-xs"><i class="entypo-mobile"></i></span>
+            <span class="hidden-xs">手机联系人</span>
+        </a>
+    </li>
+    <li ng-class="{'active': tab == 'net'}">
+        <a ng-click="changeTab('net')" data-toggle="tab">
+            <span class="visible-xs"><i class="entypo-object-group"></i></span>
+            <span class="hidden-xs">关联人网络</span>
+        </a>
+    </li>
+    <li ng-class="{'active': tab == 'message'}">
+        <a ng-click="changeTab('message')" data-toggle="tab">
+            <span class="visible-xs"><i class="entypo-message-o"></i></span>
+            <span class="hidden-xs">手机短信</span>
+        </a>
+    </li>
+    <li ng-class="{'active': tab == 'ubt'}">
+        <a ng-click="changeTab('ubt')" data-toggle="tab">
+            <span class="visible-xs"><i class="entypo-bar-chart"></i></span>
+            <span class="hidden-xs">UBT</span>
+        </a>
+    </li>
+</ul>
+
+<div class="tab-content" style="min-height:500px;">
+    <div class="tab-pane client-detail" ng-class="{'active': tab == 'basic'}">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="tabs-vertical-env">
+
+					<ul class="nav tabs-vertical" style="width:15%;"><!-- available classes "right-aligned" -->
+						<li class="active"><a ng-click="changeSubTab('lender')" data-toggle="tab">客户本人</a></li>
+						<li><a ng-click="changeSubTab('spouse')" data-toggle="tab">配偶</a></li>
+						<li><a ng-click="changeSubTab('guarantor')" data-toggle="tab">担保人</a></li>
+					</ul>
+
+					<div class="tab-content client-detail" style="width:85%;">
+						<div class="tab-pane active" ng-class="{'active': sub_tab == 'lender'}">
+                            <uib-accordion close-others="oneAtATime">
+                                <div uib-accordion-group class="panel-default"
+                                    is-open="page_state['panel_' + sub_tab + '_0']">
+                                    <uib-accordion-heading>
+                                      <span>客户本人姓名：{{client.clt_nm}} |</span>
+                                      <span>身份证号码：{{client.id_no}} |</span>
+                                      <span>性别：{{client.gender}} |</span>
+                                      <span>户籍地：{{client.reg_addr}} |</span>
+                                      <span>最后更新日期：<span style="color: #00a6ff;">{{client.update_time | date:'yyyy-MM-dd'}}</span></span>
+                                      <i class="pull-right glyphicon"
+                                           ng-class="{
+                                               'glyphicon-menu-down': page_state['panel_' + sub_tab + '_0'],
+                                                'glyphicon-menu-right': !page_state['panel_' + sub_tab + '_0']}
+                                            "></i>
+                                    </uib-accordion-heading>
+
+                                    <uib-accordion close-others="oneAtATime" class="client-info-item line-panel">
+                                        <div uib-accordion-group class="panel-default" is-open="page_state.client_info.lender_basic_0">
+                                            <uib-accordion-heading>
+                                                基础信息 <i class="glyphicon" ng-class="{'glyphicon-menu-down': page_state.client_info.lender_basic_0, 'glyphicon-menu-right': !page_state.client_info.lender_basic_0}"></i>
+                                            </uib-accordion-heading>
+                                            <table class="table table-bordered responsive">
+                                              <tbody>
+                                                  <tr>
+                                                      <td style="width:20%;">客户 ID</td>
+                                                      <td style="width:30%;">{{client.display_id||'-'}}</td>
+                                                      <td style="width:20%;">客户姓名</td>
+                                                      <td style="width:30%;">{{client.clt_nm||'-'}}</td>
+                                                  </tr>
+                                                  <tr>
+                                                      <td>身份证号码</td>
+                                                      <td>{{client.id_no||'-'}}</td>
+                                                      <td>性别</td>
+                                                      <td>{{client.gender||'-'}}</td>
+                                                  </tr>
+                                                  <tr>
+                                                      <td>生日</td>
+                                                      <td>{{client.birthday||'-'}}</td>
+                                                      <td>年龄</td>
+                                                      <td>{{client.age||'-'}}</td>
+                                                  </tr>
+                                                  <tr>
+                                                      <td>户籍地（省市区）</td>
+                                                      <td>{{client.reg_addr||'-'}}</td>
+                                                      <td>学历</td>
+                                                      <td>{{client.edu||'-'}}</td>
+                                                  </tr>
+                                                  <tr>
+                                                      <td>户籍详细地址</td>
+                                                      <td>{{client.reg_addr_details||'-'}}</td>
+                                                      <td>主要手机号</td>
+                                                      <td>{{client.mobile||'-'}}</td>
+                                                  </tr>
+                                                  <tr>
+                                                      <td>现住详细地址</td>
+                                                      <td>{{client.current_addr_details||'-'}}</td>
+                                                      <td>是否与父母同住</td>
+                                                      <td>{{client.is_live_with_parent||'-'}}</td>
+                                                  </tr>
+                                              </tbody>
+                                          </table>
+                                        </div>
+
+                                        <div uib-accordion-group class="panel-default" is-open="page_state.client_info.lender_driving_lic_0">
+                                            <uib-accordion-heading>
+                                                驾照信息 <i class="glyphicon" ng-class="{'glyphicon-menu-down': page_state.client_info.lender_driving_lic_0, 'glyphicon-menu-right': !page_state.client_info.lender_driving_lic_0}"></i>
+                                            </uib-accordion-heading>
+                                            <table class="table table-bordered responsive" style="width:50%;">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="width:20%;">驾照持有人与本人关系</td>
+                                                        <td style="width:30%;">{{client.drv_lic_relationship||'-'}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div uib-accordion-group class="panel-default" is-open="page_state.client_info.lender_job_0">
+                                            <uib-accordion-heading>
+                                                工作信息 <i class="glyphicon" ng-class="{'glyphicon-menu-down': page_state.client_info.lender_job_0, 'glyphicon-menu-right': !page_state.client_info.lender_job_0}"></i>
+                                            </uib-accordion-heading>
+                                            <h5>主要收入</h5>
+                                            <table class="table table-bordered responsive">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="width:20%;">主要收入来源</td>
+                                                        <td style="width:30%;">{{client.major_income_type||'-'}}</td>
+                                                        <td style="width:20%;">年收入</td>
+                                                        <td style="width:30%;">{{client.major_income||'-'}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>业务类型</td>
+                                                        <td>{{client.major_busi_type||'-'}}</td>
+                                                        <td>单位名称／店铺名称</td>
+                                                        <td>{{client.major_company_name||'-'}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>单位地址／店铺地址</td>
+                                                        <td>{{client.major_company_addr_details||'-'}}</td>
+                                                        <td>职务</td>
+                                                        <td>{{client.major_work_position||'-'}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>单位座机电话</td>
+                                                        <td>{{client.major_work_phone_num||'-'}}</td>
+                                                        <td>备注</td>
+                                                        <td>{{client.major_remark||'-'}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <h5>额外收入</h5>
+                                            <table class="table table-bordered responsive">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="width:20%;">额外收入来源</td>
+                                                        <td style="width:30%;">{{client.extra_income_type||'-'}}</td>
+                                                        <td style="width:20%;">额外年收入</td>
+                                                        <td style="width:30%;">{{client.extra_income||'-'}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>额外业务类型</td>
+                                                        <td>{{client.extra_busi_type||'-'}}</td>
+                                                        <td>额外单位名称／店铺名称</td>
+                                                        <td>{{client.extra_company_name||'-'}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>额外单位地址／店铺地址</td>
+                                                        <td>{{client.extra_company_addr_details||'-'}}</td>
+                                                        <td>额外职务</td>
+                                                        <td>{{client.extra_work_position||'-'}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>额外单位座机电话</td>
+                                                        <td>{{client.extra_work_phone_num||'-'}}</td>
+                                                        <td>额外备注</td>
+                                                        <td>{{client.extra_remark||'-'}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div uib-accordion-group class="panel-default" is-open="page_state.client_info.lender_house_0">
+                                            <uib-accordion-heading>
+                                                房产信息 <i class="glyphicon" ng-class="{'glyphicon-menu-down': page_state.client_info.lender_house_0, 'glyphicon-menu-right': !page_state.client_info.lender_house_0}"></i>
+                                            </uib-accordion-heading>
+                                            <table class="table table-bordered responsive">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="width:20%;">房屋所有权人</td>
+                                                        <td style="width:30%;">{{client.house_owner_name||'-'}}</td>
+                                                        <td style="width:20%;">房屋性质</td>
+                                                        <td style="width:30%;">{{client.house_type||'-'}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>申请人与房屋所有权人关系</td>
+                                                        <td>{{client.house_owner_relation||'-'}}</td>
+                                                        <td>房屋面积</td>
+                                                        <td>{{client.house_area||'-'}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>房产地址</td>
+                                                        <td>{{client.house_addr||'-'}}</td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div uib-accordion-group class="panel-default" is-open="page_state.client_info.lender_contact_0">
+                                            <uib-accordion-heading>
+                                                紧急联系人信息 <i class="glyphicon" ng-class="{'glyphicon-menu-down': page_state.client_info.lender_contact_0, 'glyphicon-menu-right': !page_state.client_info.lender_contact_0}"></i>
+                                            </uib-accordion-heading>
+                                            <h5>紧急联系人1</h5>
+                                            <table class="table table-bordered responsive">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="width:20%;">姓名</td>
+                                                        <td style="width:30%;">{{client.urg_contact1||'-'}}</td>
+                                                        <td style="width:20%;">手机号码</td>
+                                                        <td style="width:30%;">{{client.urg_mobile1||'-'}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>客户关系</td>
+                                                        <td>{{client.urg_relation1||'-'}}</td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <h5>紧急联系人2</h5>
+                                            <table class="table table-bordered responsive">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="width:20%;">姓名</td>
+                                                        <td style="width:30%;">{{client.urg_contact2||'-'}}</td>
+                                                        <td style="width:20%;">手机号码</td>
+                                                        <td style="width:30%;">{{client.urg_mobile2||'-'}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>客户关系</td>
+                                                        <td>{{client.urg_relation2||'-'}}</td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div uib-accordion-group class="panel-default" is-open="page_state.client_info.lender_marriage_0">
+                                            <uib-accordion-heading>
+                                                婚姻信息 <i class="glyphicon" ng-class="{'glyphicon-menu-down': page_state.client_info.lender_marriage_0, 'glyphicon-menu-right': !page_state.client_info.lender_marriage_0}"></i>
+                                            </uib-accordion-heading>
+                                            <table class="table table-bordered responsive">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="width:20%;">婚姻状况</td>
+                                                        <td style="width:30%;">{{client.marriage||'-'}}</td>
+                                                        <td style="width:20%;">子女数量</td>
+                                                        <td style="width:30%;">{{client.child_num||'-'}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </uib-accordion>
+                                </div>
+                            </uib-accordion>
+						</div>
+                        <div class="tab-pane" ng-class="{'active': sub_tab == 'spouse'}">
+                            <div ng-if="!client.spouse || !client.spouse.length"
+                                class="text-danger">
+                                当前客户无配偶信息
+                            </div>
+                            <uib-accordion close-others="oneAtATime">
+                                <div uib-accordion-group class="panel-default"
+                                    ng-repeat="(spouse_index,spouse) in client.spouse"
+                                    is-open="page_state['panel_' + sub_tab + '_' + spouse_index]">
+                                    <uib-accordion-heading>
+                                        <span>配偶姓名：{{spouse.content.clt_nm}} |</span>
+                                        <span>身份证号码：{{spouse.content.id_no}} |</span>
+                                        <span>性别：{{spouse.content.gender}} |</span>
+                                        <span>户籍地：{{spouse.content.reg_addr}} |</span>
+                                        <span>配偶变更时间：<span style="color: #00a6ff;">{{spouse.update_time | date:'yyyy-MM-dd'}}</span> |</span>
+                                        <span>最后更新日期：<span style="color: #00a6ff;">{{spouse.content.update_time | date:'yyyy-MM-dd'}}</span></span>
+                                      <i class="pull-right glyphicon"
+                                           ng-class="{
+                                               'glyphicon-menu-down': page_state['panel_' + sub_tab + '_' + spouse_index],
+                                                'glyphicon-menu-right': !page_state['panel_' + sub_tab + '_' + spouse_index]}
+                                            "></i>
+                                    </uib-accordion-heading>
+
+                                    <uib-accordion close-others="oneAtATime" class="client-info-item">
+                                        <div uib-accordion-group class="panel-default" is-open="page_state.client_info['spouse_basic_' + spouse_index]">
+                                            <uib-accordion-heading>
+                                                基础信息 <i class="glyphicon" ng-class="{
+                                                    'glyphicon-menu-down': page_state.client_info['spouse_basic_' + spouse_index],
+                                                    'glyphicon-menu-right': !page_state.client_info['spouse_basic_' + spouse_index]}"></i>
+                                            </uib-accordion-heading>
+                                            <table class="table table-bordered responsive">
+                                              <tbody>
+                                                  <tr>
+                                                      <td style="width:20%;">客户 ID</td>
+                                                      <td style="width:30%;">{{spouse.content.display_id||'-'}}</td>
+                                                      <td style="width:20%;">客户姓名</td>
+                                                      <td style="width:30%;">{{spouse.content.clt_nm||'-'}}</td>
+                                                  </tr>
+                                                  <tr>
+                                                      <td>身份证号码</td>
+                                                      <td>{{spouse.content.id_no||'-'}}</td>
+                                                      <td>性别</td>
+                                                      <td>{{spouse.content.gender||'-'}}</td>
+                                                  </tr>
+                                                  <tr>
+                                                      <td>生日</td>
+                                                      <td>{{spouse.content.birthday||'-'}}</td>
+                                                      <td>年龄</td>
+                                                      <td>{{spouse.content.age||'-'}}</td>
+                                                  </tr>
+                                                  <tr>
+                                                      <td>户籍地（省市区）</td>
+                                                      <td>{{spouse.content.reg_addr||'-'}}</td>
+                                                      <td>学历</td>
+                                                      <td>{{spouse.content.edu||'-'}}</td>
+                                                  </tr>
+                                                  <tr>
+                                                      <td>户籍详细地址</td>
+                                                      <td>{{spouse.content.reg_addr_details||'-'}}</td>
+                                                      <td>主要手机号</td>
+                                                      <td>{{spouse.content.mobile||'-'}}</td>
+                                                  </tr>
+                                                  <tr>
+                                                      <td>现住详细地址</td>
+                                                      <td>{{spouse.content.current_addr_details||'-'}}</td>
+                                                      <td>是否与父母同住</td>
+                                                      <td>{{spouse.content.is_live_with_parent||'-'}}</td>
+                                                  </tr>
+                                              </tbody>
+                                          </table>
+                                        </div>
+
+                                        <div uib-accordion-group class="panel-default" is-open="page_state.client_info['spouse_driving_lic_' + spouse_index]">
+                                            <uib-accordion-heading>
+                                                驾照信息 <i class="glyphicon" ng-class="{
+                                                    'glyphicon-menu-down': page_state.client_info['spouse_driving_lic_' + spouse_index],
+                                                    'glyphicon-menu-right': !page_state.client_info['spouse_driving_lic_' + spouse_index]}"></i>
+                                            </uib-accordion-heading>
+                                            <table class="table table-bordered responsive" style="width:50%;">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="width:20%;">驾照持有人与本人关系</td>
+                                                        <td style="width:30%;">{{spouse.content.drv_lic_relationship||'-'}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div uib-accordion-group class="panel-default" is-open="page_state.client_info['spouse_job_' + spouse_index]">
+                                            <uib-accordion-heading>
+                                                工作信息 <i class="glyphicon" ng-class="{
+                                                    'glyphicon-menu-down': page_state.client_info['spouse_job_' + spouse_index],
+                                                    'glyphicon-menu-right': !page_state.client_info['spouse_job_' + spouse_index]}"></i>
+                                            </uib-accordion-heading>
+                                            <h5>主要收入</h5>
+                                            <table class="table table-bordered responsive">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="width:20%;">主要收入来源</td>
+                                                        <td style="width:30%;">{{spouse.content.major_income_type||'-'}}</td>
+                                                        <td style="width:20%;">年收入</td>
+                                                        <td style="width:30%;">{{spouse.content.major_income||'-'}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>业务类型</td>
+                                                        <td>{{spouse.content.major_busi_type||'-'}}</td>
+                                                        <td>单位名称／店铺名称</td>
+                                                        <td>{{spouse.content.major_company_name||'-'}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>单位地址／店铺地址</td>
+                                                        <td>{{spouse.content.major_company_addr_details||'-'}}</td>
+                                                        <td>职务</td>
+                                                        <td>{{spouse.content.major_work_position||'-'}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>单位座机电话</td>
+                                                        <td>{{spouse.content.major_work_phone_num||'-'}}</td>
+                                                        <td>备注</td>
+                                                        <td>{{spouse.content.major_remark||'-'}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <h5>额外收入</h5>
+                                            <table class="table table-bordered responsive">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="width:20%;">主要收入来源</td>
+                                                        <td style="width:30%;">{{spouse.content.extra_income_type||'-'}}</td>
+                                                        <td style="width:20%;">年收入</td>
+                                                        <td style="width:30%;">{{spouse.content.extra_income||'-'}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>业务类型</td>
+                                                        <td>{{spouse.content.extra_busi_type||'-'}}</td>
+                                                        <td>单位名称／店铺名称</td>
+                                                        <td>{{spouse.content.extra_company_name||'-'}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>单位地址／店铺地址</td>
+                                                        <td>{{spouse.content.extra_company_addr_details||'-'}}</td>
+                                                        <td>职务</td>
+                                                        <td>{{spouse.content.extra_work_position||'-'}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>单位座机电话</td>
+                                                        <td>{{spouse.content.extra_work_phone_num||'-'}}</td>
+                                                        <td>备注</td>
+                                                        <td>{{spouse.content.extra_remark||'-'}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div uib-accordion-group class="panel-default" is-open="page_state.client_info['spouse_house_' + spouse_index]">
+                                            <uib-accordion-heading>
+                                                房产信息 <i class="glyphicon" ng-class="{
+                                                    'glyphicon-menu-down': page_state.client_info['spouse_house_' + spouse_index],
+                                                    'glyphicon-menu-right': !page_state.client_info['spouse_house_' + spouse_index]}"></i>
+                                            </uib-accordion-heading>
+                                            <table class="table table-bordered responsive">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="width:20%;">房屋所有权人</td>
+                                                        <td style="width:30%;">{{spouse.content.house_owner_name||'-'}}</td>
+                                                        <td style="width:20%;">房屋性质</td>
+                                                        <td style="width:30%;">{{spouse.content.house_type||'-'}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>申请人与房屋所有权人关系</td>
+                                                        <td>{{spouse.content.house_owner_relation||'-'}}</td>
+                                                        <td>房屋面积</td>
+                                                        <td>{{spouse.content.house_area||'-'}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>房产地址</td>
+                                                        <td>{{spouse.content.house_addr||'-'}}</td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div uib-accordion-group class="panel-default" is-open="page_state.client_info['spouse_contact_' + spouse_index]">
+                                            <uib-accordion-heading>
+                                                紧急联系人信息 <i class="glyphicon" ng-class="{
+                                                    'glyphicon-menu-down': page_state.client_info['spouse_contact_' + spouse_index],
+                                                    'glyphicon-menu-right': !page_state.client_info['spouse_contact_' + spouse_index]}"></i>
+                                            </uib-accordion-heading>
+                                            <h5>紧急联系人1</h5>
+                                            <table class="table table-bordered responsive">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="width:20%;">姓名</td>
+                                                        <td style="width:30%;">{{spouse.content.urg_contact1||'-'}}</td>
+                                                        <td style="width:20%;">手机号码</td>
+                                                        <td style="width:30%;">{{spouse.content.urg_mobile1||'-'}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>客户关系</td>
+                                                        <td>{{spouse.content.urg_relation1||'-'}}</td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <h5>紧急联系人2</h5>
+                                            <table class="table table-bordered responsive">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="width:20%;">姓名</td>
+                                                        <td style="width:30%;">{{spouse.content.urg_contact2||'-'}}</td>
+                                                        <td style="width:20%;">手机号码</td>
+                                                        <td style="width:30%;">{{spouse.content.urg_mobile2||'-'}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>客户关系</td>
+                                                        <td>{{spouse.content.urg_relation2||'-'}}</td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div uib-accordion-group class="panel-default" is-open="page_state.client_info['spouse_marriage_' + spouse_index]">
+                                            <uib-accordion-heading>
+                                                婚姻信息 <i class="glyphicon" ng-class="{
+                                                    'glyphicon-menu-down': page_state.client_info['spouse_marriage_' + spouse_index],
+                                                    'glyphicon-menu-right': !page_state.client_info['spouse_marriage_' + spouse_index]}"></i>
+                                            </uib-accordion-heading>
+                                            <table class="table table-bordered responsive">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="width:20%;">婚姻状况</td>
+                                                        <td style="width:30%;">{{spouse.content.marriage||'-'}}</td>
+                                                        <td style="width:20%;">子女数量</td>
+                                                        <td style="width:30%;">{{spouse.content.child_num||'-'}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </uib-accordion>
+                                </div>
+                            </uib-accordion>
+
+
+						</div>
+						<div class="tab-pane" ng-class="{'active': sub_tab == 'guarantor'}">
+                            <div ng-if="!client.guarantor || !client.guarantor.length"
+                                class="text-danger">
+                                当前客户无担保人信息
+                            </div>
+                            <uib-accordion close-others="oneAtATime">
+                                <div uib-accordion-group class="panel-default"
+                                    ng-repeat="(guarantor_index,guarantor) in client.guarantor"
+                                    is-open="page_state['panel_' + sub_tab + '_' + guarantor_index]">
+                                    <uib-accordion-heading>
+                                        <span>担保人姓名：{{guarantor.content.clt_nm}} |</span>
+                                        <span>身份证号码：{{guarantor.content.id_no}} |</span>
+                                        <span>性别：{{guarantor.content.gender}} |</span>
+                                        <span>户籍地：{{guarantor.content.reg_addr}} |</span>
+                                        <span>担保人变更时间：<span style="color: #00a6ff;">{{guarantor.update_time | date:'yyyy-MM-dd'}}</span> |</span>
+                                        <span>最后更新日期：<span style="color: #00a6ff;">{{guarantor.content.update_time | date:'yyyy-MM-dd'}}</span></span>
+                                      <i class="pull-right glyphicon"
+                                           ng-class="{
+                                               'glyphicon-menu-down': page_state['panel_' + sub_tab + '_' + guarantor_index],
+                                                'glyphicon-menu-right': !page_state['panel_' + sub_tab + '_' + guarantor_index]}
+                                            "></i>
+                                    </uib-accordion-heading>
+
+                                    <uib-accordion close-others="oneAtATime" class="client-info-item">
+                                        <div uib-accordion-group class="panel-default" is-open="page_state.client_info['guarantor_basic_' + guarantor_index]">
+                                            <uib-accordion-heading>
+                                                基础信息 <i class="glyphicon" ng-class="{
+                                                    'glyphicon-menu-down': page_state.client_info['guarantor_basic_' + guarantor_index],
+                                                    'glyphicon-menu-right': !page_state.client_info['guarantor_basic_' + guarantor_index]}"></i>
+                                            </uib-accordion-heading>
+                                            <table class="table table-bordered responsive">
+                                              <tbody>
+                                                  <tr>
+                                                      <td style="width:20%;">客户 ID</td>
+                                                      <td style="width:30%;">{{guarantor.content.display_id||'-'}}</td>
+                                                      <td style="width:20%;">客户姓名</td>
+                                                      <td style="width:30%;">{{guarantor.content.clt_nm||'-'}}</td>
+                                                  </tr>
+                                                  <tr>
+                                                      <td>身份证号码</td>
+                                                      <td>{{guarantor.content.id_no||'-'}}</td>
+                                                      <td>性别</td>
+                                                      <td>{{guarantor.content.gender||'-'}}</td>
+                                                  </tr>
+                                                  <tr>
+                                                      <td>生日</td>
+                                                      <td>{{guarantor.content.birthday||'-'}}</td>
+                                                      <td>年龄</td>
+                                                      <td>{{guarantor.content.age||'-'}}</td>
+                                                  </tr>
+                                                  <tr>
+                                                      <td>户籍地（省市区）</td>
+                                                      <td>{{guarantor.content.reg_addr||'-'}}</td>
+                                                      <td>学历</td>
+                                                      <td>{{guarantor.content.edu||'-'}}</td>
+                                                  </tr>
+                                                  <tr>
+                                                      <td>户籍详细地址</td>
+                                                      <td>{{guarantor.content.reg_addr_details||'-'}}</td>
+                                                      <td>主要手机号</td>
+                                                      <td>{{guarantor.content.mobile||'-'}}</td>
+                                                  </tr>
+                                                  <tr>
+                                                      <td>现住详细地址</td>
+                                                      <td>{{guarantor.content.current_addr_details||'-'}}</td>
+                                                      <td>是否与父母同住</td>
+                                                      <td>{{guarantor.content.is_live_with_parent||'-'}}</td>
+                                                  </tr>
+                                              </tbody>
+                                          </table>
+                                        </div>
+
+                                        <div uib-accordion-group class="panel-default" is-open="page_state.client_info['guarantor_driving_lic_' + guarantor_index]">
+                                            <uib-accordion-heading>
+                                                驾照信息 <i class="glyphicon" ng-class="{
+                                                    'glyphicon-menu-down': page_state.client_info['guarantor_driving_lic_' + guarantor_index],
+                                                    'glyphicon-menu-right': !page_state.client_info['guarantor_driving_lic_' + guarantor_index]}"></i>
+                                            </uib-accordion-heading>
+                                            <table class="table table-bordered responsive" style="width:50%;">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="width:20%;">驾照持有人与本人关系</td>
+                                                        <td style="width:30%;">{{guarantor.content.drv_lic_relationship||'-'}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div uib-accordion-group class="panel-default" is-open="page_state.client_info['guarantor_job_' + guarantor_index]">
+                                            <uib-accordion-heading>
+                                                工作信息 <i class="glyphicon" ng-class="{
+                                                    'glyphicon-menu-down': page_state.client_info['guarantor_job_' + guarantor_index],
+                                                    'glyphicon-menu-right': !page_state.client_info['guarantor_job_' + guarantor_index]}"></i>
+                                            </uib-accordion-heading>
+                                            <h5>主要收入</h5>
+                                            <table class="table table-bordered responsive">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="width:20%;">主要收入来源</td>
+                                                        <td style="width:30%;">{{guarantor.content.major_income_type||'-'}}</td>
+                                                        <td style="width:20%;">年收入</td>
+                                                        <td style="width:30%;">{{guarantor.content.major_income||'-'}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>业务类型</td>
+                                                        <td>{{guarantor.content.major_busi_type||'-'}}</td>
+                                                        <td>单位名称／店铺名称</td>
+                                                        <td>{{guarantor.content.major_company_name||'-'}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>单位地址／店铺地址</td>
+                                                        <td>{{guarantor.content.major_company_addr_details||'-'}}</td>
+                                                        <td>职务</td>
+                                                        <td>{{guarantor.content.major_work_position||'-'}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>单位座机电话</td>
+                                                        <td>{{guarantor.content.major_work_phone_num||'-'}}</td>
+                                                        <td>备注</td>
+                                                        <td>{{guarantor.content.major_remark||'-'}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <h5>额外收入</h5>
+                                            <table class="table table-bordered responsive">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="width:20%;">主要收入来源</td>
+                                                        <td style="width:30%;">{{guarantor.content.extra_income_type||'-'}}</td>
+                                                        <td style="width:20%;">年收入</td>
+                                                        <td style="width:30%;">{{guarantor.content.extra_income||'-'}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>业务类型</td>
+                                                        <td>{{guarantor.content.extra_busi_type||'-'}}</td>
+                                                        <td>单位名称／店铺名称</td>
+                                                        <td>{{guarantor.content.extra_company_name||'-'}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>单位地址／店铺地址</td>
+                                                        <td>{{guarantor.content.extra_company_addr_details||'-'}}</td>
+                                                        <td>职务</td>
+                                                        <td>{{guarantor.content.extra_work_position||'-'}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>单位座机电话</td>
+                                                        <td>{{guarantor.content.extra_work_phone_num||'-'}}</td>
+                                                        <td>备注</td>
+                                                        <td>{{guarantor.content.extra_remark||'-'}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div uib-accordion-group class="panel-default" is-open="page_state.client_info['guarantor_house_' + guarantor_index]">
+                                            <uib-accordion-heading>
+                                                房产信息 <i class="glyphicon" ng-class="{
+                                                    'glyphicon-menu-down': page_state.client_info['guarantor_house_' + guarantor_index],
+                                                    'glyphicon-menu-right': !page_state.client_info['guarantor_house_' + guarantor_index]}"></i>
+                                            </uib-accordion-heading>
+                                            <table class="table table-bordered responsive">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="width:20%;">房屋所有权人</td>
+                                                        <td style="width:30%;">{{guarantor.content.house_owner_name||'-'}}</td>
+                                                        <td style="width:20%;">房屋性质</td>
+                                                        <td style="width:30%;">{{guarantor.content.house_type||'-'}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>申请人与房屋所有权人关系</td>
+                                                        <td>{{guarantor.content.house_owner_relation||'-'}}</td>
+                                                        <td>房屋面积</td>
+                                                        <td>{{guarantor.content.house_area||'-'}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>房产地址</td>
+                                                        <td>{{guarantor.content.house_addr||'-'}}</td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div uib-accordion-group class="panel-default" is-open="page_state.client_info['guarantor_contact_' + guarantor_index]">
+                                            <uib-accordion-heading>
+                                                紧急联系人信息 <i class="glyphicon" ng-class="{
+                                                    'glyphicon-menu-down': page_state.client_info['guarantor_contact_' + guarantor_index],
+                                                    'glyphicon-menu-right': !page_state.client_info['guarantor_contact_' + guarantor_index]}"></i>
+                                            </uib-accordion-heading>
+                                            <h5>紧急联系人1</h5>
+                                            <table class="table table-bordered responsive">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="width:20%;">姓名</td>
+                                                        <td style="width:30%;">{{guarantor.content.urg_contact1||'-'}}</td>
+                                                        <td style="width:20%;">手机号码</td>
+                                                        <td style="width:30%;">{{guarantor.content.urg_mobile1||'-'}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>客户关系</td>
+                                                        <td>{{guarantor.content.urg_relation1||'-'}}</td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <h5>紧急联系人2</h5>
+                                            <table class="table table-bordered responsive">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="width:20%;">姓名</td>
+                                                        <td style="width:30%;">{{guarantor.content.urg_contact2||'-'}}</td>
+                                                        <td style="width:20%;">手机号码</td>
+                                                        <td style="width:30%;">{{guarantor.content.urg_mobile2||'-'}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>客户关系</td>
+                                                        <td>{{guarantor.content.urg_relation2||'-'}}</td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div uib-accordion-group class="panel-default" is-open="page_state.client_info['guarantor_marriage_' + guarantor_index]">
+                                            <uib-accordion-heading>
+                                                婚姻信息 <i class="glyphicon" ng-class="{
+                                                    'glyphicon-menu-down': page_state.client_info['guarantor_marriage_' + guarantor_index],
+                                                    'glyphicon-menu-right': !page_state.client_info['guarantor_marriage_' + guarantor_index]}"></i>
+                                            </uib-accordion-heading>
+                                            <table class="table table-bordered responsive">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="width:20%;">婚姻状况</td>
+                                                        <td style="width:30%;">{{guarantor.content.marriage||'-'}}</td>
+                                                        <td style="width:20%;">子女数量</td>
+                                                        <td style="width:30%;">{{guarantor.content.child_num||'-'}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </uib-accordion>
+                                </div>
+                            </uib-accordion>
+
+						</div>
+					</div>
+
+				</div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-pane client-detail" ng-class="{'active': tab == 'image'}">
+        <div class="row">
+            <div class="col-md-12">
+                <div ng-if="!page_state.loading &&(!image_list || !image_list.length)"
+                    class="text-danger">
+                    当前客户无影像件
+                </div>
+                <div ng-repeat="(list_index,list) in image_list">
+                    <h4>{{list.label}}</h4>
+                    <div class="tabs-vertical-env">
+
+    					<ul class="nav tabs-vertical" style="width:15%;">
+                            <li ng-repeat="(item_index,item) in list.value" ng-class="{'active':item_index==0}">
+                                <a href="" ng-click="changeImageTab(list_index,item_index)"
+                                    data-toggle="tab">
+                                    {{item.label}}
+                                </a>
+                            </li>
+    					</ul>
+
+    					<div class="tab-content image-list" style="width:85%;">
+    						<div class="tab-pane active">
+                                <div class="row" ng-class="{'limit-height':!page_state.show_more_image[list_index]}">
+                                    <div class="col-sm-10 row">
+                                        <div class="col-sm-4"
+                                             ng-repeat="url in page_state.image_item_list[list_index]">
+                                            <img ng-src="{{url[0]}}" image-modal>
+                                            <p>{{url[1] | date:'yyyy-MM-dd HH:mm:ss'}}</p>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <button type="button"
+                                            class="btn btn-white btn-block"
+                                            ng-if="!page_state.show_more_image[list_index]&&page_state.image_item_list[list_index].length>3"
+                                            ng-click="showMoreImage(list_index,true)">
+                                            查看更多
+                                            <i class="fa fa-angle-down"></i>
+                                        </button>
+                                        <button type="button"
+                                            class="btn btn-white btn-block"
+                                            ng-if="page_state.show_more_image[list_index]&&page_state.image_item_list[list_index].length>3"
+                                            ng-click="showMoreImage(list_index,false)">
+                                            收起
+                                            <i class="fa fa-angle-up"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+    						</div>
+    					</div>
+
+    				</div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="tab-pane" ng-class="{'active': tab == 'application'}">
+        <div class="row">
+            <div class="col-md-12">
+                <div ng-if="!application_list || !application_list.length"
+                    class="text-danger">
+                    当前客户无历史订单
+                </div>
+                <div ng-if="application_list && application_list.length">
+                    <table class="table table-bordered datatable" id="table-client-app-list">
+            			<thead>
+            				<tr>
+                                <th class="text-center">
+                                    订单编号
+                                </th>
+                                <th class="text-center">
+                                    申请人姓名
+                                </th>
+                                <th class="text-center">
+                                    申请时间
+                                </th>
+                                <th class="text-center">
+                                    经销商
+                                </th>
+                                <th class="text-center">
+                                    工作单位
+                                </th>
+                                <th class="text-center">
+                                    订单状态
+                                </th>
+                                <th class="text-center">
+                                    审单员
+                                </th>
+                                <th class="text-center">
+                                    上牌地
+                                </th>
+                                <th class="text-center">
+                                    车型
+                                </th>
+                                <th class="text-center">
+                                    贷款金额
+                                </th>
+                                <th class="text-center" style="min-width:100px;">
+                                    操作
+                                </th>
+            				</tr>
+            			</thead>
+            			<tbody>
+                            <tr ng-repeat="application in application_list">
+                                <td class="text-center">
+                                    {{application.app_id}}
+                                </td>
+                                <td class="text-center">
+                                    {{application.clt_nm || '-'}}
+                                </td>
+                                <td class="text-center">
+                                    {{application.app_ts | date:'yyyy-MM-dd HH:mm:ss'}}
+                                </td>
+                                <td class="text-center">
+                                    {{application.dlr_nm || '-'}}
+                                </td>
+                                <td class="text-center">
+                                    {{application.company_name || '-'}}
+                                </td>
+                                <td class="text-center">
+                                    {{application.status || '-'}}
+                                </td>
+                                <td class="text-center">
+                                    {{application.staff_owner}}
+                                </td>
+                                <td class="text-center">
+                                    {{(application.plate_reg_addr) || '-'}}
+                                </td>
+                                <td class="text-center">
+                                    {{(application.trix) || '-'}}
+                                </td>
+                                <td class="text-center">
+                                    {{(application.loan_amt|parseint) || '-'}}
+                                </td>
+
+                                <td class="text-center">
+                                    <a type="button" class="btn btn-primary"
+                                        ui-sref="menu.content.applications.detail.credit({app_id:application.app_id})"
+                                        target="_blank">
+                                        查看
+                                    </a>
+                                </td>
+                            </tr>
+            			</tfoot>
+            		</table>
+                    <paging
+                      page="page_state.application_current_page"
+                      page-size="20"
+                      total="page_state.application_count"
+                      show-prev-next="true"
+                      show-first-last="true"
+                      hide-if-empty="true"
+                      paging-action="applicationPageChanged(page)"
+                      style="float: right;">
+                    </paging>
+                </div>
+
+                <script type="text/javascript">
+                jQuery( document ).ready( function( $ ) {
+                    var $table_client_app_list = jQuery( '#table-client-app-list' );
+
+                    // Initialize DataTable
+                    $table_client_app_list.DataTable( {
+                        "sDom": "tip",
+                        "ordering": false,
+                        "paging": false,
+                        "bInfo": false,
+                        "bStateSave": true
+                    });
+                } );
+        		</script>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-pane" ng-class="{'active': tab == 'info'}">
+        <div class="row">
+            <div class="col-md-12">
+                <h4>综合画像</h4>
+                <div class="row">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="yj-chart" id="yj-chart" eoption="config" style="width:100%;height:500px;"
+
+                        ></div>
+                        <!-- <ng-echarts class="col-sm-4 echarts" ec-config="lineConfig" ec-option="page_state.config"></ng-echarts> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-pane client-contact" ng-class="{'active': tab == 'contact'}">
+        <div class="row">
+            <div class="col-md-12">
+                <div ng-if="!imei_list || !imei_list.length"
+                    class="text-danger">
+                    当前客户无设备信息
+                </div>
+
+                <div class="tabs-vertical-env" ng-if="imei_list && imei_list.length">
+
+					<ul class="nav tabs-vertical" style="width:15%;">
+						<li ng-repeat="imei in imei_list"
+                            ng-class="{'active':$index == 0}">
+                            <a ng-click="changeDevice(imei)" data-toggle="tab">
+                                手机设备{{$index+1}}<br>
+                                <span>({{imei.imei}})</span>
+                            </a>
+                        </li>
+					</ul>
+
+					<div class="tab-content client-basic" style="width:85%;">
+						<div class="tab-pane active">
+                            <div class="row device">
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">IMEI：</div>
+                                    <div class="col-sm-6">{{page_state.device.imei}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">手机厂商：</div>
+                                    <div class="col-sm-6">{{page_state.device.factory}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">品牌：</div>
+                                    <div class="col-sm-6">{{page_state.device.brand}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">手机型号：</div>
+                                    <div class="col-sm-6">{{page_state.device.model}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">操作系统：</div>
+                                    <div class="col-sm-6">{{page_state.device.system}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">系统版本号：</div>
+                                    <div class="col-sm-6">{{page_state.device.os_version}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">是否已越狱：</div>
+                                    <div class="col-sm-6">
+                                        <span ng-if="page_state.device.rooted">
+                                            {{page_state.device.rooted == 'True' ? '是' : '否'}}
+                                        </span>
+                                    </div>
+                                </di>
+                            </div>
+                            <div class="panel panel-primary">
+
+                                <div class="panel-body">
+
+                                    <form role="form">
+
+                                        <div class="row form-group form-horizontal">
+                                            <label for="field-1" class="col-sm-2 control-label">联系人姓名</label>
+                                            <div class="col-sm-3">
+                                                <input type="text" class="form-control"
+                                                    id="field-1" placeholder="联系人姓名"
+                                                    ng-model="page_state.contact_filters.n">
+                                            </div>
+
+                                            <label for="field-2" class="col-sm-2 control-label">联系人号码</label>
+                                            <div class="col-sm-3">
+                                                <input type="text" class="form-control"
+                                                    id="field-1" placeholder="联系人号码"
+                                                    ng-model="page_state.contact_filters.m">
+                                            </div>
+
+                                            <div class="col-sm-2">
+                                                <button type="button"
+                                                    class="btn btn-primary btn-block btn-search"
+                                                    ng-click="searchContact()"
+                                                    style="max-width:120px;"
+                                                >查询</button>
+                                            </div>
+
+                                        </div>
+
+                                    </form>
+
+                                </div>
+
+                            </div>
+                            <h4>当前设备联系人列表</h4>
+                            <div class="row contact-list">
+                                <div class="col-md-3 col-sm-4 col-xs-6"
+                                    ng-repeat="contact in contact_list">
+                                    <div>
+                                        <!-- <div class="labels">
+                                            <span>征信禁入</span>
+                                            <span>多头借贷</span>
+                                        </div>
+                                        <span class="right-icon">库内</span> -->
+                                        <h5>{{contact.display_name}}</h5>
+                                        <div class="contact-footer">
+                                            <i class="glyphicon glyphicon-phone"></i>
+                                            {{contact.mobile}}
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <paging
+                              page="page_state.contact_current_page"
+                              page-size="16"
+                              total="page_state.contact_count"
+                              show-prev-next="true"
+                              show-first-last="true"
+                              hide-if-empty="true"
+                              paging-action="contactPageChanged(page)"
+                              style="float: right;">
+                            </paging>
+                            <script type="text/javascript">
+                            jQuery( document ).ready( function( $ ) {
+                                var $table_contact_list = jQuery( '#table-contact-list' );
+
+                                // Initialize DataTable
+                                $table_contact_list.DataTable( {
+                                    "sDom": "tip",
+                                    "ordering": false,
+                                    "paging": false,
+                                    "bInfo": false,
+                                    "bStateSave": true
+                                });
+                            } );
+                    		</script>
+						</div>
+					</div>
+
+				</div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="tab-pane client-contact" ng-class="{'active': tab == 'net'}">
+        <div class="row">
+            <div class="col-md-12">
+                <div ng-if="!imei_list || !imei_list.length"
+                    class="text-danger">
+                    当前客户无设备信息
+                </div>
+
+                 <!-- ng-if="imei_list && imei_list.length" -->
+                <div class="tabs-vertical-env">
+
+					<ul class="nav tabs-vertical" style="width:15%;">
+						<li ng-repeat="imei in imei_list"
+                            ng-class="{'active':$index == 0}">
+                            <a ng-click="changeDevice(imei,$index)" data-toggle="tab">
+                                手机设备{{$index+1}}<br>
+                                <span>({{imei.imei}})</span>
+                            </a>
+                        </li>
+					</ul>
+
+					<div class="tab-content client-basic" style="width:85%;">
+						<div class="tab-pane"
+                            ng-repeat="imei in imei_list"
+                            ng-class="{'active':imei.imei == page_state.imei}"
+                        >
+                            <div class="row device">
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">IMEI：</div>
+                                    <div class="col-sm-6">{{page_state.device.imei}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">手机厂商：</div>
+                                    <div class="col-sm-6">{{page_state.device.factory}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">品牌：</div>
+                                    <div class="col-sm-6">{{page_state.device.brand}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">手机型号：</div>
+                                    <div class="col-sm-6">{{page_state.device.model}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">操作系统：</div>
+                                    <div class="col-sm-6">{{page_state.device.system}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">系统版本号：</div>
+                                    <div class="col-sm-6">{{page_state.device.os_version}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">是否已越狱：</div>
+                                    <div class="col-sm-6">
+                                        <span ng-if="page_state.device.rooted">
+                                            {{page_state.device.rooted == 'True' ? '是' : '否'}}
+                                        </span>
+                                    </div>
+                                </di>
+                            </div>
+                            <div>
+                                <button type="button"
+                                    class="btn btn-default"
+                                    ng-click="toggleCase(1)"
+                                    ng-class="{'active':page_state.contact_net_filters.case == 1}"
+                                >疑似中间人欺诈</button>
+                                <button type="button"
+                                    class="btn btn-default"
+                                    ng-click="toggleCase(2)"
+                                    ng-class="{'active':page_state.contact_net_filters.case == 2}"
+                                >疑似销售或者代购</button>
+                                <button type="button"
+                                    class="btn btn-default"
+                                    ng-click="toggleCase(3)"
+                                    ng-class="{'active':page_state.contact_net_filters.case == 3}"
+                                >疑似团伙欺诈</button>
+                            </div>
+                            <div ng-if="net_config[$index]">
+                                <div class="yj-chart" eoption="net_config[$index]"
+                                    style="width:100%;height:500px;">
+                                </div>
+                            </div>
+
+						</div>
+					</div>
+
+				</div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-pane client-contact" ng-class="{'active': tab == 'message'}">
+        <div class="row">
+            <div class="col-md-12">
+                <div ng-if="!message_imei_list || !message_imei_list.length"
+                    class="text-danger">
+                    当前客户无设备信息
+                </div>
+
+                <div class="tabs-vertical-env" ng-if="message_imei_list && message_imei_list.length">
+
+					<ul class="nav tabs-vertical" style="width:15%;">
+						<li ng-repeat="imei in message_imei_list"
+                            ng-class="{'active':$index == 0}">
+                            <a ng-click="changeDevice(imei)" data-toggle="tab">
+                                手机设备{{$index+1}}<br>
+                                <span>({{imei.imei}})</span>
+                            </a>
+                        </li>
+					</ul>
+
+					<div class="tab-content client-basic" style="width:85%;">
+						<div class="tab-pane active">
+                            <div class="row device">
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">IMEI：</div>
+                                    <div class="col-sm-6">{{page_state.device.imei}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">手机厂商：</div>
+                                    <div class="col-sm-6">{{page_state.device.factory}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">品牌：</div>
+                                    <div class="col-sm-6">{{page_state.device.brand}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">手机型号：</div>
+                                    <div class="col-sm-6">{{page_state.device.model}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">操作系统：</div>
+                                    <div class="col-sm-6">{{page_state.device.system}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">系统版本号：</div>
+                                    <div class="col-sm-6">{{page_state.device.os_version}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">是否已越狱：</div>
+                                    <div class="col-sm-6">
+                                        <span ng-if="page_state.device.rooted">
+                                            {{page_state.device.rooted == 'True' ? '是' : '否'}}
+                                        </span>
+                                    </div>
+                                </di>
+                            </div>
+                            <!-- <div class="panel panel-primary">
+
+                                <div class="panel-body">
+
+                                    <form role="form">
+
+                                        <div class="row form-group form-horizontal">
+                                            <label for="field-1" class="col-sm-2 control-label">联系人姓名</label>
+                                            <div class="col-sm-3">
+                                                <input type="text" class="form-control"
+                                                    id="field-1" placeholder="联系人姓名"
+                                                    ng-model="page_state.message_filters.n">
+                                            </div>
+
+                                            <label for="field-2" class="col-sm-2 control-label">联系人号码</label>
+                                            <div class="col-sm-3">
+                                                <input type="text" class="form-control"
+                                                    id="field-1" placeholder="联系人号码"
+                                                    ng-model="page_state.message_filters.m">
+                                            </div>
+
+                                            <div class="col-sm-2">
+                                                <button type="button"
+                                                    class="btn btn-primary btn-block btn-search"
+                                                    ng-click="searchmessage()"
+                                                    style="max-width:120px;"
+                                                >查询</button>
+                                            </div>
+
+                                        </div>
+
+                                    </form>
+
+                                </div>
+
+                            </div> -->
+                            <h4>当前设备短信列表</h4>
+                            <div class="panel panel-primary message-list">
+
+                                <div class="panel-body" style="padding: 0;">
+                                    <div class="row contact-list">
+                                        <div class="col-sm-4" style="border-right: 1px solid #ebebeb;">
+                                            <div class="message-contact"
+                                                ng-repeat="phone in sms_phone_list"
+                                                ng-click="getSmsMessageList(phone.phone)"
+                                                ng-class="{'active':page_state.sms_message_filters.phone == phone.phone}"
+                                            >
+                                                <!-- <h4>粒粒</h4> -->
+                                                <p>
+                                                    <i class="glyphicon glyphicon-phone"></i>
+                                                    {{phone.phone}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-8 row">
+                                            <div class="col-sm-8"
+                                                ng-repeat="message in sms_message_list"
+                                                ng-class="{'col-sm-offset-4':message.type=='snd'}"
+                                            >
+                                                <div class="message-content">
+                                                    <p>{{message.content}}</p>
+                                                    <div class="time">
+                                                        <span class="pull-right">{{message.ts | date:'yyyy-MM-dd HH:mm'}}</span>
+                                                    </div>
+                                                </div>
+                                                <!-- <p class="text-right"
+                                                    ng-if="message.type=='snd'">
+                                                    SIM卡：<span class="text-green">{{client.mobile}}</span>
+                                                </p> -->
+                                            </div>
+                                        </div>
+                                        <!-- <div class="col-md-3 col-sm-4 col-xs-6"
+                                            ng-repeat="contact in contact_list">
+                                            <div>
+                                                <div class="labels">
+                                                    <span>征信禁入</span>
+                                                    <span>多头借贷</span>
+                                                </div>
+                                                <span class="right-icon">库内</span>
+                                                <h5>{{contact.display_name}}</h5>
+                                                <div class="contact-footer">
+                                                    <i class="glyphicon glyphicon-phone"></i>
+                                                    {{contact.mobile}}
+                                                </div>
+                                            </div>
+
+                                        </div> -->
+                                    </div>
+                                </div>
+
+                            </div>
+
+						</div>
+					</div>
+
+				</div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="tab-pane client-contact" ng-class="{'active': tab == 'ubt'}">
+        <div class="row">
+            <div class="col-md-12">
+                <div ng-if="!ubt_imei_list || !ubt_imei_list.length"
+                    class="text-danger">
+                    当前客户无设备信息
+                </div>
+
+                <div class="tabs-vertical-env" ng-if="ubt_imei_list && ubt_imei_list.length">
+
+					<ul class="nav tabs-vertical" style="width:15%;">
+						<li ng-repeat="imei in ubt_imei_list"
+                            ng-class="{'active':$index == 0}">
+                            <a ng-click="changeDevice(imei,$index)" data-toggle="tab">
+                                手机设备{{$index+1}}<br>
+                                <span>({{imei.imei}})</span>
+                            </a>
+                        </li>
+					</ul>
+
+                    <div class="tab-content client-basic tab-ubt" style="width:85%;">
+                        <div class="tab-pane active"
+                            ng-repeat="(imei_index,imei) in ubt_imei_list"
+                            ng-if="page_state.imei == imei.imei"
+                        >
+                            <div class="row device">
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">IMEI：</div>
+                                    <div class="col-sm-6">{{page_state.device.imei}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">手机厂商：</div>
+                                    <div class="col-sm-6">{{page_state.device.factory}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">品牌：</div>
+                                    <div class="col-sm-6">{{page_state.device.brand}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">手机型号：</div>
+                                    <div class="col-sm-6">{{page_state.device.model}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">操作系统：</div>
+                                    <div class="col-sm-6">{{page_state.device.system}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">系统版本号：</div>
+                                    <div class="col-sm-6">{{page_state.device.os_version}}</div>
+                                </di>
+                                <di class="col-md-4 col-sm-6 row">
+                                    <div class="col-sm-6 text-right">是否已越狱：</div>
+                                    <div class="col-sm-6">
+                                        <span ng-if="page_state.device.rooted">
+                                            {{page_state.device.rooted == 'True' ? '是' : '否'}}
+                                        </span>
+                                    </div>
+                                </di>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div>
+                                        <div class="pull-left" style="">年月次</div>
+                                        <!-- <div class="col-sm-3" style="padding: 7px 0;">
+                                            当前选中：
+                                            <span>{{page_state.ubt_pv_count_filters.st}}</span>~<span>{{page_state.ubt_pv_count_filters.ed}}</span>
+                                        </div> -->
+                                        <div class="pull-right text-right">
+                                            <div class="dropdown form-group dropdown-start-parent">
+                                                <a class="dropdown-toggle" id="dropdownStart1"
+                                                    role="button" data-toggle="dropdown"
+                                                    data-target=".dropdown-start-parent"
+                                                    href="javascript:void(0);">
+                                                    <div class="input-group date">
+                                                        <input type="text" class="form-control"
+                                                            data-ng-model="page_state.ubt_pv_count_filters.st">
+                                                        <span class="input-group-addon">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </span>
+                                                    </div>
+                                                </a>
+                                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                    <datetimepicker data-ng-model="page_state.ubt_pv_count_filters.st"
+                                                        data-datetimepicker-config="{
+                                                            dropdownSelector: '#dropdownStart1',
+                                                            minView: 'month',
+                                                            startView: 'month',
+                                                            modelType: 'YYYY-MM'
+                                                        }"/>
+                                                </ul>
+                                            </div>
+                                            <div class="_calendar">-</div>
+                                            <div class="dropdown form-group dropdown-end-parent">
+                                                <a class="dropdown-toggle" id="dropdownEnd1"
+                                                    role="button" data-toggle="dropdown"
+                                                    data-target=".dropdown-end-parent" href="javascript:void(0);">
+                                                    <div class="input-group date">
+                                                        <input type="text" class="form-control"
+                                                            data-ng-model="page_state.ubt_pv_count_filters.ed">
+                                                        <span class="input-group-addon">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </span>
+                                                    </div>
+                                                </a>
+                                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                    <datetimepicker data-ng-model="page_state.ubt_pv_count_filters.ed"
+                                                        data-datetimepicker-config="{
+                                                            dropdownSelector: '#dropdownEnd1',
+                                                            minView: 'month',
+                                                            startView: 'month',
+                                                            modelType: 'YYYY-MM'
+                                                        }"/>
+                                                </ul>
+                                            </div>
+                                            <button type="button" class="btn btn-blue"
+                                                ng-click="ubtPvCount()">搜索</button>
+                                        </div>
+                                    </div>
+
+                                    <i class="glyphicon"
+                                        ng-class="{
+                                            'glyphicon-menu-down': page_state.calendar_chart,
+                                            'glyphicon-menu-right': !page_state.calendar_chart}"
+                                        ng-click="toggleShowChart('calendar_chart')"
+                                    ></i>
+                                </div>
+
+                                <div class="panel-body" ng-if="page_state.calendar_chart">
+                                    <h5>日历缩放比例（数值越大，圆点越小）：</h5>
+                                    <div ng-if="page_state.imei == imei.imei">
+                                        <rzslider
+                                             rz-slider-model="page_state.calendar_num"
+                                             rz-slider-options="{floor: 1, ceil: 100}"></rzslider>
+                                    </div>
+                                    <div class="yj-chart" id="{{'calender-chart' + imei_index}}"
+                                        eoption="calendar_config"
+                                        style="width:100%;height:300px;"
+                                        callback="showDateGraph(date)"
+                                        ng-if="!loading&&calendar_config"
+                                    ></div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div>
+                                        <div class="pull-left" style="">日次</div>
+                                        <!-- <div class="col-sm-3" style="padding: 7px 0;">
+                                            当前选中：
+                                            <span>{{page_state.ubt_pv_count_filters.st}}</span>~<span>{{page_state.ubt_pv_count_filters.ed}}</span>
+                                        </div> -->
+                                        <div class="pull-right text-right">
+                                            <div class="dropdown form-group dropdown-start-parent2">
+                                                <a class="dropdown-toggle" id="dropdownStart2"
+                                                    role="button" data-toggle="dropdown"
+                                                    data-target=".dropdown-start-parent2"
+                                                    href="javascript:void(0);">
+                                                    <div class="input-group date">
+                                                        <input type="text" class="form-control"
+                                                            data-ng-model="page_state.ubt_pv_count_hour_filters.st">
+                                                        <span class="input-group-addon">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </span>
+                                                    </div>
+                                                </a>
+                                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                    <datetimepicker data-ng-model="page_state.ubt_pv_count_hour_filters.st"
+                                                        data-datetimepicker-config="{
+                                                            dropdownSelector: '#dropdownStart2',
+                                                            minView: 'day',
+                                                            startView: 'day',
+                                                            modelType: 'YYYY-MM-DD'
+                                                        }"/>
+                                                </ul>
+                                            </div>
+                                            <div class="_calendar">-</div>
+                                            <div class="dropdown form-group dropdown-end-parent2">
+                                                <a class="dropdown-toggle" id="dropdownEnd2"
+                                                    role="button" data-toggle="dropdown"
+                                                    data-target=".dropdown-end-parent2" href="javascript:void(0);">
+                                                    <div class="input-group date">
+                                                        <input type="text" class="form-control"
+                                                            data-ng-model="page_state.ubt_pv_count_hour_filters.ed">
+                                                        <span class="input-group-addon">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </span>
+                                                    </div>
+                                                </a>
+                                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                    <datetimepicker data-ng-model="page_state.ubt_pv_count_hour_filters.ed"
+                                                        data-datetimepicker-config="{
+                                                            dropdownSelector: '#dropdownEnd2',
+                                                            minView: 'day',
+                                                            startView: 'day',
+                                                            modelType: 'YYYY-MM-DD'
+                                                        }"/>
+                                                </ul>
+                                            </div>
+                                            <button type="button" class="btn btn-blue"
+                                                ng-click="getPvCountHours()">搜索</button>
+                                        </div>
+                                    </div>
+
+                                    <i class="glyphicon"
+                                        ng-class="{
+                                            'glyphicon-menu-down': page_state.line_chart,
+                                            'glyphicon-menu-right': !page_state.line_chart}"
+                                        ng-click="toggleShowChart('line_chart')"
+                                    ></i>
+                                </div>
+
+                                <div class="panel-body" ng-if="page_state.line_chart">
+
+                                    <div class="yj-chart" id="line-chart" eoption="line_config"
+                                        style="width:100%;height:500px;"
+                                        ng-if="line_config"
+                                    ></div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div>
+                                        <div class="pull-left" style="">日次明细</div>
+                                        <!-- <div class="col-sm-3" style="padding: 7px 0;">
+                                            当前选中：
+                                            <span>{{page_state.ubt_pv_count_filters.st}}</span>~<span>{{page_state.ubt_pv_count_filters.ed}}</span>
+                                        </div> -->
+                                        <div class="pull-right text-right">
+                                            <div class="dropdown form-group dropdown-start-parent3">
+                                                <a class="dropdown-toggle" id="dropdownStart3"
+                                                    role="button" data-toggle="dropdown"
+                                                    data-target=".dropdown-start-parent3"
+                                                    href="javascript:void(0);">
+                                                    <div class="input-group date">
+                                                        <input type="text" class="form-control"
+                                                            data-ng-model="page_state.ubt_pv_list_filters.st">
+                                                        <span class="input-group-addon">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </span>
+                                                    </div>
+                                                </a>
+                                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                    <datetimepicker data-ng-model="page_state.ubt_pv_list_filters.st"
+                                                        data-datetimepicker-config="{
+                                                            dropdownSelector: '#dropdownStart3',
+                                                            minView: 'hour',
+                                                            startView: 'hour',
+                                                            modelType: 'YYYY-MM-DD HH:mm:SS'
+                                                        }"/>
+                                                </ul>
+                                            </div>
+                                            <div class="_calendar">-</div>
+                                            <div class="dropdown form-group dropdown-end-parent3">
+                                                <a class="dropdown-toggle" id="dropdownEnd3"
+                                                    role="button" data-toggle="dropdown"
+                                                    data-target=".dropdown-end-parent3" href="javascript:void(0);">
+                                                    <div class="input-group date">
+                                                        <input type="text" class="form-control"
+                                                            data-ng-model="page_state.ubt_pv_list_filters.ed">
+                                                        <span class="input-group-addon">
+                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                        </span>
+                                                    </div>
+                                                </a>
+                                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                    <datetimepicker data-ng-model="page_state.ubt_pv_list_filters.ed"
+                                                        data-datetimepicker-config="{
+                                                            dropdownSelector: '#dropdownEnd3',
+                                                            minView: 'hour',
+                                                            startView: 'hour',
+                                                            modelType: 'YYYY-MM-DD HH:mm:SS'
+                                                        }"/>
+                                                </ul>
+                                            </div>
+                                            <button type="button" class="btn btn-blue"
+                                                ng-click="getUbtPvList()">搜索</button>
+                                        </div>
+                                    </div>
+
+                                    <i class="glyphicon"
+                                        ng-class="{
+                                            'glyphicon-menu-down': page_state.pv_chart,
+                                            'glyphicon-menu-right': !page_state.pv_chart}"
+                                        ng-click="toggleShowChart('pv_chart')"
+                                    ></i>
+                                </div>
+
+                                <div class="panel-body" ng-if="page_state.pv_chart"
+                                    style="padding: 0;">
+
+                                    <table class="table table-bordered ubt-table">
+                                        <thead>
+                                            <tr style="border-bottom: 1px solid #F0F0F1;">
+                                                <th class="text-center">
+                                                    Timestamp
+                                                </th>
+                                                <th class="text-center">
+                                                    App Lv
+                                                </th>
+                                                <th class="text-center">
+                                                    Page Lv
+                                                </th>
+                                                <th class="text-center">
+                                                    Widget
+                                                </th>
+                                                <th class="text-center">
+                                                    Widget Type
+                                                </th>
+                                                <th class="text-center">
+                                                    Event
+                                                </th>
+                                                <th class="text-center" style="width:30%;">
+                                                    UBT Details
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="pv in ubt_pv_list"
+                                                ng-class="{'extra-space':pv.action=='app_end'}">
+                                                <td class="text-center">
+                                                    {{pv.ts}}
+                                                </td>
+                                                <td class="text-center">
+                                                    <span ng-if="pv.action.indexOf('app_') == 0"
+                                                        ng-class="{
+                                                            'app-start':pv.action=='app_start',
+                                                            'app-pause':pv.action=='app_pause',
+                                                            'app-awake':pv.action=='app_awake',
+                                                            'app-end':pv.action=='app_end'
+                                                        }">
+                                                        {{pv.action}}
+                                                    </span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span ng-if="pv.action.indexOf('page_') == 0"
+                                                        ng-class="{
+                                                            'page-show':pv.action=='page_show',
+                                                            'page-leave':pv.action=='page_leave'
+                                                        }">
+                                                        {{pv.action}}
+                                                    </span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span class="widget"
+                                                        ng-if="pv.action.indexOf('focus_') == 0 ||
+                                                        pv.action.indexOf('click_') == 0 ||
+                                                        pv.action.indexOf('text_') == 0">{{pv.widget_cn}}</span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span class="widget-type"
+                                                        ng-if="pv.action.indexOf('focus_') == 0 ||
+                                                        pv.action.indexOf('click_') == 0 ||
+                                                        pv.action.indexOf('text_') == 0">{{pv.object}}</span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span class="event"
+                                                        ng-if="pv.action.indexOf('focus_') == 0 ||
+                                                        pv.action.indexOf('click_') == 0 ||
+                                                        pv.action.indexOf('text_') == 0">{{pv.action}}</span>
+                                                </td>
+                                                <td class="text-center">
+                                                    {{pv.action_value||pv.page_cn}}
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+
+                                </div>
+
+                            </div>
+
+
+
+
+						</div>
+					</div>
+
+				</div>
+
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,253 @@
+.client-detail .panel-heading > .panel-title{
+    padding: 0;
+}
+.client-detail .panel-group .panel > .panel-heading > .panel-title > a{
+    padding: 6px 15px;
+    font-size: 12px;
+    color: #333;
+    font-weight: normal;
+    line-height: 20px;
+    background: #f5f5f6;
+}
+.client-detail .panel-group .panel > .panel-heading {
+    padding: 0;
+}
+.client-basic .panel-default > .panel-heading + .panel-collapse .panel-body{
+    background: #fff;
+}
+.client-detail .line-panel  .panel-default > .panel-heading + .panel-collapse .panel-body{
+    padding: 15px 0;
+    border: none;
+}
+.line-panel .panel-default > .panel-heading{
+    border-bottom: 1px solid #ebebeb;
+}
+.line-panel .panel-group > .panel{
+    border: none;
+}
+.client-detail .line-panel>.panel-group>.panel>.panel-heading>.panel-title > a{
+    background: #fff;
+    padding: 0
+}
+.client-detail .data-table tr td:nth-child(odd),
+.client-detail .data-table tr th:nth-child(odd){
+    background-color: #f9f9f9;
+}
+
+/*image*/
+.client-detail .image-list .limit-height{
+    max-height: 158px;
+    overflow: hidden;
+}
+.client-detail .image-list .col-sm-4{
+    text-align: center;
+}
+.client-detail .image-list .col-sm-4 img{
+    height: 120px;
+    cursor: pointer;
+}
+.client-detail .image-list .col-sm-4 p{
+    margin: 10px 0;
+    font-size: 13px;
+    /*color: #333;*/
+}
+
+/*contact*/
+.client-basic .device{
+    padding-bottom: 15px;
+}
+.client-basic .device>.row>div{
+    line-height: 30px;
+}
+.client-basic .device>.row>div:first-child{
+    color: #343434;
+    padding-right: 0;
+}
+.client-basic .device>.row>div:last-child{
+    color: #303642;
+    padding-left: 0;
+}
+.client-contact .tabs-vertical > li > a{
+    text-align: center;
+    padding: 5px 10px;
+    line-height: 14px;
+}
+.client-contact .contact-list.row .col-md-3>div{
+    /*border: 1px solid;*/
+    border-radius: 5px;
+    height: 180px;
+    position: relative;
+    margin-bottom: 10px;
+    background: #f5f5f5;
+}
+.client-contact .contact-list.row .col-md-3>div .labels{
+    padding: 6px 40px 0 6px;
+}
+.client-contact .contact-list.row .col-md-3>div .labels span{
+    display: inline-block;
+    padding: 1px;
+    border: 1px solid;
+    border-radius: 4px;
+    transform: scale(0.9);
+}
+.client-contact .contact-list.row .col-md-3>div .right-icon{
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    background: skyblue;
+    color: #fff;
+    text-align: center;
+    line-height: 32px;
+    border-radius: 16px;
+    position: absolute;
+    right: 6px;
+    top: 6px;
+}
+.client-contact .contact-list.row .col-md-3>div h5{
+    text-align: center;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    -webkit-transfomr: translate(-50%,-50%);
+    margin: 0;
+    font-size: 15px;
+}
+.client-contact .contact-list.row .col-md-3>div .contact-footer{
+    text-align: center;
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+}
+
+.message-contact{
+    padding-left: 16px;
+    border: 1px solid #ebebeb;
+    margin: 2px;
+    cursor: pointer;
+}
+.message-contact.active{
+    background: #ebebeb;
+}
+.message-contact>p{
+    margin: 10px 0;
+}
+.message-list .col-sm-4,
+.message-list .col-sm-8{
+    max-height: 500px;
+    overflow-y: scroll;
+}
+.message-list .col-sm-4{
+    padding-right: 0;
+}
+.message-list .col-sm-8{
+    /*padding-left: 0;*/
+}
+.message-content{
+    border: 1px solid #ebebeb;
+    /* background-color: white; */
+    border-radius: 4px;
+    padding: 10px 15px;
+    overflow: hidden;
+}
+.contact-list>.col-sm-8>.col-sm-8{
+    padding: 10px 15px;
+}
+.contact-list>.col-sm-8>.col-sm-8 p.text-right{
+    margin-top: 10px;
+}
+
+.ubt-table td span{
+    color: #fff;
+    padding: 2px 5px;
+    border-radius: 4px;
+}
+.ubt-table td span.app-start{
+    background: #06B7A3;
+}
+.ubt-table td span.app-pause{
+    background: #E8D000;
+}
+.ubt-table td span.app-awake{
+    background: #10D061;
+}
+.ubt-table td span.app-end{
+    background: #FF8867;
+}
+.ubt-table td span.page-show{
+    background: #39BDFF;
+}
+.ubt-table td span.page-leave{
+    background: #FFA400;
+}
+.ubt-table td span.widget{
+    background: #AF7FFB;
+}
+.ubt-table td span.widget-type{
+    background: #A0B4B1;
+}
+.ubt-table td span.event{
+    border: 1px solid #979797;
+    color: #666666;
+}
+
+.table tr.extra-space{
+    border-bottom: 22px solid white;
+}
+.table.ubt-table > thead > tr > th,
+.table.ubt-table > tbody > tr > th,
+.table.ubt-table > tfoot > tr > th,
+.table.ubt-table > thead > tr > td,
+.table.ubt-table > tbody > tr > td,
+.table.ubt-table > tfoot > tr > td{
+    border: none;
+    padding: 4px 0;
+    background: #fff;
+}
+
+.tab-ubt .panel-default > .panel-heading{
+    position: relative;
+    padding: 5px 0;
+}
+.tab-ubt .panel-default > .panel-heading>div{
+    margin: 0 15px;
+}
+.tab-ubt .panel-default > .panel-heading>div>.pull-left{
+    padding: 7px 0;
+}
+.tab-ubt .panel-default > .panel-heading>div>.pull-right{
+    width: 90%;
+    font-size: 0;
+    margin-right: 20px;
+}
+.tab-ubt .panel-default > .panel-heading>div>.pull-right>div{
+    display: inline-block;
+}
+.tab-ubt .panel-default > .panel-heading>div>.pull-right>div._calendar{
+    vertical-align: top;
+    line-height: 31px;
+    font-size: 14px;
+    margin: 0 10px;
+}
+.tab-ubt .panel-default > .panel-heading>div>.pull-right .btn{
+    vertical-align: top;
+    margin-left: 16px;
+}
+.tab-ubt .input-group-addon{
+    background: #fff;
+}
+.tab-ubt .dropdown.form-group{
+    margin-bottom: 0;
+}
+.tab-ubt .panel-heading>.glyphicon{
+    padding: 14px 8px;
+    position: absolute;
+    right: 0px;
+}
+
+.tab-ubt .rzslider .rz-pointer{
+    outline: none;
+}
+.tab-ubt .rzslider .rz-pointer.rz-active:after{
+    background: #fff;
+}

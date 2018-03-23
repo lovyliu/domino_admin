@@ -1,0 +1,158 @@
+<h2>融资计算器</h2>
+<br />
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="panel panel-primary">
+
+            <div class="panel-body">
+
+                <form role="form" ng-submit="calculate()">
+                    <div class="row form-group form-horizontal">
+                        <label for="field-1" class="col-sm-2 control-label">车辆开票价</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="field-1" ng-model="page_state.filters.vehicle_price"
+                            placeholder="车辆开票价" name="vehicle_price" required>
+                        </div>
+                    </div>
+                    <div class="row form-group form-horizontal">
+                        <label for="field-2" class="col-sm-2 control-label">车辆首付款</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="field-2" ng-model="page_state.filters.vehicle_down_payment"
+                            placeholder="车辆首付款" name="vehicle_down_payment" required>
+                        </div>
+                    </div>
+                    <div class="row form-group form-horizontal">
+                        <label for="field-3" class="col-sm-2 control-label">管理费贷款额</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="field-3" ng-model="page_state.filters.management_fee"
+                            placeholder="管理费贷款额" name="management_fee" required>
+                        </div>
+                    </div>
+                    <div class="row form-group form-horizontal">
+                        <label for="field-4" class="col-sm-2 control-label">其他费用贷款额</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="field-4" ng-model="page_state.filters.other_fee"
+                            placeholder="其他费用贷款额" name="other_fee" required>
+                        </div>
+                    </div>
+                    <div class="row form-group form-horizontal">
+                        <label for="field-5" class="col-sm-2 control-label">我司费率</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="field-5"
+                                ng-model="page_state.filters.rate"
+                                placeholder="我司费率" name="rate" required>
+                        </div>
+                    </div>
+                    <div class="row form-group form-horizontal">
+                        <label for="field-6" class="col-sm-2 control-label">银行利率</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="field-6"
+                                ng-model="page_state.filters.bank_rate"
+                                placeholder="银行利率" name="bank_rate" required>
+                        </div>
+                    </div>
+                    <div class="row form-group form-horizontal">
+                        <label for="field-7" class="col-sm-2 control-label">期数</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="field-7"
+                                ng-model="page_state.filters.nper"
+                                placeholder="期数" name="nper" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-10 col-sm-offset-2">
+                        <button type="submit"
+                            class="btn btn-primary"
+                        >计算</button>
+                        <button type="button"
+                            class="btn btn-danger"
+                            ng-click="resetCaculator()"
+                            style="margin-left:20px;"
+                        >重置</button>
+                    </div>
+
+                </form>
+
+                <div class="calculated-result" style="margin-top:80px;"
+                    ng-if="calculated_data">
+                    <div class="row form-group form-horizontal">
+                        <label class="col-sm-2 control-label">车辆首付款</label>
+                        <div class="col-sm-3">
+                            {{calculated_data.vehicle_down_payment}}
+                        </div>
+                    </div>
+                    <div class="row form-group form-horizontal">
+                        <label class="col-sm-2 control-label">首付款比例</label>
+                        <div class="col-sm-3">
+                            {{calculated_data.vehicle_down_payment_percent}}
+                        </div>
+                    </div>
+                    <div class="row form-group form-horizontal">
+                        <label class="col-sm-2 control-label">风控首付比例</label>
+                        <div class="col-sm-3">
+                            {{calculated_data.rc_down_payment_percent}}
+                        </div>
+                    </div>
+                    <div class="row form-group form-horizontal">
+                        <label class="col-sm-2 control-label">云车首付比例</label>
+                        <div class="col-sm-3">
+                            {{calculated_data.yunche_down_payment_percent}}
+                        </div>
+                    </div>
+                    <div class="row form-group form-horizontal">
+                        <label class="col-sm-2 control-label">手续费</label>
+                        <div class="col-sm-3">
+                            {{calculated_data.service_charge}}
+                        </div>
+                    </div>
+                    <div class="row form-group form-horizontal">
+                        <label class="col-sm-2 control-label">车辆贷款额</label>
+                        <div class="col-sm-3">
+                            {{calculated_data.vehicle_loan_amt}}
+                        </div>
+                    </div>
+                    <div class="row form-group form-horizontal">
+                        <label class="col-sm-2 control-label">未精确的合同本金</label>
+                        <div class="col-sm-3">
+                            {{calculated_data.principal}}
+                        </div>
+                    </div>
+                    <div class="row form-group form-horizontal">
+                        <label class="col-sm-2 control-label">精确的合同本金</label>
+                        <div class="col-sm-3">
+                            {{calculated_data.principal_ex}}
+                        </div>
+                    </div>
+                    <div class="row form-group form-horizontal">
+                        <label class="col-sm-2 control-label">总成本</label>
+                        <div class="col-sm-3">
+                            {{calculated_data.all_cost}}
+                        </div>
+                    </div>
+                    <div class="row form-group form-horizontal">
+                        <label class="col-sm-2 control-label">本息合计</label>
+                        <div class="col-sm-3">
+                            {{calculated_data.principal_interest}}
+                        </div>
+                    </div>
+                    <div class="row form-group form-horizontal">
+                        <label class="col-sm-2 control-label">项目总额</label>
+                        <div class="col-sm-3">
+                            {{calculated_data.project_amt}}
+                        </div>
+                    </div>
+                    <div class="row form-group form-horizontal">
+                        <label class="col-sm-2 control-label">月还款额</label>
+                        <div class="col-sm-3">
+                            {{calculated_data.monthly_payment}}
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>

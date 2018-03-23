@@ -1,0 +1,164 @@
+.dashboard .dashboard-title h2{
+    margin-bottom: 10px;
+}
+.dashboard .dashboard-title .btn-group .btn-default{
+    background: #FFFFFF;
+    border: 1px solid #DDDDDD;
+    border-radius: 2px;
+    color: #222222;
+    padding-left: 17px;
+    padding-right: 17px;
+}
+.dashboard .dashboard-title .btn-group .btn-default:hover,
+.dashboard .dashboard-title .btn-group .btn-default:focus,
+.dashboard .dashboard-title .btn-group .btn-default.focus,
+.dashboard .dashboard-title .btn-group .btn-default.active{
+    background: #06B7A3;
+    border-color: #06B7A3;
+    color: #fff !important;
+}
+
+@media (min-width: 768px){
+    .dashboard .count.row .col-sm-4{
+        width: 20%;
+    }
+}
+.dashboard .count .tile-stats{
+    padding: 17px 15px 22px;
+}
+.dashboard .count .tile-stats .num{
+    font-size: 30px;
+    font-weight: normal;
+}
+.dashboard .count .tile-stats.stats-green .num{
+    color: #06B7A3;
+}
+.dashboard .count .tile-stats.stats-blue .num{
+    color: #2DA3D8;
+}
+.dashboard .count .tile-stats.stats-purple .num{
+    color: #6C72C6;
+}
+.dashboard .count .tile-stats.stats-red .num{
+    color: #FB7B7B;
+}
+.dashboard .count .tile-stats.stats-gray .num{
+    color: #9DA7B6;
+}
+.dashboard .count .tile-stats.stats-orange .num{
+    color: #FFA400;
+}
+.dashboard .count .tile-stats .num .num-icon{
+    font-size: 0;
+}
+.dashboard .count .tile-stats .num :last-child{
+    margin-top: 2px;
+}
+.dashboard .count .tile-stats .num .num-icon span{
+    display: inline-block;
+    width: 15px;
+    height: 1px;
+    border-radius: 2px;
+}
+.dashboard .count .tile-stats.stats-green .num .num-icon span{
+    background: #06B7A3;
+}
+.dashboard .count .tile-stats.stats-blue .num .num-icon span{
+    background: #2DA3D8;
+}
+.dashboard .count .tile-stats.stats-purple .num .num-icon span{
+    background: #6C72C6;
+}
+.dashboard .count .tile-stats.stats-red .num .num-icon span{
+    background: #FB7B7B;
+}
+.dashboard .count .tile-stats.stats-gray .num .num-icon span{
+    background: #9DA7B6;
+}
+.dashboard .count .tile-stats.stats-orange .num .num-icon span{
+    background: #FFA400;
+}
+.dashboard .count .tile-stats h3{
+    font-size: 14px;
+    color: #999999;
+}
+.dashboard .count .tile-stats .icon{
+    top: 17px;
+    right: 20px;
+    bottom: auto;
+}
+.dashboard .count .tile-stats .icon img{
+    width: 50px;
+}
+
+.dashboard .chart-title{
+    margin: 0;
+    padding: 22px 20px 15px;
+    font-size: 16px;
+    color: #666666;
+}
+.dashboard .chart-title .pull-left .btn{
+    width: 80px;
+    margin-right: 10px;
+    border: 1px solid #DDDDDD;
+    border-radius: 2px;
+    font-size: 12px;
+    color: #303642;
+}
+
+.dashboard .chart-title .pull-left .btn:hover,
+.dashboard .chart-title .pull-left .btn:focus,
+.dashboard .chart-title .pull-left .btn:active:focus,
+.dashboard .chart-title .pull-left .btn.active:focus,
+.dashboard .chart-title .pull-left .btn.focus,
+.dashboard .chart-title .pull-left .btn:active,
+.dashboard .chart-title .pull-left .btn.active,
+.dashboard .chart-title .pull-left .btn:active.focus,
+.dashboard .chart-title .pull-left .btn.active.focus
+{
+    background: rgba(102, 127, 160,1);
+    color: #fff !important;
+}
+.dashboard .chart-title .pull-left .btn:first-child{
+    margin-left: 20px;
+}
+
+.dashboard .province-list{
+    padding: 0;
+    padding-right: 20px;
+}
+.dashboard .province-list .province-item{
+    list-style: none;
+    background: #F7F7F7;
+    padding: 20px 50px 14px 20px;
+    position: relative;
+}
+.dashboard .province-list .province-item:not(:first-child){
+    margin-top: 10px;
+}
+.dashboard .province-list .province-item>.row:first-child .col-sm-6:first-child{
+    font-size: 16px;
+    color: #2A2A2A;
+}
+.dashboard .province-list .province-item>.row:first-child .col-sm-6:last-child{
+    font-size: 16px;
+    color: #303642;
+}
+.dashboard .province-list .province-item>.row .col-sm-6:last-child{
+    margin-top: 5px;
+}
+.dashboard .province-list .province-item>.row:last-child .col-sm-6:first-child{
+    font-size: 12px;
+    color: #BBBBBB;
+}
+.dashboard .province-list .province-item>.row:last-child .col-sm-6:last-child{
+    font-size: 12px;
+    color: #999999;
+}
+.dashboard .province-list .province-item .top-icon{
+    width: 16px;
+    position: absolute;
+    top: 50%;
+    right: 18px;
+    transform: translateY(-50%);
+}

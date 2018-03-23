@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<head>
+    <title>同盾</title>
+    <meta charset="UTF-8"/>
+</head>
+    <link href="/templates/static/css/jsonFormater.css" type="text/css" rel="stylesheet"/>
+    <link href="/templates/static/css/bootstrap.min.css" type="text/css" rel="stylesheet"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+      <style>
+          .col-center-block {
+            float: none;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+      </style>
+
+<body>
+  <!--<div class="container">-->
+      <!--<form class="form-login">-->
+          <!--<input   name="name" id="name" placeholder="姓名" value="王明桃" >-->
+          <!--<br/>-->
+          <!--<input type="number" class="mobile" name="mobile" id="mobile" placeholder="手机号" value="18148442555" >-->
+          <!--<br/>-->
+          <!--<input type="number" class="id_number" name="id_number" id="id_number" placeholder="身份证" value="511502198603236029" >-->
+          <!--<br/>-->
+          <!--<input  class="report_id" name="report_id" id="report_id" placeholder="身份证" value="ER201708251201449764CF2F" >-->
+          <!--<br/>-->
+          <!--<button type="submit" class="submit">查询</button>-->
+      <!--</form>-->
+
+      <!--&lt;!&ndash;<pre id="result">&ndash;&gt;-->
+
+      <!--&lt;!&ndash;</pre>&ndash;&gt;-->
+  <!--</div>-->
+
+  <div class="container">
+  <div class="row myCenter">
+    <div class="col-xs-6 col-md-4 col-center-block">
+      <form class="form-login">
+        <h2 class="form-signin-heading" style="text-align:center">同盾&nbsp;查询</h2>
+        <label  class="sr-only">用户名</label>
+          <input type="text" class="form-control"  name="name" id="name" placeholder="姓名"  >
+          <br/>
+          <input  type="text" class="form-control"  name="mobile" id="mobile" placeholder="手机号"  >
+          <br/>
+        <!--<label for="inputPassword" class="sr-only">密码</label>-->
+          <input  type="text" class="form-control"  name="id_number" id="id_number" placeholder="身份证"  >
+          <br/>
+         <!--<label for="" class="sr-only">密码</label>-->
+          <!--<input  type="text" class="form-control" name="report_id" id="report_id" placeholder="报告" value="ER201708251201449764CF2F" >-->
+          <br/>
+        <div class="checkbox">
+          <!--<label>-->
+            <!--<input type="checkbox" value="remember-me">-->
+            <!--记住我 </label>-->
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">查&nbsp;&nbsp;询</button>
+      </form>
+    </div>
+      <br/><br/>
+      <div id="json">
+      </div>
+  </div>
+</div>
+
+
+    <script src="/templates/static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/templates/static/js/jsonFormater.js"></script>
+    <script type="text/javascript" src="/templates/static/js/bootstrap.min.js"></script>
+
+    <script >
+      $(document).ready(function() {
+          console.log(location.href);
+          var params = location.href.split('?')[1];
+          if(params){
+              var param_array = params.split('&');
+              for(i = 0; i < param_array.length; i ++){
+                  var param = param_array[i].split('=');
+                  $('#' + param[0]).val(decodeURI(param[1]));
+              }
+          }
+          $(".form-login").submit(function(e){
+              e.preventDefault();
+              name = $("#name").val();
+              mobile = $("#mobile").val();
+              id_number = $("#id_number").val();
+              report_id = $("#report_id").val();
+              var data = {};
+              $(this).serializeArray().map(function(x){data[x.name] = x.value;});
+              var jsonData = JSON.stringify(data);
+//              alert(jsonData)
+              $.ajax({
+                  url:"http://192.168.0.213:8002/tongdun",
+                  type:"POST",
+                  data: jsonData,
+                  contentType: "application/json",
+                  dataType: "json",
+                  success: function (data) {
+                      alert('查询成功');
+                       var options = {
+                        dom : '#json',   //用于放置的dom的选择器
+                        singleTab: "  ",  //单个tab
+                        tabSize: 2,       //缩进数量
+                        quoteKeys: true,  //key是否用双引号包含
+                        imgCollapsed: "/templates/static/images/Collapsed.gif", //收起的图片路径
+                        imgExpanded: "/templates/static/images/Expanded.gif",  //展开的图片路径
+                        isCollapsible: true //是否支持展开收起
+
+                       };
+                        var jf = new JsonFormater(options); //创建对象
+                        jf.doFormat(data); //格式化json
+
+                  }
+              });
+          });
+      })
+    </script>
+</body>
+</html>

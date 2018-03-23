@@ -1,0 +1,264 @@
+<div class="row">
+    <div class="col-sm-12">
+        <h3 class="text-center">问询表</h3>
+        <table border="1" class="bg-white print-table" width="100%">
+          <!-- 车辆请款 -->
+          <tr>
+            <td rowspan="3" colspan="2" class="bg-gray">车辆情况</td>
+            <td class="bg-gray">车型</td>
+            <td>{{application.brand + '-' + application.trix}}</td>
+            <td class="bg-gray">车价</td>
+            <td>{{(application.uw_fin_plan.vehicle_price||application.vehicle_price|parseint)}}</td>
+            <td class="bg-gray">贷款金额</td>
+            <td>{{(application.uw_fin_plan.loan_amt||application.loan_amt|parseint)}}</td>
+            <td class="bg-gray">贷款银行</td>
+            <td>{{application.loan_bank}}</td>
+          </tr>
+          <tr>
+            <td class="bg-gray">颜色</td>
+            <td>{{application.vehicle_color}}</td>
+            <td class="bg-gray">首付款</td>
+            <td>{{(application.uw_fin_plan.down_payment||application.down_payment|parseint)}}</td>
+            <td class="bg-gray">首付比例</td>
+            <td>{{application.uw_fin_plan.yunche_down_payment_percent ? rightDecimal(application.uw_fin_plan.yunche_down_payment_percent*100,100): rightDecimal(application.yunche_down_payment_percent*100,100)}}%</td>
+            <td class="bg-gray">保险公司</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class="bg-gray">二手车</td>
+            <td>否</td>
+            <td class="bg-gray">新车</td>
+            <td>是</td>
+            <td class="bg-gray">月还款额</td>
+            <td>{{(application.uw_fin_plan.monthly_payment||application.monthly_payment|parseint)}}</td>
+            <td class="bg-gray">还款期限</td>
+            <td>{{application.uw_fin_plan.nper || application.nper}}</td>
+          </tr>
+          <!-- 客户简况 -->
+          <!-- 个人基本信息 -->
+          <tr>
+            <td rowspan="8" class="bg-gray" width="30">客户简况</td>
+            <td rowspan="6" class="bg-gray" width="30">个人基本信息</td>
+            <td class="bg-gray">购车人姓名</td>
+            <td>{{application.client.clt_nm}}</td>
+            <td class="bg-gray">性别</td>
+            <td>{{application.client.gender}}</td>
+            <td class="bg-gray">户籍地</td>
+            <td>{{application.client.reg_addr_info}}</td>
+            <td class="bg-gray">身份证号</td>
+            <td>{{application.client.id_no}}</td>
+          </tr>
+          <tr>
+            <td class="bg-gray">手机</td>
+            <td>{{application.client.mobile}}</td>
+            <td class="bg-gray">学历</td>
+            <td>{{application.client.edu}}</td>
+            <td class="bg-gray">婚否</td>
+            <td colspan="3">{{application.client.marriage}}</td>
+          </tr>
+          <tr>
+            <td class="bg-gray">现住地址</td>
+            <td colspan="3">{{application.client.current_addr_details}}</td>
+            <td class="bg-gray">家庭地址</td>
+            <td colspan="3">{{application.client.current_addr_details ? application.client.current_addr_details+'（同现住地址）' : ''}}</td>
+          </tr>
+          <tr>
+            <td class="bg-gray">单位名称</td>
+            <td colspan="3">
+                <span ng-if="application.client.major_income_type == '工资'">
+                    {{application.client.major_company_name}}
+                </span>
+                <span ng-if="application.client.major_income_type == '自营'">
+                    {{application.client.major_busi_type}}
+                </span>
+            </td>
+            <td class="bg-gray">单位地址</td>
+            <td colspan="3">
+                {{application.client.major_company_addr_details}}
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-gray">职务</td>
+            <td>
+                <span ng-if="application.clientmajor_income_type == '工资'">
+                    {{application.client.major_work_position}}
+                </span>
+                <span ng-if="application.client.major_income_type != '工资'">
+                    其他
+                </span>
+            </td>
+            <td class="bg-gray">月收入</td>
+            <td>{{application.client.major_income ? (application.client.major_income/12).toFixed(0) : ''}}</td>
+            <td class="bg-gray">单位电话</td>
+            <td>{{application.client.major_work_phone_num}}</td>
+            <td class="bg-gray">驾照</td>
+            <td>{{application.client.driving_lic}}</td>
+          </tr>
+          <tr>
+            <td class="bg-gray">房屋所有权人</td>
+            <td>{{application.client.house_owner_name}}</td>
+            <td class="bg-gray">房屋性质</td>
+            <td colspan="2">{{application.client.house_type}}</td>
+            <td class="bg-gray">房屋面积</td>
+            <td colspan="2">{{application.client.house_area}}</td>
+          </tr>
+          <tr>
+            <td rowspan="2" class="bg-gray">其他联系人</td>
+            <td class="bg-gray">紧急联系人1</td>
+            <td colspan="2">{{application.client.urg_contact1}}</td>
+            <td class="bg-gray">手机</td>
+            <td colspan="2">{{application.client.urg_mobile1}}</td>
+            <td class="bg-gray">关系</td>
+            <td>{{application.client.urg_relation1}}</td>
+          </tr>
+          <tr>
+            <td class="bg-gray">紧急联系人2</td>
+            <td colspan="2">{{application.client.urg_contact2}}</td>
+            <td class="bg-gray">手机</td>
+            <td colspan="2">{{application.client.urg_mobile2}}</td>
+            <td class="bg-gray">关系</td>
+            <td>{{application.client.urg_relation2}}</td>
+          </tr>
+          <tr>
+            <td rowspan="3" colspan="2" class="bg-gray">共同还款人简况</td>
+            <td class="bg-gray">姓名</td>
+            <td colspan="1">{{application.client.spouse.clt_nm}}</td>
+            <td class="bg-gray" colspan="2">身份证号</td>
+            <td colspan="2">{{application.client.spouse.id_no}}</td>
+            <td class="bg-gray">与按揭客户关系</td>
+            <td>配偶</td>
+          </tr>
+          <tr>
+              <td class="bg-gray">单位名称</td>
+              <td>
+                  <span ng-if="application.client.spouse.major_income_type == '工资'">
+                      {{application.client.spouse.major_company_name}}
+                  </span>
+                  <span ng-if="application.client.spouse.major_income_type == '自营'">
+                      {{application.client.spouse.major_busi_type}}
+                  </span>
+              </td>
+              <td class="bg-gray">单位地址</td>
+              <td>
+                  {{application.client.spouse.major_company_addr_details}}
+              </td>
+              <td class="bg-gray">单位电话</td>
+              <td colspan="3">
+                  {{application.client.spouse.major_work_phone_num}}
+              </td>
+          </tr>
+          <tr>
+              <td class="bg-gray" colspan="1">职务</td>
+              <td>
+                  <span ng-if="application.client.spouse.major_income_type == '工资'">
+                      {{application.client.spouse.major_work_position}}
+                  </span>
+                  <span ng-if="application.client.spouse.major_income_type != '工资'">
+                      其他
+                  </span>
+              </td>
+              <td class="bg-gray">月收入</td>
+              <td>{{application.client.spouse.major_income ? (application.client.spouse.major_income/12).toFixed(0) : ''}}</td>
+              <td class="bg-gray" colspan="1">手机</td>
+              <td colspan="1">{{application.client.spouse.mobile}}</td>
+              <td class="bg-gray" colspan="1">驾照</td>
+              <td>{{application.client.driving_lic}}</td>
+          </tr>
+
+          <tr>
+              <td rowspan="7" class="bg-gray" width="30">担保人情况</td>
+              <td rowspan="4" class="bg-gray" width="30">担保人</td>
+              <td class="bg-gray">担保人</td>
+              <td>{{application.client.guarantor.clt_nm}}</td>
+              <td class="bg-gray">关系</td>
+              <td>{{application.client.guarantor.client_guarantor_ship}}</td>
+              <td class="bg-gray">户籍地</td>
+              <td>{{application.client.guarantor.reg_addr_info}}</td>
+              <td class="bg-gray">身份证号</td>
+              <td>{{application.client.guarantor.id_no}}</td>
+          </tr>
+          <tr>
+              <td class="bg-gray">婚姻状况</td>
+              <td>{{application.client.guarantor.marriage}}</td>
+              <td class="bg-gray">学历</td>
+              <td>{{application.client.guarantor.edu}}</td>
+              <td class="bg-gray">月收入</td>
+              <td>{{application.client.guarantor.major_income ? (application.client.guarantor.major_income/12).toFixed(0) : ''}}</td>
+              <td class="bg-gray">手机</td>
+              <td>{{application.client.guarantor.mobile}}</td>
+          </tr>
+          <tr>
+            <td class="bg-gray">现住地址</td>
+            <td colspan="3">{{application.client.guarantor.current_addr_details}}</td>
+            <td class="bg-gray">家庭地址</td>
+            <td colspan="3">{{application.client.guarantor.current_addr_details ? application.client.guarantor.current_addr_details+'（同现住地址）' : ''}}</td>
+          </tr>
+          <tr>
+              <td class="bg-gray">单位名称</td>
+              <td>
+                  <span ng-if="application.client.guarantor.major_income_type == '工资'">
+                      {{application.client.guarantor.major_company_name}}
+                  </span>
+                  <span ng-if="application.client.guarantor.major_income_type == '自营'">
+                      {{application.client.guarantor.major_busi_type}}
+                  </span>
+              </td>
+              <td class="bg-gray">单位地址</td>
+              <td>
+                  {{application.client.guarantor.major_company_addr_details}}
+              </td>
+              <td class="bg-gray">单位电话</td>
+              <td>
+                  {{application.client.guarantor.major_work_phone_num}}
+              </td>
+              <td class="bg-gray">职务</td>
+              <td>
+                  <span ng-if="application.client.guarantor.major_income_type == '工资'">
+                      {{application.client.guarantor.major_work_position}}
+                  </span>
+                  <span ng-if="application.client.guarantor.major_income_type != '工资'">
+                      其他
+                  </span>
+              </td>
+          </tr>
+          <tr>
+            <td class="bg-gray" rowspan="2">配偶</td>
+            <td class="bg-gray">配偶姓名</td>
+            <td>{{application.client.guarantor.spouse.clt_nm}}</td>
+            <td class="bg-gray">身份证号</td>
+            <td colspan="2">{{application.client.guarantor.spouse.id_no}}</td>
+            <td class="bg-gray" colspan="2">手机</td>
+            <td>{{application.client.guarantor.spouse.mobile}}</td>
+          </tr>
+          <tr>
+              <td class="bg-gray">单位名称</td>
+              <td>
+                  <span ng-if="application.client.guarantor.spouse.major_income_type == '工资'">
+                      {{application.client.guarantor.spouse.major_company_name}}
+                  </span>
+                  <span ng-if="application.client.guarantor.spouse.major_income_type == '自营'">
+                      {{application.client.guarantor.spouse.major_busi_type}}
+                  </span>
+              </td>
+              <td class="bg-gray">单位地址</td>
+              <td>
+                  {{application.client.guarantor.spouse.major_company_addr_details}}
+              </td>
+              <td class="bg-gray" colspan="2">单位电话</td>
+              <td>
+                  {{application.client.guarantor.spouse.major_work_phone_num}}
+              </td>
+          </tr>
+          <tr>
+            <td class="bg-gray">房屋</td>
+            <td class="bg-gray">所有权人</td>
+            <td>{{application.client.guarantor.house_owner_name}}</td>
+            <td class="bg-gray">房屋性质</td>
+            <td colspan="2">{{application.client.guarantor.house_type}}</td>
+            <td class="bg-gray">房屋地址</td>
+            <td colspan="2"></td>
+          </tr>
+        </table>
+
+    </div>
+</div>

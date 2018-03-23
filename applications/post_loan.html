@@ -1,0 +1,315 @@
+<div class="content loans post-loan">
+    <div class="content-fixed">
+        <div class="loans-container client-detail">
+            <div class="list-group check-item">
+                <div ng-repeat="(tab_index,list) in post_loan_list">
+                    <a href="" class="list-group-item active"
+                        ng-click="changeTab(tab_index)">
+                        {{list.name}}
+                    </a>
+                    <a href="" class="list-group-item"
+                        ng-repeat="(post_loan_index,post_loan) in list.value"
+                        ng-click="changeSubTab(post_loan,post_loan_index)"
+                        ng-if="page_state.tab_index == tab_index"
+                        ng-class="{'selected': page_state.sub_tab_index == post_loan_index}">
+                        {{post_loan.where_from + ' ⇀ ' + post_loan.where_to}}
+                    </a>
+                </div>
+                <div>
+                    <a href="" class="list-group-item active"
+                        ng-click="changeTab(post_loan_list.length)">
+                        补充其他信息
+                    </a>
+                    <a href="" class="list-group-item"
+                        ng-click="changeSubTab('',0)"
+                        ng-if="page_state.tab_index == post_loan_list.length"
+                        ng-class="{'selected': page_state.sub_tab_index == 0}">
+                        补充其他信息
+                    </a>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-10">
+                    <div class="post-loan" ng-if="post_loan">
+                        <uib-accordion close-others="oneAtATime" class="line-panel">
+                            <div uib-accordion-group class="panel-default"
+                                is-open="page_state.file_list_open">
+                                <uib-accordion-heading>
+                                    项目清单 <i class="glyphicon" ng-class="{'glyphicon-menu-down': page_state.file_list_open, 'glyphicon-menu-right': !page_state.file_list_open}"></i>
+                                </uib-accordion-heading>
+                                <table class="table table-bordered responsive">
+                                    <theaed>
+                                        <th>No.</th>
+                                        <th>项目名称</th>
+                                        <th>份数</th>
+                                        <th>
+                                            是否已<span ng-if="post_loan.where_to=='予见'">签收</span><span ng-if="post_loan.where_from=='予见'">寄送</span>
+                                        </th>
+                                        <th>操作</th>
+                                    </theaed>
+                                    <tbody>
+                                        <tr ng-repeat="project in post_loan.project_list">
+                                            <td>{{$index + 1}}</td>
+                                            <td>{{project.item}}</td>
+                                            <td>{{project.quantity}}</td>
+                                            <td ng-if="post_loan.where_to=='予见'"
+                                                ng-class="{'text-green':project.confirmed}">
+                                                {{project.confirmed ? '已签收' : '未签收'}}
+                                            </td>
+                                            <td ng-if="post_loan.where_from=='予见'"
+                                                ng-class="{'text-green':project.confirmed}">
+                                                {{project.confirmed ? '已寄送' : '未寄送'}}
+                                            </td>
+                                            <td>
+                                                <button type="button"
+                                                    class="btn btn-primary"
+                                                    ng-click="open($event,'resetProject',project.item)"
+                                                    ng-disabled="!project.confirmed">
+                                                    重置
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div uib-accordion-group class="panel-default"
+                                is-open="page_state.delivery_open">
+                                <uib-accordion-heading>
+                                    快递明细 <i class="glyphicon" ng-class="{'glyphicon-menu-down': page_state.delivery_open, 'glyphicon-menu-right': !page_state.delivery_open}"></i>
+                                </uib-accordion-heading>
+                                <form ng-submit="createExpress()">
+                                    <div class="row form-group form-horizontal">
+                                        <div class="col-sm-3">
+                                            <input type="text" placeholder="请输入快递单号"
+                                                class="form-control"
+                                                ng-model="page_state.express_number"
+                                                required
+                                                pattern="\d+">
+                                        </div>
+                                        <button type="submit"
+                                            class="btn btn-info _style">
+                                            添加新快递单号
+                                        </button>
+                                    </div>
+                                </form>
+
+                                <uib-accordion close-others="oneAtATime">
+                                    <div uib-accordion-group class="panel-default express-wrapper"
+                                        ng-repeat="(express_index,express) in post_loan.express_list"
+                                        is-open="page_state['express_' + express_index]">
+                                        <uib-accordion-heading style="overflow:hidden;">
+                                            <div class="express-header-wrapper"
+                                                ng-click="openExpress($event,express.express.number,express_index)">
+                                                <div class="express-header">
+                                                    <div class="express-title">
+                                                        <span class="update-icon"
+                                                            ng-class="{'updated':express.confirmed}">{{express.confirmed ? '已更新' : '待更新'}}</span>
+                                                        <h4>快递单号：{{express.express.number}}</h4>
+                                                    </div>
+                                                    <p>
+                                                        单号记录时间：
+                                                        <span>{{express.express.created_time | date: 'yyyy-MM-dd'}}</span>
+                                                        | 记录人：{{express.staff}}
+                                                        <span ng-if="express.confirmed">
+                                                            | 项目内容更新时间：
+                                                            <span>{{express.update_time | date: 'yyyy-MM-dd'}}</span>
+                                                            | 更新人：{{express.update_staff}}
+                                                        </span>
+
+                                                    </p>
+                                                </div>
+                                                <button type="button"
+                                                    class="btn btn-primary update-button"
+                                                    ng-if="!express.confirmed"
+                                                    ng-click="open($event,'updateExpress',express)"
+                                                    ng-disabled="!page_state.can_update">
+                                                    确认更新
+                                                    <!-- ng-if="!express.confirmed" -->
+                                                </button>
+                                                <span class="text-danger" ng-if="!page_state.can_update&&!express.confirmed">
+                                                    <i class="fa fa-exclamation-triangle"></i>至少需【签收】／【寄送】1个项目</span>
+                                                <i class="pull-right glyphicon"
+                                                   ng-class="{
+                                                       'glyphicon-menu-down': page_state['express_' + '_0'],
+                                                        'glyphicon-menu-right': !page_state['express_' + '_0']}"></i>
+                                            </div>
+
+                                        </uib-accordion-heading>
+
+                                        <div class="row">
+                                            <div class="col-sm-6 express-progress">
+                                                <ul>
+                                                    <li ng-repeat="express_progress in express.express.express">
+                                                        <div class="circle">
+                                                            <span></span>
+                                                        </div>
+
+                                                        <div class="progress-content">
+                                                            <span ng-bind-html="express_progress.time"></span>
+                                                            <span ng-bind-html="express_progress.status"></span>
+                                                        </div>
+                                                    </li>
+
+                                                </ul>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <table class="table table-bordered responsive">
+                                                    <theaed>
+                                                        <th>No.</th>
+                                                        <th>项目名称</th>
+                                                        <th>份数</th>
+                                                        <th>
+                                                            是否已<span ng-if="post_loan.where_to=='予见'">签收</span><span ng-if="post_loan.where_from=='予见'">寄送</span>
+                                                        </th>
+                                                        <th ng-if="!express.confirmed"></th>
+                                                    </theaed>
+                                                    <tbody>
+                                                        <tr ng-repeat="project in express.project_list">
+                                                            <td>{{$index + 1}}</td>
+                                                            <td>{{project.item}}</td>
+                                                            <td>{{project.quantity}}</td>
+                                                            <td>
+                                                                <span ng-if="post_loan.where_to=='予见'"
+                                                                    ng-class="{'text-green':project.confirmed}">
+                                                                    {{project.confirmed ? '已签收' : '未签收'}}
+                                                                </span>
+                                                                <span ng-if="post_loan.where_from=='予见'"
+                                                                    ng-class="{'text-green':project.confirmed}">
+                                                                    {{project.confirmed ? '已寄送' : '未寄送'}}
+                                                                </span>
+                                                            </td>
+                                                            <td ng-if="!express.confirmed">
+                                                                <switch ng-model="project.confirmed"
+                                                                    class="green"
+                                                                    ng-change="clickToggle(project.confirmed,express_index)"
+                                                                    ></switch>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-sm-12 row image-wrapper">
+                                                <div class="col-sm-2" ng-repeat="(image_index,image) in express.express.image_list">
+                                                    <div class="fileinput fileinput-new"
+                                                        ng-click="clickUpload(express.express.number,image.label,express_index,image_index)">
+                                                        <input type="file" accept="image/*"
+                                                            fileread="page_state.file"
+                                                            ng-disabled="page_state.uploading || (express.confirmed && express_index != 0)">
+                										<div class="fileinput-new thumbnail" data-trigger="fileinput">
+                                                            <i class="fa fa-plus"
+                                                                ng-if="!page_state.uploading && !image.image_url"></i>
+                                                            <span ng-if="page_state.uploading && !image.image_url">
+                                                                上传中...
+                                                            </span>
+                                                            <img ng-src="{{image.image_url}}"
+                                                                ng-if="!page_state.uploading && image.image_url">
+                										</div>
+                										<!-- <div class="fileinput-preview fileinput-exists thumbnail"
+                                                            ng-if="!image.image_url"
+                										>
+                										</div> -->
+                                                        <a href="javascript:void(0);" class="remove-image"
+                                                            ng-hide="page_state.uploading || (express.confirmed && express_index != 0) || !image.image_url"
+                                                            ng-click="removeImage(express.express.number,image.label,express_index,image_index)">
+                                                            <i class="fa fa-close"></i>
+                                                        </a>
+                									</div>
+                                                    <p class="text-center">{{image.label}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </uib-accordion>
+
+                            </div>
+                        </uib-accordion>
+                    </div>
+                    <div class="post-loan not-express" ng-if="page_state.tab_index == post_loan_list.length">
+
+                        <uib-accordion close-others="oneAtATime" class="line-panel">
+                            <div uib-accordion-group class="panel-default"
+                                ng-repeat="(list_index,value_list) in post_loan_input_values"
+                                is-open="page_state['not_express_open_'+list_index]">
+                                <uib-accordion-heading>
+                                    {{value_list.name}} <i class="glyphicon" ng-class="{'glyphicon-menu-down': page_state.not_express_open, 'glyphicon-menu-right': !page_state.not_express_open}"></i>
+                                </uib-accordion-heading>
+                                <table class="table table-bordered responsive">
+                                    <theaed>
+                                        <th style="width:10%;">No.</th>
+                                        <th style="width:30%;">项目</th>
+                                        <th style="width:20%;">已保存数据</th>
+                                        <th style="width:40%;">操作</th>
+                                    </theaed>
+                                    <tbody>
+                                        <tr ng-repeat="(value_index,value) in value_list.content">
+                                            <td>{{value_index+1}}</td>
+                                            <td>{{value.verbose}}</td>
+                                            <td>
+                                                <span ng-if="value.dtype=='char'">
+                                                    {{value.content}}
+                                                </span>
+                                                <span ng-if="value.dtype=='time'">
+                                                    {{value.content | date: 'yyyy-MM-dd'}}
+                                                </span
+                                            ></td>
+                                            <td>
+                                                <form ng-submit="updatePostLoanValue(list_index,value_index)">
+                                                    <input type="text" style="width: 200px;height: 28px;"
+                                                        ng-if="value.dtype=='char'"
+                                                        ng-model="page_state.post_loan_values[list_index][value_index]"
+                                                        required
+                                                        pattern="\d+"
+                                                        placeholder="{{'请输入正确的'+value.verbose}}">
+                                                    <div class="dropdown" ng-if="value.dtype=='time'" style="width:200px;">
+                                                        <a class="dropdown-toggle"
+                                                            id="{{'dropdown' + list_index + '_' + value_index}}"
+                                                            role="button" data-toggle="dropdown"
+                                                            data-target="#" href="javascript:void(0);">
+                                                            <div class="input-group">
+                                                                <input type="text"
+                                                                    class="form-control"
+                                                                    data-ng-model="page_state.post_loan_values[list_index][value_index]"
+                                                                    required
+                                                                    pattern="\d{4}-(0[1-9]{1}|10|11|12)-(0[1-9]{1}|[12]{1}[0-9]|30|31)"
+                                                                    placeholder="请选择或输入正确的时间">
+                                                                <span class="input-group-addon">
+                                                                    <i class="glyphicon glyphicon-calendar"></i>
+                                                                </span>
+                                                            </div>
+                                                        </a>
+                                                        <ul class="dropdown-menu" role="menu"
+                                                            aria-labelledby="dLabel">
+                                                            <datetimepicker data-ng-model="page_state.post_loan_values[list_index][value_index]"
+                                                                data-datetimepicker-config="{
+                                                                    dropdownSelector: '#dropdown' + list_index + '_' + value_index,
+                                                                    minView: 'day',
+                                                                    startView: 'day',
+                                                                    modelType: 'YYYY-MM-DD'
+                                                                }"/>
+                                                        </ul>
+                                                    </div>
+                                                    <button type="submit"
+                                                        class="btn btn-primary"
+                                                        ng-disabled="!page_state.post_loan_values[list_index][value_index]"
+                                                    >
+                                                        确认
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </uib-accordion>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="lib/assets/js/fileinput.js"></script>
